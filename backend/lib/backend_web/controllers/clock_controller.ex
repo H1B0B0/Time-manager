@@ -11,7 +11,7 @@ defmodule BackendWeb.ClockController do
     render(conn, :index, clocks: clocks)
   end
 
-  def create_user_clock(conn, %{"userID" => user_id, "clock" => clock_params}) do
+  def create(conn, %{"userID" => user_id, "clock" => clock_params}) do
     clock_params = Map.put(clock_params, "user_id", user_id)
     with {:ok, %Clock{} = clock} <- Time.create_clock(clock_params) do
       conn
