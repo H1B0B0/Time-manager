@@ -13,7 +13,8 @@ defmodule Backend.Time.Clock do
   @doc false
   def changeset(clock, attrs) do
     clock
-    |> cast(attrs, [:time, :status])
-    |> validate_required([:time, :status])
+    |> cast(attrs, [:time, :status, :user])
+    |> validate_required([:time, :status, :user])
+    |> validate_inclusion(:status, [true, false], message: "must be true or false")
   end
 end
