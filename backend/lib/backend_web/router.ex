@@ -8,7 +8,8 @@ defmodule BackendWeb.Router do
   scope "/api", BackendWeb do
     pipe_through :api
 
-    resources "/clocks", ClockController, only: [:create, :show, :index, :update, :delete]
+    get "/clocks/:userID", ClockController, :show
+    post "/clocks/:userID", ClockController, :create
     resources "/users", UserController, only: [:create, :show, :index, :update, :delete]
     resources "/workingtime", WorkingtimeController, only: [:create, :show, :index, :update, :delete]
   end
