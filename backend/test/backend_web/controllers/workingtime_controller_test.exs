@@ -75,9 +75,10 @@ defmodule BackendWeb.WorkingtimeControllerTest do
       conn = delete(conn, ~p"/api/workingtime/#{workingtime_id}")
       assert response(conn, 204)
 
-      assert_error_sent 404, fn ->
-        get(conn, ~p"/api/workingtime/#{user.id}/#{workingtime_id}")
-      end
+
+      conn = get(conn, ~p"/api/workingtime/#{user.id}/#{workingtime_id}")
+      assert response(conn, 404)
+
     end
   end
 

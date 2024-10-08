@@ -1,3 +1,5 @@
+import Ecto.Query, only: [from: 2]
+
 defmodule BackendWeb.WorkingtimeController do
   use BackendWeb, :controller
 
@@ -44,7 +46,7 @@ defmodule BackendWeb.WorkingtimeController do
           {:error, changeset} ->
             conn
             |> put_status(:unprocessable_entity)
-            |> render(BackendWeb.ChangesetView, "error.json", changeset: changeset)
+            |> json(%{error: "Workingtime not found"})
         end
     end
   end
@@ -54,6 +56,11 @@ defmodule BackendWeb.WorkingtimeController do
 
     with {:ok, %Workingtime{}} <- WorkingTime.delete_workingtime(workingtime) do
       send_resp(conn, :no_content, "")
+    else
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(BackendWeb.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -83,5 +90,17 @@ defmodule BackendWeb.WorkingtimeController do
         |> put_status(:unprocessable_entity)
         |> json(%{error: "Invalid start time format"})
     end
+  end
+
+  def get_workingtime_by_user_and_id(userID, id) do
+    Repo.get_by(Workingtime, user_id: userID, id: id)
+  end
+
+  def get_workingtime_user_and_date(userID, startTime, endTime) do
+    query = from w in Workingtime,
+      where: w.user_id == ^userID and w.start >= ^startTime and w.end <= ^endTime,
+      select: w
+
+    Repo.all(query)
   end
 end
