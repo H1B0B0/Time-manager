@@ -20,3 +20,6 @@ services:
       - ./backend:/app
     depends_on:
       - database
+
+volumes:
+  postgres_data:
