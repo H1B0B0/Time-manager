@@ -4,7 +4,7 @@ import Config
 config :backend, Backend.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "database",
+  hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
   database: "backend_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,

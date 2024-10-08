@@ -14,6 +14,8 @@ services:
     command: >
       bash -c "mix setup && mix phx.server"
     working_dir: /app
+    environment:
+      DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
     ports:
       - "4000:4000"
     volumes:

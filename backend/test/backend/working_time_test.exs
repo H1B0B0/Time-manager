@@ -21,11 +21,11 @@ defmodule Backend.WorkingTimeTest do
     end
 
     test "create_workingtime/1 with valid data creates a workingtime" do
-      valid_attrs = %{start: ~N[2024-10-06 12:13:00], end: ~N[2024-10-06 12:13:00]}
+      valid_attrs = %{start: "2024-10-06 12:13:00", end: "2024-10-06 12:13:00", user_id: workingtime_fixture().user_id}
 
       assert {:ok, %Workingtime{} = workingtime} = WorkingTime.create_workingtime(valid_attrs)
-      assert workingtime.start == ~N[2024-10-06 12:13:00]
-      assert workingtime.end == ~N[2024-10-06 12:13:00]
+      assert workingtime.start == "2024-10-06 12:13:00"
+      assert workingtime.end == "2024-10-06 12:13:00"
     end
 
     test "create_workingtime/1 with invalid data returns error changeset" do
@@ -34,11 +34,11 @@ defmodule Backend.WorkingTimeTest do
 
     test "update_workingtime/2 with valid data updates the workingtime" do
       workingtime = workingtime_fixture()
-      update_attrs = %{start: ~N[2024-10-07 12:13:00], end: ~N[2024-10-07 12:13:00]}
+      update_attrs = %{start: "2024-10-07 12:13:00", end: "2024-10-07 12:13:00"}
 
       assert {:ok, %Workingtime{} = workingtime} = WorkingTime.update_workingtime(workingtime, update_attrs)
-      assert workingtime.start == ~N[2024-10-07 12:13:00]
-      assert workingtime.end == ~N[2024-10-07 12:13:00]
+      assert workingtime.start == "2024-10-07 12:13:00"
+      assert workingtime.end == "2024-10-07 12:13:00"
     end
 
     test "update_workingtime/2 with invalid data returns error changeset" do

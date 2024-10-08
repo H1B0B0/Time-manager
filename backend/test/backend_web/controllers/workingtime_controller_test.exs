@@ -6,12 +6,12 @@ defmodule BackendWeb.WorkingtimeControllerTest do
   alias Backend.WorkingTime.Workingtime
 
   @create_attrs %{
-    start: ~N[2024-10-06 12:13:00],
-    end: ~N[2024-10-06 12:13:00]
+    start: "2024-10-06 12:13:00",
+    end: "2024-10-06 12:13:00"
   }
   @update_attrs %{
-    start: ~N[2024-10-07 12:13:00],
-    end: ~N[2024-10-07 12:13:00]
+    start: "2024-10-07 12:13:00",
+    end: "2024-10-07 12:13:00"
   }
   @invalid_attrs %{start: nil, end: nil}
 
