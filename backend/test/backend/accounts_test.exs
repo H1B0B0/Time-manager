@@ -8,6 +8,14 @@ defmodule Backend.AccountsTest do
 
     import Backend.AccountsFixtures
 
+    @create_attrs %{
+      username: "Jake Doe",
+      email: "jake.doe@mail.com"
+    }
+    @update_attrs %{
+      username: "Jana Doe",
+      email: "jana.doe@mail.zz"
+    }
     @invalid_attrs %{username: nil, email: nil}
 
     test "list_users/0 returns all users" do
@@ -21,11 +29,11 @@ defmodule Backend.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{username: "Carl", email: "carl@mail.com"}
+      valid_attrs = %{username: @create_attrs.username, email: @create_attrs.email}
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
-      assert user.username == "Carl"
-      assert user.email == "carl@mail.com"
+      assert user.username == "Jake Doe"
+      assert user.email == "jake.doe@mail.com"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -34,11 +42,11 @@ defmodule Backend.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{username: "John Dodo", email: "john.dodo@mail.com"}
+      update_attrs = %{username: @update_attrs.username, email: @update_attrs.email}
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
-      assert user.username == "John Dodo"
-      assert user.email == "john.dodo@mail.com"
+      assert user.username == "Jana Doe"
+      assert user.email == "jana.doe@mail.zz"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
