@@ -3,9 +3,8 @@ defmodule Backend.WorkingTimeFixtures do
   This module defines test helpers for creating
   entities via the `Backend.WorkingTime` context.
   """
-
+  alias Backend.Workingtime
   alias Backend.Accounts
-
   @doc """
   Generate a workingtime.
   """
@@ -17,9 +16,9 @@ defmodule Backend.WorkingTimeFixtures do
     {:ok, workingtime} =
       attrs
       |> Enum.into(%{
-        start: "2024-10-06 12:13:00",
         end: "2024-10-06 12:13:00",
-        user_id: user.id
+        start: "2024-10-06 12:13:00",
+        user: user.id
       })
       |> Backend.WorkingTime.create_workingtime()
 

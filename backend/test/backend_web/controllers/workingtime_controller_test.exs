@@ -57,8 +57,8 @@ defmodule BackendWeb.WorkingtimeControllerTest do
 
       assert %{
                "id" => ^id,
-               "end" => "2024-10-06T12:13:00",
-               "start" => "2024-10-06T12:13:00"
+               "end" => "2024-10-06 12:13:00",
+               "start" => "2024-10-06 12:13:00"
              } = json_response(conn, 200)["data"]
     end
 
@@ -82,8 +82,8 @@ defmodule BackendWeb.WorkingtimeControllerTest do
 
       assert %{
                "id" => ^id,
-               "end" => "2024-10-07T12:13:00",
-               "start" => "2024-10-07T12:13:00"
+               "end" => "2024-10-07 12:13:00",
+               "start" => "2024-10-07 12:13:00"
              } = json_response(conn, 200)["data"]
     end
 
@@ -113,15 +113,15 @@ defmodule BackendWeb.WorkingtimeControllerTest do
       conn: conn,
       workingtime: %Workingtime{user_id: user_id}
     } do
-      start_time = "2024-10-01T00:00:00Z"
-      end_time = "2024-10-31T23:59:59Z"
+      start_time = "2024-10-01 00:00:00"
+      end_time = "2024-10-31 23:59:59"
       conn = get(conn, ~p"/api/workingtime/#{user_id}?start=#{start_time}&end=#{end_time}")
       assert json_response(conn, 200)["data"] != []
     end
 
     test "renders errors when no workingtime found", %{conn: conn} do
-      start_time = "2024-10-01T00:00:00Z"
-      end_time = "2024-10-31T23:59:59Z"
+      start_time = "2024-10-01 00:00:00"
+      end_time = "2024-10-31 23:59:59"
       conn = get(conn, ~p"/api/workingtime/999?start=#{start_time}&end=#{end_time}")
       assert json_response(conn, 404)["error"] == "Workingtime not found"
     end
