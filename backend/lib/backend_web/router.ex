@@ -8,7 +8,8 @@ defmodule BackendWeb.Router do
   scope "/api", BackendWeb do
     pipe_through :api
 
-    resources "/clocks", ClockController, only: [:create, :show, :index, :update, :delete]
+    get "/clocks/:userID", ClockController, :show
+    post "/clocks/:userID", ClockController, :create
 
     get "/users/", UserController, :index
     get "/users/:id/", UserController, :show
@@ -16,7 +17,11 @@ defmodule BackendWeb.Router do
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
 
-    resources "/workingtime", WorkingtimeController, only: [:create, :show, :index, :update, :delete]
+    delete "/workingtime/:id", WorkingtimeController, :delete
+    put "/workingtime/:userID", WorkingtimeController, :update
+    post "/workingtime/users", WorkingtimeController, :create
+    get "/workingtime/:userID/:id", WorkingtimeController, :show
+    get "/workingtime/:userID", WorkingtimeController, :getAll
   end
 
   if Application.compile_env(:backend, :dev_routes) do
