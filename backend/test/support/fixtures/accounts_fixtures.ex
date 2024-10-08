@@ -11,8 +11,8 @@ defmodule Backend.AccountsFixtures do
     {:ok, user} =
       attrs
       |> Enum.into(%{
-        email: "some email",
-        username: "some username"
+        email: "john.doe@mail.com",
+        username: "John Doe"
       })
       |> Backend.Accounts.create_user()
 
