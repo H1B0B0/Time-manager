@@ -1,9 +1,7 @@
 defmodule BackendWeb.ClockControllerTest do
   use BackendWeb.ConnCase
 
-  import Backend.TimeFixtures
   alias Backend.Accounts
-  alias Backend.Time.Clock
 
   @create_attrs %{
     status: true,

@@ -50,7 +50,7 @@ defmodule BackendWeb.WorkingtimeController do
   def getAll(conn, %{"userID" => userID, "start" => startTime, "end" => endTime}) do
     startTime = DateTime.from_iso8601!(startTime)
     endTime = DateTime.from_iso8601!(endTime)
-    case Workingtime.get_workingtime_user_and_date(userID,startTime,endTime) do
+    case WorkingTime.get_workingtime_user_and_date(userID, startTime, endTime) do
       nil ->
         conn
         |> put_status(:not_found)
