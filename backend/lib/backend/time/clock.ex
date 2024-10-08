@@ -5,7 +5,7 @@ defmodule Backend.Time.Clock do
   schema "clocks" do
     field :status, :boolean, default: false
     field :time, :naive_datetime
-    field :user, :id
+    belongs_to :user, Backend.Accounts.User
 
     timestamps(type: :utc_datetime)
   end
@@ -13,8 +13,8 @@ defmodule Backend.Time.Clock do
   @doc false
   def changeset(clock, attrs) do
     clock
-    |> cast(attrs, [:time, :status, :user])
-    |> validate_required([:time, :status, :user])
+    |> cast(attrs, [:status, :time, :user_id])
+    |> validate_required([:status, :time, :user_id])
     |> validate_inclusion(:status, [true, false], message: "must be true or false")
   end
 end
