@@ -12,7 +12,7 @@ services:
   backend:
     image: elixir:1.17
     command: >
-      bash -c "mix setup && mix phx.server"
+      bash -c "mix setup && mix phx.server && mix run priv/repo/seeds.exs"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
