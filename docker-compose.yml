@@ -10,7 +10,7 @@ services:
   backend:
     image: elixir:1.17
     command: >
-      bash -c "mix setup && mix deps.get && mix ecto.create && mix ecto.migrate && mix phx.server"
+      bash -c "mix setup && mix phx.server"
     working_dir: /app
     ports:
       - "4000:4000"
