@@ -4,17 +4,26 @@ defmodule Backend.TimeFixtures do
   entities via the `Backend.Time` context.
   """
 
+  alias Backend.Time
+  alias Backend.Accounts
+
   @doc """
   Generate a clock.
   """
   def clock_fixture(attrs \\ %{}) do
+    unique_id = System.unique_integer([:positive])
+    email = "test#{unique_id}@example.com"
+
+    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password"})
+
     {:ok, clock} =
       attrs
       |> Enum.into(%{
         status: true,
-        time: ~N[2024-10-06 12:11:00]
+        time: ~N[2024-10-06 12:11:00],
+        user_id: user.id
       })
-      |> Backend.Time.create_clock()
+      |> Time.create_clock()
 
     clock
   end

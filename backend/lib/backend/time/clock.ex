@@ -16,5 +16,6 @@ defmodule Backend.Time.Clock do
     |> cast(attrs, [:status, :time, :user_id])
     |> validate_required([:status, :time, :user_id])
     |> validate_inclusion(:status, [true, false], message: "must be true or false")
+    |> foreign_key_constraint(:user_id, name: "clocks_user_id_fkey")
   end
 end
