@@ -19,7 +19,7 @@ defmodule BackendWeb.Router do
 
     delete "/workingtime/:id", WorkingtimeController, :delete
     put "/workingtime/:userID", WorkingtimeController, :update
-    post "/workingtime", WorkingtimeController, :create
+    post "/workingtime/users", WorkingtimeController, :create
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     get "/workingtime/:userID", WorkingtimeController, :getAll
   end

@@ -5,7 +5,12 @@ meta {
 }
 
 get {
-  url: http://localhost:4000/api/workingtime/2
+  url: http://localhost:4000/api/workingtime/1?start=2024-10-06 11:13:00Z&end=2024-10-06 14:13:00Z
   body: none
   auth: none
+}
+
+params:query {
+  start: 2024-10-06 11:13:00Z
+  end: 2024-10-06 14:13:00Z
 }
