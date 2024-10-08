@@ -11,7 +11,7 @@ defmodule BackendWeb.Router do
     get "/clocks/:userID", ClockController, :show
     post "/clocks/:userID", ClockController, :create
 
-    get "/users/", UserController, :index
+    get "/users", UserController, :index
     get "/users/:id/", UserController, :show
     post "/users", UserController, :create
     put "/users/:id", UserController, :update
@@ -19,7 +19,7 @@ defmodule BackendWeb.Router do
 
     delete "/workingtime/:id", WorkingtimeController, :delete
     put "/workingtime/:userID", WorkingtimeController, :update
-    post "/workingtime/users", WorkingtimeController, :create
+    post "/workingtime", WorkingtimeController, :create
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     get "/workingtime/:userID", WorkingtimeController, :getAll
   end

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "T-POO-700",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

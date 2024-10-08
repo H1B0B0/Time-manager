@@ -1,0 +1,21 @@
+meta {
+  name: Modify workingtime
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:4000/api/workingtime/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "workingtime": {
+      "start": "2024-10-06T12:12:00",
+      "end": "2024-10-06T12:13:00",
+      "id": 5
+    }
+  }
+}
