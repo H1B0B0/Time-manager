@@ -31,11 +31,21 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def update(conn, %{"id" => id, "workingtime" => workingtime_params}) do
-    workingtime = WorkingTime.get_workingtime!(id)
-
-    with {:ok, %Workingtime{} = workingtime} <- WorkingTime.update_workingtime(workingtime, workingtime_params) do
-      render(conn, :show, workingtime: workingtime)
+  def update(conn, %{"userID" => userID, "workingtime" => workingtime_params}) do
+    case WorkingTime.get_workingtime_by_user_and_id(userID, workingtime_params["id"]) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "Workingtime not found"})
+      workingtime ->
+        with {:ok, %Workingtime{} = updated_workingtime} <- WorkingTime.update_workingtime(workingtime, workingtime_params) do
+          render(conn, :show, workingtime: updated_workingtime)
+        else
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(BackendWeb.ChangesetView, "error.json", changeset: changeset)
+        end
     end
   end
 
@@ -47,16 +57,31 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def getAll(conn, %{"userID" => userID, "start" => startTime, "end" => endTime}) do
-    startTime = DateTime.from_iso8601!(startTime)
-    endTime = DateTime.from_iso8601!(endTime)
-    case WorkingTime.get_workingtime_user_and_date(userID, startTime, endTime) do
-      nil ->
+  def getAll(conn, %{"userID" => userID} = params) do
+    startTime = Map.get(params, "start", DateTime.utc_now() |> DateTime.to_iso8601())
+    endTime = Map.get(params, "end", DateTime.utc_now() |> DateTime.to_iso8601())
+
+    case DateTime.from_iso8601(startTime) do
+      {:ok, startTime, _} ->
+        case DateTime.from_iso8601(endTime) do
+          {:ok, endTime, _} ->
+            case WorkingTime.get_workingtime_user_and_date(userID, startTime, endTime) do
+              [] ->
+                conn
+                |> put_status(:ok)
+                |> json(%{data: []})
+              workingtimes ->
+                render(conn, :index, workingtime: workingtimes)
+            end
+          _ ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{error: "Invalid end time format"})
+        end
+      _ ->
         conn
-        |> put_status(:not_found)
-        |> json(%{error: "Workingtime not found"})
-      workingtime ->
-        render(conn, :getAll, workingtime: workingtime)
+        |> put_status(:unprocessable_entity)
+        |> json(%{error: "Invalid start time format"})
     end
   end
 end

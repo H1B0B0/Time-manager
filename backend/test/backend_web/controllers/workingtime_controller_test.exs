@@ -46,7 +46,8 @@ defmodule BackendWeb.WorkingtimeControllerTest do
     test "renders workingtime when data is valid", %{conn: conn, user: user} do
       workingtime = workingtime_fixture(%{user_id: user.id})
       workingtime_id = workingtime.id
-      conn = put(conn, ~p"/api/workingtime/#{workingtime_id}", workingtime: @update_attrs)
+      update_attrs = Map.put(@update_attrs, :id, workingtime_id)
+      conn = put(conn, ~p"/api/workingtime/#{user.id}", workingtime: update_attrs)
       assert %{"id" => ^workingtime_id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/workingtime/#{user.id}/#{workingtime_id}")
@@ -61,7 +62,8 @@ defmodule BackendWeb.WorkingtimeControllerTest do
     test "renders errors when data is invalid", %{conn: conn, user: user} do
       workingtime = workingtime_fixture(%{user_id: user.id})
       workingtime_id = workingtime.id
-      conn = put(conn, ~p"/api/workingtime/#{workingtime_id}", workingtime: @invalid_attrs)
+      invalid_attrs = Map.put(@invalid_attrs, :id, workingtime_id)
+      conn = put(conn, ~p"/api/workingtime/#{user.id}", workingtime: invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

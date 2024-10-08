@@ -38,6 +38,24 @@ defmodule Backend.WorkingTime do
   def get_workingtime!(id), do: Repo.get!(Workingtime, id)
 
   @doc """
+  Gets a single workingtime by user ID and workingtime ID.
+
+  Returns `nil` if no matching record is found.
+
+  ## Examples
+
+      iex> get_workingtime_by_user_and_id(1, 123)
+      %Workingtime{}
+
+      iex> get_workingtime_by_user_and_id(1, 456)
+      nil
+
+  """
+  def get_workingtime_by_user_and_id(user_id, id) do
+    Repo.get_by(Workingtime, user_id: user_id, id: id)
+  end
+
+  @doc """
   Creates a workingtime.
 
   ## Examples
@@ -100,5 +118,22 @@ defmodule Backend.WorkingTime do
   """
   def change_workingtime(%Workingtime{} = workingtime, attrs \\ %{}) do
     Workingtime.changeset(workingtime, attrs)
+  end
+
+  @doc """
+  Returns a list of workingtimes for a user within a date range.
+
+  ## Examples
+
+      iex> get_workingtime_user_and_date(1, ~N[2023-01-01 00:00:00], ~N[2023-01-31 23:59:59])
+      [%Workingtime{}, ...]
+
+  """
+  def get_workingtime_user_and_date(user_id, start_time, end_time) do
+    query = from w in Workingtime,
+      where: w.user_id == ^user_id and w.start >= ^start_time and w.end <= ^end_time,
+      select: w
+
+    Repo.all(query)
   end
 end
