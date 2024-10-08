@@ -37,6 +37,15 @@ defmodule Backend.Accounts do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  # Get the user by username and email
+  def get_user_by_username_and_email(username, email) do
+    query = from u in User,
+      where: u.username == ^username and u.email == ^email,
+      select: u
+
+    Repo.one(query)
+  end
+
   @doc """
   Creates a user.
 
