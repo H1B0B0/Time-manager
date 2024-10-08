@@ -16,3 +16,5 @@ services:
       - "4000:4000"
     volumes:
       - ./backend:/app
+    depends_on:
+      - database
