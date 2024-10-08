@@ -36,6 +36,8 @@ defmodule Backend.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+  # Returns nil instead of raising an error
+  def get_user(id), do: Repo.get(User, id)
 
   # Get the user by username and email
   def get_user_by_username_and_email(username, email) do
