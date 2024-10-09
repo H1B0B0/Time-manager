@@ -10,29 +10,61 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   backend:
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
+    labels:
+      - "traefik.http.routers.backend.rule=Host(`backend.traefik.me`)"
+      - "traefik.http.routers.backend-tls.tls.domains[0].main=backend.traefik.me"
+      - "traefik.http.routers.backend-tls.tls.domains[0].sans=backend-*.traefik.me"
+      - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
-    ports:
-      - "4000:4000"
     volumes:
       - ./backend:/app
     depends_on:
       - database
+
   frontend:
     image: node:lts-bullseye
     container_name: t-poo-700-stg_9_frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
-    ports:
-      - "5173:5173"
+    labels:
+      - "traefik.http.routers.frontend.rule=Host(`frontend.traefik.me`)"
+      - "traefik.http.routers.frontend-tls.tls.domains[0].main=frontend.traefik.me"
+      - "traefik.http.routers.frontend-tls.tls.domains[0].sans=frontend-*.traefik.me"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     command: /bin/sh -c "npm install && npm run dev -- --host"
+
+  reverse-proxy-https-helper:
+    image: alpine
+    command: sh -c "cd /etc/ssl/traefik
+      && wget traefik.me/cert.pem -O cert.pem
+      && wget traefik.me/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
+
+  traefik:
+    restart: unless-stopped
+    image: traefik:v2.0.2
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./tls.yml:/etc/traefik/tls.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/etc/ssl/traefik
+
 volumes:
   postgres_data:
     name: t-poo-700-stg_9_postgres_data
+  certs:

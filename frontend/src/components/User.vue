@@ -1,6 +1,7 @@
 <template>
   <div>
-    <input v-model="userId" placeholder="Enter user ID" />
+<input v-model="email" placeholder="Enter email" />
+    <input v-model="username" placeholder="Enter username" />
     <button @click="fetchData">Fetch Data</button>
     <div v-if="data">
       <p>Hello, {{ data.data.username }}</p>
@@ -22,7 +23,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await fetch(`http://localhost:4000/api/users/${this.userId}`);
+        const response = await fetch(`http://localhost:4000/api/users?email=${this.email}&username=${this.username}`)
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
