@@ -47,6 +47,13 @@ defmodule BackendWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
+  # Configure Corsica for CORS handling
+  plug Corsica,
+    origins: ["https://frontend.traefik.me", "*"],
+    allow_headers: ["authorization", "content-type", "accept"],
+    allow_methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+    allow_credentials: true
+
   plug BackendWeb.Router
-  plug Corsica, origins: "*"
 end
