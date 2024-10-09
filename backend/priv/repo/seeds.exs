@@ -17,6 +17,7 @@ alias Backend.Time.Clock
 # USERS
 
 Backend.Repo.delete_all(User)
+Backend.Repo.query("ALTER SEQUENCE users_id_seq RESTART")
 
 user1 = Backend.Repo.insert!(%User{username: "johnDoe", email: "johnDoe@gmail.com"})
 user2 = Backend.Repo.insert!(%User{username: "janeDoe", email: "janeDoe@gmail.com"})
@@ -25,6 +26,7 @@ user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gm
 # WORKINGTIME
 
 Backend.Repo.delete_all(Workingtime)
+Backend.Repo.query("ALTER SEQUENCE workingtime_id_seq RESTART")
 
 startTime1 = NaiveDateTime.from_iso8601!("2024-10-05T12:20:00")
 endTime1 = NaiveDateTime.from_iso8601!("2024-10-06T20:13:00")
@@ -41,6 +43,7 @@ Backend.Repo.insert!(%Workingtime{start: startTime3, end: endTime3, user_id: use
 # CLOCK
 
 Backend.Repo.delete_all(Clock)
+Backend.Repo.query("ALTER SEQUENCE clocks_id_seq RESTART")
 
 time1 = NaiveDateTime.from_iso8601!("2024-10-05T12:20:00")
 Backend.Repo.insert!(%Clock{status: true, time: time1, user_id: user1.id})
