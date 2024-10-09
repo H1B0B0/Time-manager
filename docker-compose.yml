@@ -1,6 +1,7 @@
 services:
   database:
     image: postgres:17
+    container_name: t-poo-700-stg_9_database
     ports:
       - "5432:5432"
     environment:
@@ -11,6 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
   backend:
     image: elixir:1.17
+    container_name: t-poo-700-stg_9_backend
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
     working_dir: /app
@@ -24,17 +26,13 @@ services:
       - database
   frontend:
     image: node:lts-bullseye
+    container_name: t-poo-700-stg_9_frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
     ports:
       - "5173:5173"
-    command: /bin/sh -c "npm install || true && npm run dev -- --host"
-    
-    # The 'command' directive overrides the default command specified by the Docker image.
-    # In this case, it runs 'tail -f /dev/null', which keeps the container running indefinitely
-    # by continuously monitoring an empty file. We used it to build the initial project.
-    # command: tail -f /dev/null
-
+    command: /bin/sh -c "npm install && npm run dev -- --host"
 volumes:
   postgres_data:
+    name: t-poo-700-stg_9_postgres_data
