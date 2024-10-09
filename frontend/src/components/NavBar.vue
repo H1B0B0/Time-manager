@@ -529,7 +529,7 @@
             <span class="sr-only">Open user menu</span>
             <img
               class="w-8 h-8 rounded-full"
-              src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/michael-gough.png"
+              src="https://media.licdn.com/dms/image/v2/D4E03AQGzqHu5MxMLiw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1702286805832?e=1733961600&v=beta&t=XzhIg0TGwVepPYyUeJz2vQwfejSGyrfjdQmqy61Pq_M"
               alt="user photo"
             />
           </button>
