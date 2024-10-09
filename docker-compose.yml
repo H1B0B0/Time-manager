@@ -21,6 +21,8 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
+    ports:
+      - "4000:4000"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
@@ -63,6 +65,17 @@ services:
       - ./tls.yml:/etc/traefik/tls.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/etc/ssl/traefik
+
+  pg_admin:
+    image: dpage/pgadmin4
+    container_name: t-poo-700-stg_9_pg_admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - database
 
 volumes:
   postgres_data:
