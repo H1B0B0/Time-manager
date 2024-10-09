@@ -6,8 +6,13 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <header>
+  <div class="min-h-screen flex flex-col">
+    <header class="w-full">
       <NavBar />
       <User />
-  </header>
+    </header>
+    <main class="flex-grow">
+      
+    </main>
+  </div>
 </template>
