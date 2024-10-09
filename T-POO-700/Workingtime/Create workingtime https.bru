@@ -1,0 +1,21 @@
+meta {
+  name: Create workingtime https
+  type: http
+  seq: 6
+}
+
+post {
+  url: https://backend.traefik.me/api/workingtime/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "workingtime": {
+      "start": "2024-10-06T12:13:00",
+      "end": "2024-10-06T12:13:00",
+      "user_id": 1
+    }
+  }
+}

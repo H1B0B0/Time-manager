@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://backend.treafik.me";
+const BASE_URL = "https://backend.traefik.me/api";
 
 export const deleteWorkingTime = async (id: string): Promise<void> => {
   await axios.delete(`${BASE_URL}/workingtime/${id}`);
