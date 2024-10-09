@@ -72,12 +72,19 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - "5050:80"
+    labels:
+      - "traefik.http.routers.pg_admin.rule=Host(`pg_admin.traefik.me`)"
+      - "traefik.http.routers.pg_admin-tls.tls.domains[0].main=pg_admin.traefik.me"
+      - "traefik.http.routers.pg_admin-tls.tls.domains[0].sans=pg_admin-*.traefik.me"
     depends_on:
       - database
+    volumes:
+      - pgadmin:/var/lib/pgadmin
 
 volumes:
   postgres_data:
     name: t-poo-700-stg_9_postgres_data
   certs:
+    name: t-poo-700-stg_9_certs
+  pgadmin:
+    name: t-poo-700-stg_9_pgadmin
