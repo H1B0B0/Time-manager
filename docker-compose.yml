@@ -22,6 +22,19 @@ services:
       - ./backend:/app
     depends_on:
       - database
+  frontend:
+    image: node:lts-bullseye
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: /bin/sh -c "npm install || true && npm run dev -- --host"
+    
+    # The 'command' directive overrides the default command specified by the Docker image.
+    # In this case, it runs 'tail -f /dev/null', which keeps the container running indefinitely
+    # by continuously monitoring an empty file. We used it to build the initial project.
+    # command: tail -f /dev/null
 
 volumes:
   postgres_data:
