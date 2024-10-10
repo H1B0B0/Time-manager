@@ -19,6 +19,9 @@
       <input v-model="newEmail" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
       <input v-model="newUsername" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
       <button @click="createAccount" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Create an account</button>
+      <button type="button" @click="cancelCreating" class=" w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 mt-5">
+            Already have an account
+          </button>
     </div>
 
     <div v-if="data">
@@ -87,6 +90,9 @@ export default {
     },
     startCreating() {
       this.isCreating = true;
+    },
+    cancelCreating() {
+      this.isCreating = false;
     },
     async createAccount() {
       try {
