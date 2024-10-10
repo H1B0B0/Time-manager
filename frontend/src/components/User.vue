@@ -1,33 +1,40 @@
 <template>
-  <div class="mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in 🔐</h2>
+  <div class="mx-auto mt-10 p-6 bg-gray-900 rounded-lg shadow-xl">
+    <h2 v-if="!isCreating" class="text-2xl font-bold mb-6 text-center text-white">Log in 🔐</h2>
 
     <div v-if="!data && !isCreating" class="mb-6">
-      <input v-model="email" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
-      <input v-model="username" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
+      <input v-model="email" placeholder="Email"
+        class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
+      <input v-model="username" placeholder="Username"
+        class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
       <button @click="getUser" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         Search
       </button>
     </div>
 
-    <p v-if="!data && !isCreating" class="text-black text-center my-2 -mt-5 font-bold">or</p>
+    <p v-if="!data && !isCreating" class="text-white text-center my-2 -mt-5 font-bold">or</p>
 
-    <button v-if="!data && !isCreating" @click="startCreating" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">Create an account</button>
+    <button v-if="!data && !isCreating" @click="startCreating"
+      class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">Create an account</button>
 
     <div v-if="isCreating">
-      <h2 class="text-2xl font-bold mb-6 text-center text-black mt-2">Create an account 👋🏻</h2>
-      <input v-model="newEmail" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
-      <input v-model="newUsername" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
-      <button @click="createAccount" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Create an account</button>
-      <button type="button" @click="cancelCreating" class=" w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 mt-5">
-            Already have an account
-          </button>
+      <h2 class="text-2xl font-bold mb-6 text-center text-white mt-2">Create an account 👋🏻</h2>
+      <input v-model="newEmail" placeholder="Email"
+        class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
+      <input v-model="newUsername" placeholder="Username"
+        class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
+      <button @click="createAccount" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Create an
+        account</button>
+      <button type="button" @click="cancelCreating"
+        class=" w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 mt-5">
+        Already have an account
+      </button>
     </div>
 
     <div v-if="data">
       <div v-if="!isEditing">
-        <p class="mb-2 text-black"><strong>Username</strong> {{ data.data.username }}</p>
-        <p class="mb-4 text-black"><strong>Email:</strong> {{ data.data.email }}</p>
+        <p class="mb-2 text-white"><strong>Username</strong> {{ data.data.username }}</p>
+        <p class="mb-4 text-white"><strong>Email:</strong> {{ data.data.email }}</p>
         <div class="flex justify-between">
           <button @click="startEditing" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">
             Edit account
@@ -39,8 +46,10 @@
       </div>
 
       <form v-else @submit.prevent="updateUser" class="space-y-4">
-        <input v-model="editedUsername" placeholder="New username" class="w-full p-2 border rounded text-black" required />
-        <input v-model="editedEmail" placeholder="New email" class="w-full p-2 border rounded text-black" required type="email" />
+        <input v-model="editedUsername" placeholder="New username"
+          class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400" required />
+        <input v-model="editedEmail" placeholder="New email"
+          class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400" required type="email" />
         <div class="flex justify-between">
           <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
             Update account
