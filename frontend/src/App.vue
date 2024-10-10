@@ -31,5 +31,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <header></header>
+  <div class="min-h-screen flex flex-col">
+    <header class="w-full"></header>
+    <main class="flex-grow">
+      <NavBar />
+      <User />
+    </main>
+  </div>
 </template>
