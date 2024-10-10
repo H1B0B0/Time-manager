@@ -60,10 +60,15 @@ export const updateUser = async (id: number, data: UserType) => {
 
 export const deleteUser = async (id: number) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/api/users/${id}`);
-    return response.data.data;
+    return await axios.delete(`${BASE_URL}/api/users/${id}`);
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
+
+// Usage:
+// onMounted(async () => {
+//   const user = await getUserById(5)
+//   console.log(user)
+// })
