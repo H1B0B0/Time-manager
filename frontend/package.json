@@ -11,6 +11,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@splinetool/react-spline": "^4.0.0",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
     "pinia": "^2.1.7",

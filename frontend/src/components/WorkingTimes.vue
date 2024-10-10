@@ -42,7 +42,7 @@ watch(route, () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+  <div class="w-full h-full flex flex-col bg-gray-900 text-gray-100">
     <header class="w-full flex justify-center py-4">
       <h1
         class="text-2xl font-bold bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"

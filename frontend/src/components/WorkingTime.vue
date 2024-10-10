@@ -115,7 +115,7 @@ watch(route, () => {
 
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-gray-100 p-4"
+    class="w-full h-full flex flex-col items-center justify-center bg-gray-900 text-gray-100 p-4"
   >
     <header class="mb-6">
       <h1 class="text-3xl font-bold">Working Time Details</h1>
