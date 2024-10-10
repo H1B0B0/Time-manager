@@ -32,42 +32,37 @@ watch(route, () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
-    <header class="w-full">
-      <h1>Working Times for User {{ userId }}</h1>
+  <div class="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+    <header class="w-full flex justify-center py-4">
+      <h1
+        class="text-2xl font-bold bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
+      >
+        Working Times for User {{ userId }}
+      </h1>
     </header>
-    <main class="flex-grow">
-      <table>
-        <thead>
-          <tr>
-            <th>Start Time</th>
-            <th>End Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="workingTime in workingTimes" :key="workingTime.id">
-            <td>{{ workingTime.start }}</td>
-            <td>{{ workingTime.end }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <main class="flex-grow p-4">
+      <div class="overflow-x-auto">
+        <table
+          class="min-w-full bg-gray-800 shadow-md rounded-lg overflow-hidden"
+        >
+          <thead class="bg-gray-700">
+            <tr>
+              <th class="py-2 px-4 text-left">Start Time</th>
+              <th class="py-2 px-4 text-left">End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="workingTime in workingTimes"
+              :key="workingTime.id"
+              class="border-b border-gray-700"
+            >
+              <td class="py-2 px-4">{{ workingTime.start }}</td>
+              <td class="py-2 px-4">{{ workingTime.end }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </div>
 </template>
-
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-</style>

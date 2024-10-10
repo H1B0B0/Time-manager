@@ -1,19 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 import WorkingTime from "../components/WorkingTime.vue";
+import WorkingTimes from "../components/WorkingTimes.vue";
+import User from "../components/User.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
+    component: User,
   },
-  // {
-  //   path: "/workingTimes/:userID",
-  //   name: "WorkingTimes",
-  //   component: WorkingTimes,
-  //   props: true,
-  // },
+  {
+    path: "/workingTimes/:userID",
+    name: "WorkingTimes",
+    component: WorkingTimes,
+    props: true,
+  },
   {
     path: "/workingTime/:userID/:workingTimeID?",
     name: "WorkingTime",
