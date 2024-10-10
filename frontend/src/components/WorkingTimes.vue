@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 import {
   createWorkingTime,
   showWorkingTime,
   getWorkingTimes,
 } from "../functions/workingTime";
 
+const route = useRoute();
 const workingTimes = ref([]);
-const userId = "1";
+const userId = ref(route.params.userID);
+const workingTimeId = ref(route.params.workingTimeID);
 
 const fetchData = async () => {
   try {
     const response = await getWorkingTimes(
-      userId,
+      userId.value,
       "2024-10-05 12:10:00Z",
       "2024-10-06 20:14:00Z"
     );
@@ -24,6 +27,12 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
+  fetchData();
+});
+
+watch(route, () => {
+  userId.value = route.params.userID;
+  workingTimeId.value = route.params.workingTimeID;
   fetchData();
 });
 </script>

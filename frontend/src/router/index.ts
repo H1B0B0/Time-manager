@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import WorkingTime from "../components/WorkingTime.vue";
 
 const routes = [
   {
@@ -7,21 +8,30 @@ const routes = [
     name: "home",
     component: HomeView,
   },
+  // {
+  //   path: "/workingTimes/:userID",
+  //   name: "WorkingTimes",
+  //   component: WorkingTimes,
+  //   props: true,
+  // },
   {
-    path: "/about",
-    name: "about",
-    component: () => import("../views/AboutView.vue"),
+    path: "/workingTime/:userID/:workingTimeID?",
+    name: "WorkingTime",
+    component: WorkingTime,
+    props: true,
   },
-  {
-    path: "/workingtime",
-    name: "workingtime",
-    component: () => import("../views/WorkingTime.vue"),
-  },
-  {
-    path: "/workingtimes/:userID",
-    name: "workingtimes",
-    component: () => import("../views/WorkingTimes.vue"),
-  },
+  // {
+  //   path: "/clock/:userID",
+  //   name: "ClockManager",
+  //   component: ClockManager,
+  //   props: true,
+  // },
+  // {
+  //   path: "/chartManager/:userID",
+  //   name: "ChartManager",
+  //   component: ChartManager,
+  //   props: true,
+  // },
 ];
 
 const router = createRouter({
