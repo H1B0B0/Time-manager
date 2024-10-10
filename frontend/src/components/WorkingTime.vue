@@ -65,7 +65,6 @@ const handleCreate = async () => {
     await createWorkingTime({ workingtime: workingTimeData.value });
     console.log("Working time created successfully");
     toast.success("Working time created successfully", toastOptions);
-    router.push(`/workingTime/${userID.value}`);
   } catch (error) {
     console.error("Error creating working time:", error);
     toast.error("Error creating working time", toastOptions);
@@ -83,7 +82,6 @@ const handleUpdate = async () => {
     });
     console.log("Working time updated successfully");
     toast.success("Working time updated successfully", toastOptions);
-    router.push(`/workingTime/${userID.value}`);
   } catch (error) {
     console.error("Error updating working time:", error);
     toast.error("Error updating working time", toastOptions);
@@ -96,7 +94,6 @@ const handleDelete = async () => {
     await deleteWorkingTime(userID.value, workingTimeID.value);
     console.log("Working time deleted successfully");
     toast.success("Working time deleted successfully", toastOptions);
-    router.push(`/workingTime/${userID.value}`);
   } catch (error) {
     console.error("Error deleting working time:", error);
     toast.error("Error deleting working time", toastOptions);
