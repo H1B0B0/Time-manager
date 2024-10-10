@@ -15,7 +15,8 @@
     "js-cookie": "^3.0.5",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "vue3-toastify": "^0.2.3"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",

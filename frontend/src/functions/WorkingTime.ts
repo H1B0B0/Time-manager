@@ -10,7 +10,10 @@ export const updateWorkingTime = async (
   userID: string,
   data: any
 ): Promise<void> => {
-  await axios.put(`${BASE_URL}/workingtime/${userID}`, data);
+  const response = await axios.put(`${BASE_URL}/workingtime/${userID}`, {
+    workingtime: data,
+  });
+  return response.data;
 };
 
 export const createWorkingTime = async (data: any): Promise<void> => {

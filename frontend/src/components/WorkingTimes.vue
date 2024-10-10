@@ -2,10 +2,16 @@
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { getWorkingTimes } from "../functions/workingTime";
+import { toast, type ToastOptions } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const route = useRoute();
 const workingTimes = ref([]);
 const userId = ref(route.params.userID);
+
+const toastOptions: ToastOptions = {
+  autoClose: 3000,
+};
 
 const fetchData = async () => {
   try {
@@ -16,16 +22,20 @@ const fetchData = async () => {
     );
     console.log(response.data);
     workingTimes.value = response.data;
+    toast.success("Working times fetched successfully", toastOptions);
   } catch (error) {
     console.error(error);
+    toast.error("Error fetching working times", toastOptions);
   }
 };
 
 onMounted(() => {
+  console.log("Component mounted, fetching data...");
   fetchData();
 });
 
 watch(route, () => {
+  console.log("Route changed, fetching new data...");
   userId.value = route.params.userID;
   fetchData();
 });
