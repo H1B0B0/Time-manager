@@ -1,8 +1,7 @@
-<script>
-    import ClockGet from './ClockGet.vue';
+<script setup>
+import ClockGet from "./ClockGet.vue";
 </script>
 
 <template>
-    <ClockGet />
-
+  <ClockGet />
 </template>

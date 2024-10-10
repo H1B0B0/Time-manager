@@ -15,10 +15,10 @@ import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js";
       class="flex-grow flex items-center justify-center bg-transparent z-10"
     >
       <spline-viewer
-        class="absolute inset-0 w-full h-full -z-10 blur-sm"
-        url="https://prod.spline.design/8CeuKuE2uJNDDSt9/scene.splinecode"
+        class="absolute inset-0 w-full h-full"
+        url="https://prod.spline.design/soRsUYV4PO0dCd6S/scene.splinecode"
       ></spline-viewer>
-      <div class="">
+      <div class="z-20">
         <RouterView />
       </div>
     </main>

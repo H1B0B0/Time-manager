@@ -29,12 +29,6 @@ const routes = [
     props: true,
   },
   // {
-  //   path: "/clock/:userID",
-  //   name: "ClockManager",
-  //   component: ClockManager,
-  //   props: true,
-  // },
-  // {
   //   path: "/chartManager/:userID",
   //   name: "ChartManager",
   //   component: ChartManager,
