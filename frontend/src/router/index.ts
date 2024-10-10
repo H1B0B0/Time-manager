@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import WorkingTime from "../components/WorkingTime.vue";
 import WorkingTimes from "../components/WorkingTimes.vue";
 import User from "../components/User.vue";
+import ClockManager from "../components/ClockManager.vue";
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
     path: "/workingTime/:userID/:workingTimeID?",
     name: "WorkingTime",
     component: WorkingTime,
+    props: true,
+  },
+  {
+    path: "/clocks/:userID",
+    name: "ClockManager",
+    component: ClockManager,
     props: true,
   },
   // {
