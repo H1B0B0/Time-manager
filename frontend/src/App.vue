@@ -3,7 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import User from "./components/User.vue";
 import NavBar from "./components/NavBar.vue";
-import workingTimes from "./components/workingTimes.vue";
 </script>
 
 <template>
@@ -12,7 +11,6 @@ import workingTimes from "./components/workingTimes.vue";
     <main class="flex-grow">
       <NavBar />
       <User />
-      <workingTimes />
     </main>
   </div>
 </template>
