@@ -1,5 +1,4 @@
-// src/components/ChartManager.d.ts
-declare module "../components/ChartManager.vue" {
+declare module "*.vue" {
   import { DefineComponent } from "vue";
   const component: DefineComponent<{}, {}, any>;
   export default component;
