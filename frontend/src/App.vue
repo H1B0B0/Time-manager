@@ -6,21 +6,21 @@ import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js";
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col relative bg-transparent">
-    <spline-viewer
-      class="absolute inset-0 w-full h-full z-0"
-      url="https://prod.spline.design/8CeuKuE2uJNDDSt9/scene.splinecode"
-    >
-    </spline-viewer>
-
-    <header class="w-full z-10 bg-transparent relative">
+  <div class="min-h-screen flex flex-col relative">
+    <header class="w-full z-20 bg-transparent">
       <NavBar />
     </header>
 
     <main
-      class="flex-grow flex items-center justify-center pt-16 z-10 relative"
+      class="flex-grow flex items-center justify-center bg-transparent z-10"
     >
-      <RouterView />
+      <spline-viewer
+        class="absolute inset-0 w-full h-full -z-10 blur-sm"
+        url="https://prod.spline.design/8CeuKuE2uJNDDSt9/scene.splinecode"
+      ></spline-viewer>
+      <div class="">
+        <RouterView />
+      </div>
     </main>
   </div>
 </template>
