@@ -14,7 +14,8 @@ export const updateWorkingTime = async (
 };
 
 export const createWorkingTime = async (data: any): Promise<void> => {
-  await axios.post(`${BASE_URL}/workingtime/users`, data);
+  const response = await axios.post(`${BASE_URL}/workingtime/users`, data);
+  return response.data;
 };
 
 export const showWorkingTime = async (
@@ -25,7 +26,13 @@ export const showWorkingTime = async (
   return response.data;
 };
 
-export const getAllWorkingTimes = async (userID: string): Promise<any[]> => {
-  const response = await axios.get(`${BASE_URL}/workingtime/${userID}`);
+export const getWorkingTimes = async (
+  userID: string,
+  start: string,
+  end: string
+): Promise<any[]> => {
+  const response = await axios.get(
+    `${BASE_URL}/workingtime/${userID}?start=${start}&end=${end}`
+  );
   return response.data;
 };
