@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { createWorkingTime, showWorkingTime } from "./functions/workingTime";
+import {
+  createWorkingTime,
+  showWorkingTime,
+  getWorkingTimes,
+} from "../functions/workingTime";
 
 const fetchData = async () => {
   try {
@@ -8,7 +12,7 @@ const fetchData = async () => {
       workingtime: {
         start: "2024-10-06T12:13:00",
         end: "2024-10-06T12:13:00",
-        user_id: 49,
+        user_id: 4,
       },
     };
     const workingTime = await createWorkingTime(data);
@@ -18,8 +22,15 @@ const fetchData = async () => {
   }
 
   try {
-    const workingTime = await showWorkingTime("49", "120"); // 49 is the user_id and 120 is the id of the working time
+    const workingTime = await showWorkingTime("4", "4");
     console.log(workingTime);
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    const workingTimes = await getWorkingTimes("4");
+    console.log(workingTimes);
   } catch (error) {
     console.error(error);
   }
