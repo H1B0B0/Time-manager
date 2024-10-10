@@ -3,6 +3,7 @@ import WorkingTime from "../components/WorkingTime.vue";
 import WorkingTimes from "../components/WorkingTimes.vue";
 import User from "../components/User.vue";
 import ClockManager from "../components/ClockManager.vue";
+import NotFound from "../components/NotFound.vue";
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     name: "ClockManager",
     component: ClockManager,
     props: true,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: NotFound,
   },
   // {
   //   path: "/chartManager/:userID",
