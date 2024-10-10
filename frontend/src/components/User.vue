@@ -1,19 +1,30 @@
 <template>
   <div class="max-w-md mx-4 mt-10 p-6 bg-white rounded-lg shadow-xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in 🔐</h2>
 
-    <div v-if="!data" class="mb-6">
+    <div v-if="!data && !isCreating" class="mb-6">
       <input v-model="email" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
       <input v-model="username" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
-      <button @click="fetchData" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+      <button @click="getUser" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         Search
       </button>
+    </div>
+
+    <p v-if="!data && !isCreating" class="text-black text-center my-2 -mt-5 font-bold">or</p>
+
+    <button v-if="!data && !isCreating" @click="startCreating" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700">Create an account</button>
+
+    <div v-if="isCreating">
+      <h2 class="text-2xl font-bold mb-6 text-center text-black mt-2">Create an account 👋🏻</h2>
+      <input v-model="newEmail" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
+      <input v-model="newUsername" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
+      <button @click="createAccount" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Create an account</button>
     </div>
 
     <div v-if="data">
       <div v-if="!isEditing">
         <p class="mb-2 text-black"><strong>Username</strong> {{ data.data.username }}</p>
-        <p class="mb-4  text-black"><strong>Email:</strong> {{ data.data.email }}</p>
+        <p class="mb-4 text-black"><strong>Email:</strong> {{ data.data.email }}</p>
         <div class="flex justify-between">
           <button @click="startEditing" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">
             Edit account
@@ -24,7 +35,7 @@
         </div>
       </div>
 
-      <form v-else @submit.prevent="updateProfile" class="space-y-4">
+      <form v-else @submit.prevent="updateUser" class="space-y-4">
         <input v-model="editedUsername" placeholder="New username" class="w-full p-2 border rounded text-black" required />
         <input v-model="editedEmail" placeholder="New email" class="w-full p-2 border rounded text-black" required type="email" />
         <div class="flex justify-between">
@@ -51,23 +62,52 @@ export default {
     return {
       email: '',
       username: '',
+      newEmail: '',
+      newUsername: '',
+
       data: null,
       error: null,
+      isCreating: false,
       isEditing: false,
       editedUsername: '',
       editedEmail: ''
     };
   },
   methods: {
-    async fetchData() {
+    async getUser() {
       try {
-        const response = await fetch(`http://localhost:4000/api/users?email=${this.email}&username=${this.username}`);
+        const response = await fetch(`https://backend.traefik.me/api/users?email=${this.email}&username=${this.username}`);
         if (!response.ok) throw new Error('Error fetching the account');
         this.data = await response.json();
         this.error = null;
       } catch (error) {
         this.error = error;
         console.error('Error fetching the account:', error);
+      }
+    },
+    startCreating() {
+      this.isCreating = true;
+    },
+    async createAccount() {
+      try {
+        const response = await fetch('https://backend.traefik.me/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user: {
+              username: this.newUsername,
+              email: this.newEmail,
+            }
+          })
+        });
+        if (!response.ok) throw new Error('Error creating the account');
+        const data = await response.json();
+        this.data = data;
+        this.error = null;
+        this.isCreating = false;
+      } catch (error) {
+        this.error = error;
+        console.error('Error creating the account:', error);
       }
     },
     startEditing() {
@@ -78,14 +118,16 @@ export default {
     cancelEditing() {
       this.isEditing = false;
     },
-    async updateProfile() {
+    async updateUser() {
       try {
         const response = await fetch(`https://backend.traefik.me/api/users/${this.data.data.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            username: this.editedUsername,
-            email: this.editedEmail
+            user: {
+              username: this.editedUsername,
+              email: this.editedEmail
+            }
           })
         });
         if (!response.ok) throw new Error('Error updating the account');
