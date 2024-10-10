@@ -24,3 +24,9 @@ import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js";
     </main>
   </div>
 </template>
+
+<style>
+#container #logo {
+  display: none !important;
+}
+</style>
