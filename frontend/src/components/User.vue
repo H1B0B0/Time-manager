@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-md mx-4 mt-10 p-6 bg-white rounded-lg shadow-xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in 🔐</h2>
 
     <div v-if="!data" class="mb-6">
       <input v-model="email" placeholder="Email" class="w-full p-2 mb-3 border rounded text-black" />
       <input v-model="username" placeholder="Username" class="w-full p-2 mb-3 border rounded text-black" />
-      <button @click="fetchData" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+      <button @click="getUser" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         Search
       </button>
     </div>
@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <form v-else @submit.prevent="updateProfile" class="space-y-4">
+      <form v-else @submit.prevent="updateUser" class="space-y-4">
         <input v-model="editedUsername" placeholder="New username" class="w-full p-2 border rounded text-black" required />
         <input v-model="editedEmail" placeholder="New email" class="w-full p-2 border rounded text-black" required type="email" />
         <div class="flex justify-between">
@@ -59,7 +59,7 @@ export default {
     };
   },
   methods: {
-    async fetchData() {
+    async getUser() {
       try {
         const response = await fetch(`http://localhost:4000/api/users?email=${this.email}&username=${this.username}`);
         if (!response.ok) throw new Error('Error fetching the account');
@@ -78,15 +78,21 @@ export default {
     cancelEditing() {
       this.isEditing = false;
     },
-    async updateProfile() {
+    async updateUser() {
+      console.log("lol", this.editedUsername)
       try {
         const response = await fetch(`https://backend.traefik.me/api/users/${this.data.data.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: this.editedUsername,
-            email: this.editedEmail
-          })
+
+          body: JSON.stringify(
+            {
+              "user": {
+              "username": this.editedUsername,
+              "email": this.editedEmail
+            },
+            }
+          )
         });
         if (!response.ok) throw new Error('Error updating the account');
         this.data.data.username = this.editedUsername;
