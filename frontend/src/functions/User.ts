@@ -1,11 +1,11 @@
 import axios from "axios";
 import type { UserType } from "../types/UserType";
 
-const BASE_URL = "https://backend.traefik.me";
+const BASE_URL = "https://backend.traefik.me/api";
 
 export const getUserById = async (id: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/${id}`);
+    const response = await axios.get(`${BASE_URL}/users/${id}`);
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +15,7 @@ export const getUserById = async (id: number) => {
 
 export const getUser = async (username: string, email: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/`, {
+    const response = await axios.get(`${BASE_URL}/users/`, {
       params: {
         username,
         email
@@ -35,7 +35,7 @@ export const createUser = async (data: UserType) => {
         'Content-Type': 'application/json'
       }
     }
-    const response = await axios.post(`${BASE_URL}/api/users`, JSON.stringify({ user: data }), config);
+    const response = await axios.post(`${BASE_URL}/users`, JSON.stringify({ user: data }), config);
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -50,7 +50,7 @@ export const updateUser = async (id: number, data: UserType) => {
         'Content-Type': 'application/json'
       }
     }
-    const response = await axios.put(`${BASE_URL}/api/users/${id}`, JSON.stringify({ user: data }), config);
+    const response = await axios.put(`${BASE_URL}/users/${id}`, JSON.stringify({ user: data }), config);
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -60,7 +60,7 @@ export const updateUser = async (id: number, data: UserType) => {
 
 export const deleteUser = async (id: number) => {
   try {
-    return await axios.delete(`${BASE_URL}/api/users/${id}`);
+    return await axios.delete(`${BASE_URL}/users/${id}`);
   } catch (error) {
     console.error(error);
     throw error;

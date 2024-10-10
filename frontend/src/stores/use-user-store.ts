@@ -1,7 +1,6 @@
-// store/use-user-store.ts
 import { defineStore } from 'pinia'
-import type { UserType } from '@/../types/UserType'
-import { getUserById } from '@/../functions/User'
+import type { UserType } from '@/types/UserType'
+import { getUserById } from '@/functions/User'
 
 export const useUserStore = defineStore('storeUser', {
   state() {
