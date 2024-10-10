@@ -26,7 +26,13 @@ export const showWorkingTime = async (
   return response.data;
 };
 
-export const getWorkingTimes = async (userID: string): Promise<any[]> => {
-  const response = await axios.get(`${BASE_URL}/workingtime/${userID}`);
+export const getWorkingTimes = async (
+  userID: string,
+  start: string,
+  end: string
+): Promise<any[]> => {
+  const response = await axios.get(
+    `${BASE_URL}/workingtime/${userID}?start=${start}&end=${end}`
+  );
   return response.data;
 };
