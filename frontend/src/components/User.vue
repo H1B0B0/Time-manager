@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md mx-4 mt-10 p-6 bg-white rounded-lg shadow-xl">
+  <div class="mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
     <h2 class="text-2xl font-bold mb-6 text-center text-black">Log in 🔐</h2>
 
     <div v-if="!data && !isCreating" class="mb-6">
@@ -49,7 +49,6 @@
       </form>
     </div>
 
-    <!-- Affichage des erreurs -->
     <div v-if="error" class="mt-4 p-4 bg-red-100 text-red-700 rounded">
       {{ error.message }}
     </div>
@@ -57,6 +56,7 @@
 </template>
 
 <script>
+import { defineStore } from 'pinia'
 export default {
   data() {
     return {
