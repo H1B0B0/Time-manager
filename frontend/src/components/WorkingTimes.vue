@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import {
-  createWorkingTime,
-  showWorkingTime,
-  getWorkingTimes,
-} from "../functions/workingTime";
+import { getWorkingTimes } from "../functions/workingTime";
 
 const route = useRoute();
 const workingTimes = ref([]);
 const userId = ref(route.params.userID);
-const workingTimeId = ref(route.params.workingTimeID);
 
 const fetchData = async () => {
   try {
@@ -32,16 +27,16 @@ onMounted(() => {
 
 watch(route, () => {
   userId.value = route.params.userID;
-  workingTimeId.value = route.params.workingTimeID;
   fetchData();
 });
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <header class="w-full"></header>
+    <header class="w-full">
+      <h1>Working Times for User {{ userId }}</h1>
+    </header>
     <main class="flex-grow">
-      <h1>Fetched data for User {{ userId }}</h1>
       <table>
         <thead>
           <tr>
