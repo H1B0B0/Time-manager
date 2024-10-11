@@ -37,3 +37,69 @@ export const createClock = async (userId: number, data: ClockType) => {
     throw error;
   }
 }
+
+// Get clocks by create a key value pair where the key is the date and the value are all the clocks for that date
+export const getClocksDate = async (userId: number, start: string, end: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/clocks/${userId}`);
+    const clocks: ClockType[] = response.data.data;
+    const clocksByDateArray: { date: string, clocks: ClockType[] }[] = [];
+
+    const from = new Date(start).getTime();
+    const to = new Date(end).getTime();
+
+    clocks.forEach((clock) => {
+      const clockTime = new Date(clock.time).getTime();
+      const date = new Date(clock.time).toLocaleDateString();
+
+      if (clockTime >= from && clockTime <= to) {
+        let dateGroup = clocksByDateArray.find((group) => group.date === date);
+
+        if (!dateGroup) {
+          dateGroup = { date, clocks: [] };
+          clocksByDateArray.push(dateGroup);
+        }
+
+        dateGroup.clocks.push(clock);
+      }
+    });
+
+    return clocksByDateArray;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
+// Get the time worked per day by creating a key value pair where the key is the date and the value is the time worked in that specific date
+export const hoursWorkedPerDay = (clocksByDateArray: { date: string, clocks: ClockType[] }[]) => {
+  const hoursWorkedPerDayArray: { date: string, hours: number }[] = [];
+
+  clocksByDateArray.forEach((dateGroup) => {
+    const clocks = dateGroup.clocks;
+    let hoursWorked = 0;
+
+    for (let i = 0; i < clocks.length; i=i+2) {
+      const clockIn = clocks[i];
+      const clockOut = clocks[i + 1];
+
+      if (clockIn && clockOut) {
+        const clockInTime = new Date(clockIn.time);
+        const clockOutTime = new Date(clockOut.time);
+
+        const diff = clockOutTime.getTime() - clockInTime.getTime();
+        const diffHours = diff / 1000 / 60 / 60;
+
+        hoursWorked += diffHours;
+      }
+    }
+
+    hoursWorkedPerDayArray.push({ date: dateGroup.date, hours: hoursWorked });
+  });
+
+  return hoursWorkedPerDayArray;
+}
+
+
