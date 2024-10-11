@@ -17,11 +17,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`)"
-      - "traefik.http.routers.backend-tls.tls.domains[0].main=${BACKEND_DNS}"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend.tls=true"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
-      - traefik.http.routers.frontend.entrypoints=websecure
-      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
-      - traefik.http.routers.frontend.tls=true
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
     working_dir: /app
@@ -41,11 +40,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${FRONTEND_DNS}`)"
-      - "traefik.http.routers.frontend-tls.tls.domains[0].main=${FRONTEND_DNS}"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.tls=true"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
-      - traefik.http.routers.frontend.entrypoints=websecure
-      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
-      - traefik.http.routers.frontend.tls=true
     command: /bin/sh -c "npm install && npm run dev -- --host"
 
   reverse-proxy-https-helper:
@@ -62,7 +60,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     labels:
+      - "traefik.enable=true"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -88,11 +88,11 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pg_admin.rule=Host(`${PGADMIN_DNS}`)"
-      - "traefik.http.routers.pg_admin-tls.tls.domains[0].main=${PGADMIN_DNS}"
-      - traefik.http.routers.frontend.entrypoints=websecure
-      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
-      - traefik.http.routers.frontend.tls=true
+      - "traefik.http.routers.pgadmin.rule=Host(`${PGADMIN_DNS}`)"
+      - "traefik.http.routers.pgadmin.entrypoints=websecure"
+      - "traefik.http.routers.pgadmin.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
     depends_on:
       - database
     volumes:
