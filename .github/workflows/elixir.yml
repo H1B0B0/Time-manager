@@ -68,6 +68,8 @@ jobs:
       - name: Set permissions for SSH key
         run: chmod 600 key.pem
       - name: Create Ansible inventory file
-        run: echo "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
+        run: echo -e "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
+      - name: Display Ansible inventory file
+        run: cat inventory.ini
       - name: Run Ansible Playbook
         run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem
