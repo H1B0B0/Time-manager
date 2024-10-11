@@ -70,4 +70,4 @@ jobs:
       - name: Create Ansible inventory file
         run: echo "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
       - name: Run Ansible Playbook
-        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem
+        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --host ${{ secrets.HOSTS }}
