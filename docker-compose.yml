@@ -15,14 +15,11 @@ services:
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
     labels:
-      - "traefik.http.routers.backend.rule=Host(`backend.traefik.me`)"
-      - "traefik.http.routers.backend-tls.tls.domains[0].main=backend.traefik.me"
-      - "traefik.http.routers.backend-tls.tls.domains[0].sans=backend-*.traefik.me"
+      - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`) || Host(`backend.kurama-chat.xyz`)"
+      - "traefik.http.routers.backend-tls.tls.domains[0].main=${BACKEND_DNS} || backend.kurama-chat.xyz"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
-    ports:
-      - "4000:4000"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
@@ -38,9 +35,8 @@ services:
     volumes:
       - ./frontend:/app
     labels:
-      - "traefik.http.routers.frontend.rule=Host(`frontend.traefik.me`)"
-      - "traefik.http.routers.frontend-tls.tls.domains[0].main=frontend.traefik.me"
-      - "traefik.http.routers.frontend-tls.tls.domains[0].sans=frontend-*.traefik.me"
+      - "traefik.http.routers.frontend.rule=Host(`${FRONTEND_DNS}`) || Host(`kurama-chat.xyz`)"
+      - "traefik.http.routers.frontend-tls.tls.domains[0].main=${FRONTEND_DNS} || kurama-chat.xyz"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     command: /bin/sh -c "npm install && npm run dev -- --host"
 
@@ -66,16 +62,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/etc/ssl/traefik
 
-  pg_admin:
+  pgadmin:
     image: dpage/pgadmin4
     container_name: t-poo-700-stg_9_pg_admin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     labels:
-      - "traefik.http.routers.pg_admin.rule=Host(`pg_admin.traefik.me`)"
-      - "traefik.http.routers.pg_admin-tls.tls.domains[0].main=pg_admin.traefik.me"
-      - "traefik.http.routers.pg_admin-tls.tls.domains[0].sans=pg_admin-*.traefik.me"
+      - "traefik.http.routers.pg_admin.rule=Host(`${PGADMIN_DNS}`) || Host(`pgadmin.kurama-chat.xyz`)"
+      - "traefik.http.routers.pg_admin-tls.tls.domains[0].main=${PGADMIN_DNS} || pgadmin.kurama-chat.xyz"
     depends_on:
       - database
     volumes:

@@ -19,8 +19,9 @@ jobs:
         image: postgres:17
         ports: ["5432:5432"]
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
     name: Build and test
     runs-on: ubuntu-latest
 
@@ -72,4 +73,5 @@ jobs:
       - name: Display Ansible inventory file
         run: cat inventory.ini
       - name: Run Ansible Playbook
-        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no"
+        run: |
+          ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}"
