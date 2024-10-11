@@ -50,6 +50,7 @@ jobs:
         run: mix deps.get
       - name: Run tests
         run: mix test
+
   deploy:
     name: Deploy
     needs: build
@@ -58,11 +59,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Create SSH key file
+        run: echo "${{ secrets.KEY }}" > .ansible_key
+      - name: Set permissions for SSH key
+        run: chmod 600 .ansible_key
       - name: Set up Ansible
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: Playbook.yml
-          key: ${{secrets.KEY}}
+          key: .ansible_key
           inventory: |
             [EC2]
-            ${{ secrets.HOSTS}}
+            ${{ secrets.HOSTS }}
