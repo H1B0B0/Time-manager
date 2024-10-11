@@ -15,9 +15,13 @@ services:
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`)"
       - "traefik.http.routers.backend-tls.tls.domains[0].main=${BACKEND_DNS}"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+      - traefik.http.routers.frontend.tls=true
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
     working_dir: /app
@@ -35,9 +39,13 @@ services:
     volumes:
       - ./frontend:/app
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${FRONTEND_DNS}`)"
       - "traefik.http.routers.frontend-tls.tls.domains[0].main=${FRONTEND_DNS}"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+      - traefik.http.routers.frontend.tls=true
     command: /bin/sh -c "npm install && npm run dev -- --host"
 
   reverse-proxy-https-helper:
@@ -56,11 +64,21 @@ services:
       - "443:443"
     labels:
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=hibobo@kurama-chat.xyz"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json"
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - ./tls.yml:/etc/traefik/tls.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/etc/ssl/traefik
+      - ./volumes/traefik/acme:/acme
+      - ./volumes/traefik/logs:/logs
 
   pgadmin:
     image: dpage/pgadmin4
@@ -69,8 +87,12 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.pg_admin.rule=Host(`${PGADMIN_DNS}`)"
       - "traefik.http.routers.pg_admin-tls.tls.domains[0].main=${PGADMIN_DNS}"
+      - traefik.http.routers.frontend.entrypoints=websecure
+      - traefik.http.routers.frontend.tls.certresolver=letsencrypt
+      - traefik.http.routers.frontend.tls=true
     depends_on:
       - database
     volumes:
