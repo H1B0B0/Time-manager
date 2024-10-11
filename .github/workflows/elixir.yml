@@ -59,17 +59,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install Ansible
+      - name: Configure & Deploy with Ansible
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible
-      - name: Create SSH key file
-        run: echo "${{ secrets.KEY }}" > key.pem
-      - name: Set permissions for SSH key
-        run: chmod 600 key.pem
-      - name: Create Ansible inventory file
-        run: echo -e "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
-      - name: Display Ansible inventory file
-        run: cat inventory.ini
-      - name: Run Ansible Playbook
-        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no"
+          echo "${{ secrets.KEY }}" > private_key
+          eval $(ssh-agent -s)
+          chmod 400 private_key
+          ssh-add private_key
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          python3 -m pip install docker
+          ansible-galaxy collection install community.docker
+          echo "[all]" > inventory.ini
+          echo "my_instance ansible_host=${{secrets.HOSTS}} ansible_user=ec2-user ansible_ssh_private_key_file=./private_key" >> inventory.ini
+          ansible-playbook -i inventory.ini Playbook.yml
