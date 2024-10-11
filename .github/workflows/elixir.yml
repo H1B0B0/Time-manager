@@ -54,10 +54,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: create Key.pem
-        run: echo "${{ secrets.KEY }}" > Key.pem
       - name: Set up Ansible
-        uses: ansible/ansible-content-actions/.github/workflows/ansible_lint.yaml@main
+        uses: dawidd6/action-ansible-playbook@v2
         with:
-          version: "latest"
-          args: "Playbook.yml -i inventory.ini --private-key Key.pem"
+          playbook: Playbook.yml
+          key: ${{secrets.KEY}}
+          inventory: |
+            [EC2]
+            ${{ secrets.HOSTS}}
