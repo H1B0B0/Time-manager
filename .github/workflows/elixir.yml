@@ -72,4 +72,4 @@ jobs:
       - name: Display Ansible inventory file
         run: cat inventory.ini
       - name: Run Ansible Playbook
-        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem
+        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no"
