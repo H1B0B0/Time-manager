@@ -67,6 +67,8 @@
         src: .
         dest: /app/
         rsync_opts:
+          - "--delete"
+          - "--checksum"
           - "--exclude=key.pem"
           - "--exclude=.env"
           - "--exclude=.env.example"
