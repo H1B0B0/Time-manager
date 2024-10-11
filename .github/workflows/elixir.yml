@@ -1,3 +1,8 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: Elixir CI
 
 on:
@@ -7,8 +12,7 @@ on:
     branches:
       - "main"
   pull_request:
-    branches:
-      - "main"
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -54,23 +58,18 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Configure & Deploy with Ansible
+      - uses: actions/checkout@v4
+      - name: Install Ansible
         run: |
-          echo "${{ secrets.KEY }}" | tr -d '\r' > private_key
-          chmod 600 private_key
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          eval $(ssh-agent -s)
-          ssh-add private_key
           sudo apt-get update
           sudo apt-get install -y ansible
-          echo "[all]" > inventory.ini
-          echo "my_instance ansible_host=${{ secrets.HOSTS }} ansible_user=ec2-user ansible_ssh_private_key_file=./private_key" >> inventory.ini
-          ansible-playbook -i inventory.ini Playbook.yml --ssh-extra-args "-o StrictHostKeyChecking=no"
-      - name: Debug private key
-        run: |
-          echo "Private key content:"
-          cat private_key
-          echo "End of private key content"
+      - name: Create SSH key file
+        run: echo "${{ secrets.KEY }}" > key.pem
+      - name: Set permissions for SSH key
+        run: chmod 600 key.pem
+      - name: Create Ansible inventory file
+        run: echo -e "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
+      - name: Display Ansible inventory file
+        run: cat inventory.ini
+      - name: Run Ansible Playbook
+        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no"
