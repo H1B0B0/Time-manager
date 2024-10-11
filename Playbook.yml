@@ -1,5 +1,5 @@
-- name: My first play
-  hosts: EC2
+- hosts: all
+  become: true
   user: ec2-user
   tasks:
     - name: Install Docker

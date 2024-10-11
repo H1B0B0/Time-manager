@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Elixir CI
 
 on:
@@ -59,15 +54,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
       - name: Create SSH key file
-        run: echo "${{ secrets.KEY }}" > .pem.key
+        run: echo "${{ secrets.KEY }}" | tr -d '\r' > key.pem
       - name: Set permissions for SSH key
-        run: chmod 600 .pem.key
-      - name: Set up Ansible
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: Playbook.yml
-          key: .pem.key
-          inventory: |
-            [EC2]
-            ${{ secrets.HOSTS }}
+        run: chmod 600 key.pem
+      - name: Debug SSH key
+        run: |
+          echo "SSH key content:"
+          cat key.pem
+          echo "End of SSH key content"
+      - name: Create Ansible inventory file
+        run: echo -e "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
+      - name: Display Ansible inventory file
+        run: cat inventory.ini
+      - name: Run Ansible Playbook
+        run: ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no"
