@@ -1,138 +1,92 @@
 <template>
-  <div>
-    <h1>Chart Manager</h1>
-    <div>
-      <BarChart :chartData="barChartData" :options="chartOptions" />
-      <LineChart :chartData="lineChartData" :options="chartOptions" />
-      <PieChart :chartData="pieChartData" :options="chartOptions" />
-    </div>
+  <div class="p-4 bg-gray-100 rounded-lg shadow">
+    <h1 class="text-center text-gray-800 text-2xl font-bold mb-4">Chart Manager</h1>
+    <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
+    <template v-if="start && end">
+
+     <div class="bg-white p-4 rounded-lg">
+        <p></p>
+        <canvas ref="chartCanvas"></canvas>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import { Bar, Line, Pie } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  PointElement,
-  LineController,
-  CategoryScale,
-  LinearScale,
-  PieController,
-  ArcElement,
-} from "chart.js";
+import { Chart, registerables } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  LineElement,
-  PointElement,
-  LineController,
-  CategoryScale,
-  LinearScale,
-  PieController,
-  ArcElement
-);
+Chart.register(...registerables);
 
 export default {
-  name: "ChartManager",
-  components: {
-    BarChart: Bar,
-    LineChart: Line,
-    PieChart: Pie,
-  },
   data() {
     return {
-      barChartData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
-        datasets: [
-          {
-            label: "Working Hours",
-            backgroundColor: "#f87979",
-            data: [40, 39, 10, 40, 39, 80, 40],
-          },
-        ],
-      },
-      lineChartData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
-        datasets: [
-          {
-            label: "Working Hours",
-            backgroundColor: "#f87979",
-            data: [40, 39, 10, 40, 39, 80, 40],
-          },
-        ],
-      },
-      pieChartData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
-        datasets: [
-          {
-            label: "Working Hours",
-            backgroundColor: [
-              "#f87979",
-              "#a8e6cf",
-              "#ff8b94",
-              "#ffaaa5",
-              "#ffd3b6",
-              "#dcedc1",
-              "#a8e6cf",
-            ],
-            data: [40, 39, 10, 40, 39, 80, 40],
-          },
-        ],
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
+      start: null,
+      end: null,
+      errorMessage: null,
+      chart: null
     };
   },
-  methods: {
-    fetchChartData() {},
-  },
   mounted() {
-    this.fetchChartData();
+    this.fetchData();
   },
+  methods: {
+    fetchData() {
+      fetch("http://backend.traefik.me/api/workingtime/1/1")
+        .then(async response => {
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.message || response.statusText);
+          }
+          this.start = new Date(data.data.start);
+          this.end = new Date(data.data.end);
+          this.$nextTick(() => {
+            this.createChart();
+          });
+        })
+        .catch(error => {
+          this.errorMessage = error.message;
+        });
+    },
+    createChart() {
+      const ctx = this.$refs.chartCanvas.getContext('2d');
+      const duration = (this.end.getTime() - this.start.getTime()) / (1000 * 60 * 60);
+
+      this.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Working Time'],
+          datasets: [{
+            label: 'Duration (hours)',
+            data: [duration],
+            backgroundColor: 'lightblue',
+            borderColor: 'lightblue',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Hours'
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (context) => `Duration: ${context.parsed.y.toFixed(2)} hours`
+              }
+            }
+          }
+        }
+      });
+    },
+    formatDate(date) {
+      return date.toLocaleString();
+    }
+  }
 };
 </script>
-
-<style scoped>
-h1 {
-  text-align: center;
-}
-div {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
-</style>

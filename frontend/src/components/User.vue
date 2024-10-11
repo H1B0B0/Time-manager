@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { defineStore } from 'pinia'
+import { useUserStore } from '@/stores/use-user-store';
 export default {
   data() {
     return {
@@ -90,12 +90,17 @@ export default {
       try {
         const response = await fetch(`https://backend.traefik.me/api/users?email=${this.email}&username=${this.username}`);
         if (!response.ok) throw new Error('Error fetching the account');
-        this.data = await response.json();
+        const responseData = await response.json();
+        this.data = responseData;
         this.error = null;
+
+        const userStore = useUserStore();
+				userStore.setUser(responseData.data);
       } catch (error) {
         this.error = error;
         console.error('Error fetching the account:', error);
       }
+
     },
     startCreating() {
       this.isCreating = true;
@@ -135,16 +140,18 @@ export default {
     },
     async updateUser() {
       try {
-        const response = await fetch(`https://backend.traefik.me/api/users/${this.data.data.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user: {
-              username: this.editedUsername,
-              email: this.editedEmail
-            }
-          })
-        });
+       const response = await fetch(`https://backend.traefik.me/api/users/${this.data.data.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+        user: {
+          username: this.editedUsername,
+          email: this.editedEmail
+    }
+  })
+});
+        const responseData = await response.json();
+
         if (!response.ok) throw new Error('Error updating the account');
         this.data.data.username = this.editedUsername;
         this.data.data.email = this.editedEmail;
