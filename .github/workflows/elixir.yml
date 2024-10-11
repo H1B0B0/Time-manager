@@ -59,13 +59,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Ansible
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: Playbook.yml
-          key: ${{ secrets.KEY}}
-          inventory: |
-            [EC2]
-            ${{ secrets.HOSTS }}
-          options: |
-            --ssh-extra-args "-o StrictHostKeyChecking=no"
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+      - name: Create SSH key file
+        run: echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
+      - name: Set permissions for SSH key
+        run: chmod 600 ~/.ssh/id_rsa
+      - name: Create Ansible inventory file
+        run: echo "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
+      - name: Run Ansible Playbook
+        run: ansible-playbook Playbook.yml -i inventory.ini --private-key ~/.ssh/id_rsa --ssh-extra-args "-o StrictHostKeyChecking=no"
