@@ -83,9 +83,9 @@
           PGADMIN_DEFAULT_EMAIL={{ PGADMIN_DEFAULT_EMAIL }}
           PGADMIN_DEFAULT_PASSWORD={{ PGADMIN_DEFAULT_PASSWORD }}
         dest: /app/.env
-        
+
     - name: Deploy Docker Compose stack
       become: yes
       become_user: root
-      community.docker.docker_compose:
-        project_src: app
+      directory: /app
+      command: docker-compose up -d
