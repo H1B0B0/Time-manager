@@ -2,9 +2,77 @@
   hosts: EC2
   user: ec2-user
   tasks:
-    - name: Ping my hosts
-      ansible.builtin.ping:
+    - name: Install Docker
+      become: yes
+      become_user: root
+      yum:
+        name: docker
+        update_cache: yes
 
-    - name: Print message
-      ansible.builtin.debug:
-        msg: Hello world
+    - name: Install pip
+      become: yes
+      become_user: root
+      yum:
+        name: python3,python3-pip
+        update_cache: yes
+
+    - name: Install Docker Compose
+      become: yes
+      become_user: root
+      pip:
+        name: docker-compose
+        extra_args: --ignore-installed requests
+
+    - name: Create Docker CLI plugins directory
+      become: yes
+      become_user: root
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+        mode: "0755"
+
+    - name: Install Docker Compose plugin
+      become: yes
+      become_user: root
+      command: curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+
+    - name: Apply executable permissions to the Docker Compose binary
+      become: yes
+      become_user: root
+      command: chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+    - name: Start Docker
+      become: yes
+      become_user: root
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Check if /app folder exists
+      stat:
+        path: /app
+      register: app_folder
+
+    - name: Create /app folder if it does not exist
+      become: yes
+      become_user: root
+      command: mkdir -p /app
+      when: not app_folder.stat.exists
+
+    - name: Copy project files to /app folder
+      become: yes
+      become_user: root
+      synchronize:
+        src: .
+        dest: /app/
+        rsync_opts:
+          - "--exclude=key.pem"
+          - "--exclude=.env"
+          - "--exclude=.env.example"
+
+    - name: Deploy Docker Compose stack
+      become: yes
+      become_user: root
+      community.docker.docker_compose:
+        project_src: app
