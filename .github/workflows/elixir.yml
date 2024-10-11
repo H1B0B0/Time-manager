@@ -60,14 +60,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create SSH key file
-        run: echo "${{ secrets.KEY }}" > .ansible_key
+        run: echo "${{ secrets.KEY }}" > .pem.key
       - name: Set permissions for SSH key
-        run: chmod 600 .ansible_key
+        run: chmod 600 .pem.key
       - name: Set up Ansible
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: Playbook.yml
-          key: .ansible_key
+          key: .pem.key
           inventory: |
             [EC2]
             ${{ secrets.HOSTS }}
