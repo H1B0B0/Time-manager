@@ -1,20 +1,24 @@
-logLevel: DEBUG
-
-api:
-  insecure: true
-  dashboard: true
-
 entryPoints:
-  http:
+  web:
     address: ":80"
-  https:
+  websecure:
     address: ":443"
 
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: hibobo@kurama-chat.xyz
+      storage: /acme/acme.json
+      tlsChallenge: {}
+
 providers:
-  file:
-    filename: /etc/traefik/tls.yml
   docker:
-    endpoint: unix:///var/run/docker.sock
-    watch: true
-    exposedByDefault: true
-    defaultRule: 'HostRegexp(`{{ index .Labels "com.docker.compose.service"}}.traefik.me`,`{{ index .Labels "com.docker.compose.service"}}-{dashed-ip:.*}.traefik.me`)'
+    exposedByDefault: false
+
+api:
+  dashboard: true
+
+log:
+  level: DEBUG
+
+accessLog: {}
