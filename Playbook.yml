@@ -63,15 +63,10 @@
     - name: Copy project files to /app folder
       become: yes
       become_user: root
-      synchronize:
+      copy:
         src: .
         dest: /app/
-        rsync_opts:
-          - "--delete"
-          - "--checksum"
-          - "--exclude=key.pem"
-          - "--exclude=.env"
-          - "--exclude=.env.example"
+      force: yes
 
     - name: Create .env
       become: yes
