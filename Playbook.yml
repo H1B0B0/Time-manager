@@ -78,6 +78,9 @@
           DATABASE_HOSTNAME={{ DATABASE_HOSTNAME }}
           PGADMIN_DEFAULT_EMAIL={{ PGADMIN_DEFAULT_EMAIL }}
           PGADMIN_DEFAULT_PASSWORD={{ PGADMIN_DEFAULT_PASSWORD }}
+          FRONTEND_DNS={{ FRONTEND_DNS }}
+          BACKEND_DNS={{ BACKEND_DNS }}
+          PGADMIN_DNS={{ PGADMIN_DNS }}
         dest: /app/.env
         force: yes
 
