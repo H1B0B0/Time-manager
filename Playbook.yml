@@ -87,5 +87,4 @@
     - name: Deploy Docker Compose stack
       become: yes
       become_user: root
-      directory: /app
       command: docker-compose -f /app/docker-compose.yml up -d
