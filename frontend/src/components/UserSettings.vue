@@ -29,7 +29,7 @@ const userStore = useUserStore();
 
 const updateAccount = async () => {
   try {
-    const response = await updateUser(username.value, email.value);
+    const response = await updateUser(userStore.user.id, { email: email.value, username: username.value });
     userStore.setUser(response);
     toast.success('Successfully updated account');
   } catch (error) {
