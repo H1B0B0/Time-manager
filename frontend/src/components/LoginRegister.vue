@@ -2,9 +2,9 @@
   <div class="mx-auto mt-10 p-6 bg-gray-900 rounded-lg shadow-xl">
     <div v-if="!isCreating" class="mb-6">
       <h2 v-if="!isCreating" class="text-2xl font-bold mb-6 text-center text-white">Log in 🔐</h2>
-      <input v-model="email" placeholder="Email"
+      <input v-model="email" placeholder="Email" required
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
-      <input v-model="username" placeholder="Username"
+      <input v-model="username" placeholder="Username" required
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
       <button @click="login" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         Search
@@ -20,9 +20,9 @@
 
     <div v-if="isCreating">
       <h2 class="text-2xl font-bold mb-6 text-center text-white mt-2">Create an account 👋🏻</h2>
-      <input v-model="newEmail" placeholder="Email"
+      <input v-model="newEmail" placeholder="Email" required
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
-      <input v-model="newUsername" placeholder="Username"
+      <input v-model="newUsername" placeholder="Username" required
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400" />
       <button @click="register" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Create an
         account</button>
