@@ -93,6 +93,11 @@
         dest: /app/frontend/.env
         force: yes
 
+    - name: create cert folder
+      become: yes
+      become_user: root
+      command: mkdir -p /app/cert
+
     - name: kuramacert
       copy:
         dest: /app/cert/kuramacert.pem
