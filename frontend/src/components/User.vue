@@ -12,11 +12,13 @@
         v-model="email"
         placeholder="Email"
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400"
+        required
       />
       <input
         v-model="username"
         placeholder="Username"
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400"
+        required
       />
       <button
         @click="getUser"
@@ -49,11 +51,13 @@
         v-model="newEmail"
         placeholder="Email"
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400"
+        required
       />
       <input
         v-model="newUsername"
         placeholder="Username"
         class="w-full p-2 mb-3 border rounded text-white bg-gray-600 border-gray-400"
+        required
       />
       <button
         @click="createAccount"
