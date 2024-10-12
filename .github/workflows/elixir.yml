@@ -55,8 +55,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: start ec2 instance
-        run: curl -X GET ${{ secrets.API_POINT}}
+      - name: Start EC2 instance
+        run: curl -X GET ${{ secrets.API_POINT }}
       - name: Install Ansible
         run: |
           sudo apt-get update
@@ -74,6 +74,13 @@ jobs:
         run: echo -e "[EC2]\n${{ secrets.HOSTS }}" > inventory.ini
       - name: Display Ansible inventory file
         run: cat inventory.ini
+      - name: Wait for SSH to be available
+        run: |
+          for i in {1..30}; do
+            ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.HOSTS }} 'echo SSH is available' && break
+            echo "Waiting for SSH to be available..."
+            sleep 10
+          done
       - name: Run Ansible Playbook
         run: |
           ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }} FRONTEND_DNS=${{ secrets.FRONTEND_DNS }} BACKEND_DNS=${{ secrets.BACKEND_DNS }} PGADMIN_DNS=${{ secrets.PGADMIN_DNS }} kuramacert=${{ secrets.kuramacert }} kuramakey=${{ secrets.kuramakey }}"
