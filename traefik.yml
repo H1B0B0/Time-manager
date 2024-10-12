@@ -12,13 +12,17 @@ certificatesResolvers:
       tlsChallenge: {}
 
 providers:
+  file:
+    filename: /etc/traefik/tls.yml
   docker:
-    exposedByDefault: false
+    endpoint: unix:///var/run/docker.sock
+    watch: true
+    exposedByDefault: true
+    defaultRule: 'HostRegexp(`{{ index .Labels "com.docker.compose.service"}}.traefik.me`,`{{ index .Labels "com.docker.compose.service"}}-{dashed-ip:.*}.traefik.me`)'
 
 api:
   dashboard: true
 
-log:
-  level: DEBUG
+logLevel: DEBUG
 
 accessLog: {}

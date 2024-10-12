@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { ClockType } from "../types/ClockType";
 
-const BASE_URL = "https://backend.traefik.me/api";
+const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
 export const getClock = async (userId: number) => {
   try {
@@ -11,7 +11,7 @@ export const getClock = async (userId: number) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const getLatestClock = async (userId: number) => {
   try {
@@ -21,29 +21,37 @@ export const getLatestClock = async (userId: number) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const createClock = async (userId: number, data: ClockType) => {
   try {
     const config = {
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-    const response = await axios.post(`${BASE_URL}/clocks/${userId}`, JSON.stringify({ clock: data }), config);
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(
+      `${BASE_URL}/clocks/${userId}`,
+      JSON.stringify({ clock: data }),
+      config
+    );
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+};
 
 // Get clocks by create a key value pair where the key is the date and the value are all the clocks for that date
-export const getClocksDate = async (userId: number, start: string, end: string) => {
+export const getClocksDate = async (
+  userId: number,
+  start: string,
+  end: string
+) => {
   try {
     const response = await axios.get(`${BASE_URL}/clocks/${userId}`);
     const clocks: ClockType[] = response.data.data;
-    const clocksByDateArray: { date: string, clocks: ClockType[] }[] = [];
+    const clocksByDateArray: { date: string; clocks: ClockType[] }[] = [];
 
     const from = new Date(start).getTime();
     const to = new Date(end).getTime();
@@ -69,19 +77,19 @@ export const getClocksDate = async (userId: number, start: string, end: string) 
     console.error(error);
     throw error;
   }
-}
-
-
+};
 
 // Get the time worked per day by creating a key value pair where the key is the date and the value is the time worked in that specific date
-export const hoursWorkedPerDay = (clocksByDateArray: { date: string, clocks: ClockType[] }[]) => {
-  const hoursWorkedPerDayArray: { date: string, hours: number }[] = [];
+export const hoursWorkedPerDay = (
+  clocksByDateArray: { date: string; clocks: ClockType[] }[]
+) => {
+  const hoursWorkedPerDayArray: { date: string; hours: number }[] = [];
 
   clocksByDateArray.forEach((dateGroup) => {
     const clocks = dateGroup.clocks;
     let hoursWorked = 0;
 
-    for (let i = 0; i < clocks.length; i=i+2) {
+    for (let i = 0; i < clocks.length; i = i + 2) {
       const clockIn = clocks[i];
       const clockOut = clocks[i + 1];
 
@@ -100,6 +108,4 @@ export const hoursWorkedPerDay = (clocksByDateArray: { date: string, clocks: Clo
   });
 
   return hoursWorkedPerDayArray;
-}
-
-
+};

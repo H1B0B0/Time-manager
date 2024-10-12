@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { getWorkingTimes } from "../functions/workingTime";
+import { getWorkingTimes } from "../functions/WorkingTime";
 import { toast, type ToastOptions } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 

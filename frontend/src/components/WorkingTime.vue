@@ -6,7 +6,7 @@ import {
   showWorkingTime,
   updateWorkingTime,
   deleteWorkingTime,
-} from "../functions/workingTime";
+} from "../functions/WorkingTime";
 import { toast, type ToastOptions } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 

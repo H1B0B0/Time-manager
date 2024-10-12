@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { UserType } from "../types/UserType";
 
-const BASE_URL = "https://backend.traefik.me/api";
+const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
 export const getUserById = async (id: number) => {
   try {
@@ -11,52 +11,60 @@ export const getUserById = async (id: number) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const getUser = async (username: string, email: string) => {
   try {
     const response = await axios.get(`${BASE_URL}/users/`, {
       params: {
         username,
-        email
-      }
+        email,
+      },
     });
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const createUser = async (data: UserType) => {
   try {
     const config = {
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-    const response = await axios.post(`${BASE_URL}/users`, JSON.stringify({ user: data }), config);
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(
+      `${BASE_URL}/users`,
+      JSON.stringify({ user: data }),
+      config
+    );
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const updateUser = async (id: number, data: UserType) => {
   try {
     const config = {
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-    const response = await axios.put(`${BASE_URL}/users/${id}`, JSON.stringify({ user: data }), config);
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.put(
+      `${BASE_URL}/users/${id}`,
+      JSON.stringify({ user: data }),
+      config
+    );
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const deleteUser = async (id: number) => {
   try {
@@ -65,7 +73,7 @@ export const deleteUser = async (id: number) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 // Usage:
 // onMounted(async () => {
