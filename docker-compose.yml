@@ -18,7 +18,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
       bash -c "mix setup && mix run priv/repo/seeds.exs && mix phx.server"
@@ -40,17 +40,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${FRONTEND_DNS}`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     command: /bin/sh -c "npm install && npm run dev -- --host"
-
-  reverse-proxy-https-helper:
-    image: alpine
-    command: sh -c "cd /etc/ssl/traefik
-      && wget traefik.me/cert.pem -O cert.pem
-      && wget traefik.me/privkey.pem -O privkey.pem"
-    volumes:
-      - certs:/etc/ssl/traefik
 
   traefik:
     restart: unless-stopped
@@ -64,9 +56,7 @@ services:
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
-      - ./tls.yml:/etc/traefik/tls.yml
       - /var/run/docker.sock:/var/run/docker.sock
-      - certs:/etc/ssl/traefik
       - ./volumes/traefik/acme:/acme
       - ./volumes/traefik/logs:/logs
 
@@ -80,7 +70,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.rule=Host(`${PGADMIN_DNS}`)"
       - "traefik.http.routers.pgadmin.entrypoints=websecure"
-      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.routers.pgadmin.tls.certresolver=letsencrypt"
       - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
     depends_on:
       - database
