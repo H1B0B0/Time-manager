@@ -23,9 +23,9 @@ import { useUserStore } from '@/stores/use-user-store';
 import { updateUser, deleteUser } from '@/functions/User';
 import { toast } from 'vue3-toastify';
 
-const email = ref('');
-const username = ref('');
 const userStore = useUserStore();
+const email = ref(userStore.user?.email ?? '');
+const username = ref(userStore.user?.username ?? '');
 
 const updateAccount = async () => {
   try {
