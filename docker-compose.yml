@@ -59,6 +59,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/traefik/acme:/acme
       - ./volumes/traefik/logs:/logs
+      - ./tls.yml:/etc/traefik/tls.yml
+      - certs:/etc/ssl/traefik
 
   pgadmin:
     image: dpage/pgadmin4
@@ -76,6 +78,14 @@ services:
       - database
     volumes:
       - pgadmin:/var/lib/pgadmin
+
+  reverse-proxy-https-helper:
+    image: alpine
+    command: sh -c "cd /etc/ssl/traefik
+      && wget traefik.me/cert.pem -O cert.pem
+      && wget traefik.me/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
 
 volumes:
   postgres_data:
