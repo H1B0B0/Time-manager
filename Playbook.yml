@@ -84,6 +84,16 @@
         dest: /app/.env
         force: yes
 
+    - name: kuramacert
+      copy:
+        dest: /app/cert/kuramacert.pem
+        content: "{{ kuramacert }}"
+
+    - name: kuramakey
+      copy:
+        dest: /app/cert/kurama.key
+        content: "{{ kuramakey }}"
+
     - name: Deploy Docker Compose stack
       become: yes
       become_user: root

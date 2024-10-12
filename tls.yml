@@ -7,3 +7,5 @@ tls:
   certificates:
     - certFile: /etc/ssl/traefik/cert.pem
       keyFile: /etc/ssl/traefik/privkey.pem
+    - certFile: /app/cert/kuramacert.pem
+      keyFile: /app/cert/kurama.key
