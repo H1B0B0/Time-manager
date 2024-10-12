@@ -1,15 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
 import WorkingTime from "../components/WorkingTime.vue";
 import WorkingTimes from "../components/WorkingTimes.vue";
-import User from "../components/User.vue";
 import ClockManager from "../components/ClockManager.vue";
 import ChartManager from "@/components/ChartManager.vue";
 import NotFound from "@/components/NotFound.vue";
+import LoginRegister from "../components/LoginRegister.vue";
+import UserSettings from "../components/UserSettings.vue";
 const routes = [
   {
     path: "/",
     name: "home",
-    component: User,
+    component: LoginRegister,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: UserSettings,
   },
   {
     path: "/workingTimes/:userID",
