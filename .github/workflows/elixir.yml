@@ -55,6 +55,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: start ec2 instance
+        run: curl -X GET ${{ secrets.API_POINT}}
       - name: Install Ansible
         run: |
           sudo apt-get update

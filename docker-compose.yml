@@ -1,5 +1,6 @@
 services:
   database:
+    restart: always
     image: postgres:17
     container_name: t-poo-700-stg_9_database
     ports:
@@ -12,6 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
+    restart: always
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
     labels:
@@ -31,6 +33,7 @@ services:
       - database
 
   frontend:
+    restart: always
     image: node:lts-bullseye
     container_name: t-poo-700-stg_9_frontend
     working_dir: /app
@@ -45,7 +48,7 @@ services:
     command: /bin/sh -c "npm install && npm run dev -- --host"
 
   traefik:
-    restart: unless-stopped
+    restart: always
     image: traefik:v2.0.2
     ports:
       - "80:80"
@@ -63,6 +66,7 @@ services:
       - certs:/etc/ssl/traefik
 
   pgadmin:
+    restart: always
     image: dpage/pgadmin4
     container_name: t-poo-700-stg_9_pg_admin
     environment:
