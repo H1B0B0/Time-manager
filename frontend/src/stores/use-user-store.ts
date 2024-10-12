@@ -12,17 +12,7 @@ export const useUserStore = defineStore('storeUser', {
     setUser(user: UserType) {
       this.user = user;
     },
-    refreshUser() {
-      const id = this.user.id;
-      if (id) {
-        getUserById(id).then((user) => {
-          this.setUser(user);
-        });
-      }
-    },
-    resetUser() {
-      this.user = {} as UserType;
-    }
+
   },
   getters: {
     getUser(): UserType {
