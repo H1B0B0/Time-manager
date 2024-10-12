@@ -60,19 +60,12 @@
       command: mkdir -p /app
       when: not app_folder.stat.exists
 
-    - name: Synchronize project files to /app folder
+    - name: Copy project files to /app folder
       become: yes
       become_user: root
-      synchronize:
+      copy:
         src: .
         dest: /app/
-        delete: yes
-        rsync_opts:
-          - "--exclude=.git"
-          - "--exclude=*.pyc"
-          - "--exclude=__pycache__"
-          - "--checksum"
-          - "--times"
 
     - name: Create .env
       become: yes
@@ -91,7 +84,7 @@
         dest: /app/.env
         force: yes
 
-    - name: Create .env for frontend
+    - name: Create .env
       become: yes
       become_user: root
       copy:
@@ -100,24 +93,17 @@
         dest: /app/frontend/.env
         force: yes
 
-    - name: Create cert folder
+    - name: create cert folder
       become: yes
       become_user: root
-      file:
-        path: /app/cert
-        state: directory
-        mode: "0755"
+      command: mkdir -p /app/cert
 
-    - name: Copy kuramacert
-      become: yes
-      become_user: root
+    - name: kuramacert
       copy:
         dest: /app/cert/kuramacert.pem
         content: "{{ kuramacert }}"
 
-    - name: Copy kuramakey
-      become: yes
-      become_user: root
+    - name: kuramakey
       copy:
         dest: /app/cert/kurama.key
         content: "{{ kuramakey }}"
