@@ -66,10 +66,13 @@
       synchronize:
         src: .
         dest: /app/
+        delete: yes
         rsync_opts:
           - "--exclude=.git"
           - "--exclude=*.pyc"
           - "--exclude=__pycache__"
+          - "--checksum"
+          - "--times"
 
     - name: Create .env
       become: yes
