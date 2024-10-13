@@ -11,7 +11,8 @@ defmodule Backend.WorkingTimeFixtures do
   def workingtime_fixture(attrs \\ %{}) do
     unique_id = System.unique_integer([:positive])
     email = "test#{unique_id}@example.com"
-    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password"})
+    role = Backend.AccountsFixtures.role_fixture()
+    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password", role_id: role.id})
 
     attrs = Enum.into(attrs, %{
       start: ~N[2024-10-06 12:13:00],

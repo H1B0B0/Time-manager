@@ -29,7 +29,8 @@ defmodule Backend.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{username: @create_attrs.username, email: @create_attrs.email}
+      role = role_fixture()
+      valid_attrs = %{username: @create_attrs.username, email: @create_attrs.email, role_id: role.id}
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.username == "Jake Doe"

@@ -8,11 +8,13 @@ defmodule Backend.AccountsFixtures do
   Generate a user.
   """
   def user_fixture(attrs \\ %{}) do
+    role = role_fixture()
     {:ok, user} =
       attrs
       |> Enum.into(%{
         email: "john.doe@mail.com",
-        username: "John Doe"
+        username: "John Doe",
+        role_id: role.id
       })
       |> Backend.Accounts.create_user()
 

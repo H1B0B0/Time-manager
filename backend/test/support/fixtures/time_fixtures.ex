@@ -14,7 +14,8 @@ defmodule Backend.TimeFixtures do
     unique_id = System.unique_integer([:positive])
     email = "test#{unique_id}@example.com"
 
-    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password"})
+    role = Backend.AccountsFixtures.role_fixture()
+    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password", role_id: role.id})
 
     {:ok, clock} =
       attrs

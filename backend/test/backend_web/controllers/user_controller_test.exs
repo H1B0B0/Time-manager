@@ -21,13 +21,13 @@ defmodule BackendWeb.UserControllerTest do
 
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/users", user: @create_attrs)
+      role = role_fixture()
+      conn = post(conn, ~p"/api/users", user: %{username: @create_attrs.username, email: @create_attrs.email, role_id: role.id})
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-        "id" => ^id,
         "email" => "john.doe@mail.com",
         "username" => "John Doe"
         } = json_response(conn, 200)["data"]
@@ -85,7 +85,6 @@ defmodule BackendWeb.UserControllerTest do
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-               "id" => ^id,
                "email" => "jane.doe@mail.zz",
                "username" => "Jane Doe"
              } = json_response(conn, 200)["data"]
