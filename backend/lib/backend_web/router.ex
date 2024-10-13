@@ -22,6 +22,9 @@ defmodule BackendWeb.Router do
     post "/workingtime/users", WorkingtimeController, :create
     get "/workingtime/:userID/:id", WorkingtimeController, :show
     get "/workingtime/:userID", WorkingtimeController, :getAll
+
+    get "/roles", RoleController, :index
+    get "/roles/:id", RoleController, :show
   end
 
   if Application.compile_env(:backend, :dev_routes) do
