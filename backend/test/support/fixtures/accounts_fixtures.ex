@@ -18,4 +18,18 @@ defmodule Backend.AccountsFixtures do
 
     user
   end
+
+  @doc """
+  Generate a role.
+  """
+  def role_fixture(attrs \\ %{}) do
+    attrs =
+      attrs
+      |> Enum.into(%{
+        category: "some category"
+      })
+
+    {:ok, role} = Backend.Accounts.create_role(attrs)
+    role
+  end
 end

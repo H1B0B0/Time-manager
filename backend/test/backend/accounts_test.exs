@@ -66,4 +66,22 @@ defmodule Backend.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end
   end
+
+  describe "roles" do
+    alias Backend.Accounts.Role
+
+    import Backend.AccountsFixtures
+
+    @invalid_attrs %{category: nil}
+
+    test "list_roles/0 returns all roles" do
+      role = role_fixture()
+      assert Accounts.list_roles() == [role]
+    end
+
+    test "get_role!/1 returns the role with given id" do
+      role = role_fixture()
+      assert Accounts.get_role!(role.id) == role
+    end
+  end
 end
