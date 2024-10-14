@@ -98,22 +98,6 @@
         content: |
           VITE_BACKEND_DNS={{ BACKEND_DNS }}
         dest: /app/frontend/.env
-        force: yes
-
-    - name: Create cert folder
-      become: yes
-      become_user: root
-      command: mkdir -p /app/cert
-
-    - name: Copy kuramacert
-      copy:
-        dest: /app/cert/kuramacert.pem
-        content: "{{ kuramacert }}"
-
-    - name: Copy kuramakey
-      copy:
-        dest: /app/cert/kurama.key
-        content: "{{ kuramakey }}"
 
     - name: Run npm install in /app/frontend
       become: yes
