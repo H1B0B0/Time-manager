@@ -1,9 +1,9 @@
 <template>
   <div class="mt-10 w-[90%] p-6 bg-gray-900 rounded-lg shadow-xl max-h-[32rem] overflow-hidden flex flex-col">
-    <h1 class="font-bold text-white text-2xl mb-6 sticky top-0 bg-gray-900/95 p-3 rounded border-b border-blue-800">
+    <h1 class="font-bold text-white text-2xl sticky top-0 bg-gray-900/95 p-3 rounded">
       The latest updates
-
     </h1>
+    <p class="border-b border-blue-800 mb-6 p-3 text-white"><a href="https://www.instagram.com/gothamtimenews/" class="underline underline-offset-2">Follow us</a> on instagram to stay updated of the latest news.</p>
     <div class="overflow-y-auto pr-4 space-y-4">
       <div v-for="(article, index) in articles" :key="index" class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out">
         <button
@@ -22,6 +22,8 @@
       </div>
     </div>
   </div>
+
+
 </template>
 
 <script>
