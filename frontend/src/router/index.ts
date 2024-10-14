@@ -9,6 +9,7 @@ import UserSettings from "../components/UserSettings.vue";
 import Home from "../components/Home.vue";
 import News from "../components/News.vue";
 import WorkedHoursPerMonth from "@/components/WorkedHoursPerMonth.vue";
+import UserDashboard from "@/components/userDashboard.vue";
 
 const routes = [
   {
@@ -36,6 +37,12 @@ const routes = [
     path: "/workingTime/:userID/:workingTimeID?",
     name: "WorkingTime",
     component: WorkingTime,
+    props: true,
+  },
+  {
+    path: "/dashboard/:userID",
+    name: "Dashboard",
+    component: UserDashboard,
     props: true,
   },
   {

@@ -59,6 +59,7 @@ export default {
 
     const chartOptions = ref({
       responsive: true,
+      aspectRatio: 1,
       plugins: {
         legend: {
           labels: {

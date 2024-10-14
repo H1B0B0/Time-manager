@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 rounded-lg shadow bg-gray-800">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
-    <div class="bg-gray-800 p-4 rounded-lg">
+    <div class="bg-gray-800 p-Z rounded-lg">
       <Bar
         :key="chartKey"
         id="my-chart-id"
@@ -63,6 +63,7 @@ export default {
 
     const chartOptions = ref({
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           labels: {
