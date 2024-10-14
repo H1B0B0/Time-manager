@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-[32rem] overflow-hidden flex flex-col items-center mx-auto w-full"
+    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full"
   >
     <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
       The latest updates
@@ -18,7 +18,7 @@
       <div
         v-for="(article, index) in articles"
         :key="index"
-        class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out relative"
+        class="bg-gray-800 rounded-lg overflow-visible transition-all duration-300 ease-in-out relative"
       >
         <button
           @click="toggleArticle(index)"
@@ -66,7 +66,7 @@
         ></div>
         <span
           v-if="!article.isRead"
-          class="absolute top-0 right-0 inline-block w-2 h-2 bg-violet-800 rounded-full"
+          class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full z-50"
         ></span>
       </div>
     </div>
@@ -83,6 +83,7 @@ export default {
   name: "UpdatesComponent",
   setup() {
     const articles = ref([]);
+    const latestVersion = ref("");
 
     onMounted(async () => {
       for (const path in markdownFiles) {
@@ -91,23 +92,47 @@ export default {
         const title = attributes.title;
         const description = attributes.description; // Ajout de la description
         const content = html;
-        const isRead = localStorage.getItem(`article-${title}`) === "true";
+        const versionMatch = title.match(/\d+(\.\d+)+/);
+        const version = versionMatch ? versionMatch[0] : title;
+        const isRead = localStorage.getItem(`article-${version}`) === "true";
         articles.value.push({
           title,
           description, // Ajout de la description
           content,
+          version,
           isOpen: false,
           isRead,
         });
       }
+
+      // Trier les articles par version de release
+      articles.value.sort((a, b) => {
+        const versionA = a.version;
+        const versionB = b.version;
+        return versionB.localeCompare(versionA, undefined, { numeric: true });
+      });
+
+      // Mettre à jour la version la plus récente
+      if (articles.value.length > 0) {
+        latestVersion.value = articles.value[0].version;
+        localStorage.setItem("latest-news-version", latestVersion.value);
+      }
+
+      // Vérifier si toutes les nouvelles ont été lues
+      checkAllArticlesRead();
     });
 
     const toggleArticle = (index) => {
       articles.value[index].isOpen = !articles.value[index].isOpen;
       if (articles.value[index].isOpen) {
         articles.value[index].isRead = true;
-        localStorage.setItem(`article-${articles.value[index].title}`, "true");
+        localStorage.setItem(
+          `article-${articles.value[index].version}`,
+          "true"
+        );
         checkAllArticlesRead();
+        // Émettre un événement global pour notifier le changement
+        window.dispatchEvent(new Event("latest-news-read"));
       }
     };
 
@@ -115,6 +140,8 @@ export default {
       const allRead = articles.value.every((article) => article.isRead);
       if (allRead) {
         localStorage.setItem("latest-news-id", "true");
+      } else {
+        localStorage.removeItem("latest-news-id");
       }
     };
 

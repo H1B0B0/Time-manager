@@ -131,7 +131,7 @@
               News
               <span
                 v-if="!isLatestNewsRead"
-                class="absolute top-0 right-0 inline-block w-2 h-2 bg-violet-800 rounded-full"
+                class="absolute top-0 right-15 inline-block w-2 h-2 bg-red-500 rounded-full"
               ></span>
             </router-link>
           </li>
@@ -143,7 +143,7 @@
 
 <script>
 import { useUserStore } from "@/stores/use-user-store";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 
 export default {
   setup() {
@@ -162,9 +162,21 @@ export default {
     );
 
     // Check if the latest news has been read
+    const checkLatestNewsRead = () => {
+      const latestNewsVersion = localStorage.getItem("latest-news-version");
+      isLatestNewsRead.value =
+        localStorage.getItem(`article-${latestNewsVersion}`) === "true";
+    };
+
     onMounted(() => {
-      const latestNewsId = "latest-news-id"; // Replace with the actual latest news ID
-      isLatestNewsRead.value = localStorage.getItem(latestNewsId) === "true";
+      checkLatestNewsRead();
+      // Écouter l'événement global pour mettre à jour isLatestNewsRead
+      window.addEventListener("latest-news-read", checkLatestNewsRead);
+    });
+
+    onUnmounted(() => {
+      // Nettoyer l'écouteur d'événement pour éviter les fuites de mémoire
+      window.removeEventListener("latest-news-read", checkLatestNewsRead);
     });
 
     const logout = () => {
