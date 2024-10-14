@@ -12,19 +12,26 @@
       >
         Follow us
       </a>
-      on instagram to stay updated of the latest news.
+      on Instagram to stay updated with the latest news.
     </p>
     <div class="overflow-y-auto pr-4 space-y-4 w-full">
       <div
         v-for="(article, index) in articles"
         :key="index"
-        class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out"
+        class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out relative"
       >
         <button
           @click="toggleArticle(index)"
           class="w-full p-4 flex justify-between items-center text-left focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
         >
-          <h2 class="font-semibold text-lg text-white">{{ article.title }}</h2>
+          <div class="flex-col">
+            <h2 class="font-semibold text-lg text-purple-400">
+              {{ article.title }}
+            </h2>
+            <h4 class="text-sm text-white">
+              {{ article.description }}
+            </h4>
+          </div>
           <svg
             v-if="article.isOpen"
             xmlns="http://www.w3.org/2000/svg"
@@ -54,9 +61,13 @@
         </button>
         <div
           v-if="article.isOpen"
-          class="p-4 bg-gray-700 text-white"
+          class="p-4 bg-gray-700 text-white prose prose-lg max-w-none"
           v-html="article.content"
         ></div>
+        <span
+          v-if="!article.isRead"
+          class="absolute top-0 right-0 inline-block w-2 h-2 bg-violet-800 rounded-full"
+        ></span>
       </div>
     </div>
   </div>
@@ -64,56 +75,47 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import { marked } from "marked";
+
+// Utiliser import.meta.glob pour charger tous les fichiers Markdown dans le dossier 'content'
+const markdownFiles = import.meta.glob("../content/*.md");
 
 export default {
   name: "UpdatesComponent",
   setup() {
     const articles = ref([]);
 
-    const markdown = `
-# Release 0.0
-content lol
-# Release 0.0.1
-Content lol
-# Release 0.0.2
-content lol
-# Release 0.0
-Content lol
-# Release 0.0.1
-Content lol
-# Release 0.0.2
-content lol
-# Release 0.0
-Content lol
-# Release 0.0.1
-Content lol
-# Release 0.0.2
-content lol
-`;
-
-    onMounted(() => {
-      const parsedContent = marked.lexer(markdown);
-      let currentArticle = null;
-
-      for (const token of parsedContent) {
-        if (token.type === "heading" && token.depth === 1) {
-          if (currentArticle) {
-            articles.value.push(currentArticle);
-          }
-          currentArticle = { title: token.text, content: "", isOpen: false };
-        } else if (currentArticle) {
-          currentArticle.content += marked.parseInline(token.raw);
-        }
-      }
-
-      if (currentArticle) {
-        articles.value.push(currentArticle);
+    onMounted(async () => {
+      for (const path in markdownFiles) {
+        const fileContent = await markdownFiles[path]();
+        const { attributes, html } = fileContent;
+        const title = attributes.title;
+        const description = attributes.description; // Ajout de la description
+        const content = html;
+        const isRead = localStorage.getItem(`article-${title}`) === "true";
+        articles.value.push({
+          title,
+          description, // Ajout de la description
+          content,
+          isOpen: false,
+          isRead,
+        });
       }
     });
 
     const toggleArticle = (index) => {
       articles.value[index].isOpen = !articles.value[index].isOpen;
+      if (articles.value[index].isOpen) {
+        articles.value[index].isRead = true;
+        localStorage.setItem(`article-${articles.value[index].title}`, "true");
+        checkAllArticlesRead();
+      }
+    };
+
+    const checkAllArticlesRead = () => {
+      const allRead = articles.value.every((article) => article.isRead);
+      if (allRead) {
+        localStorage.setItem("latest-news-id", "true");
+      }
     };
 
     return {
@@ -123,3 +125,17 @@ content lol
   },
 };
 </script>
+
+<style>
+/* Add styling for better readability of the markdown content */
+.prose h2 {
+  color: #8b5cf6; /* Tailwind violet-500 */
+}
+.prose ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+}
+.prose li {
+  color: #d1d5db; /* Tailwind cool-gray-300 */
+}
+</style>
