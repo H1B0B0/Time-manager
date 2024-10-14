@@ -143,6 +143,7 @@ defmodule Backend.Accounts do
 
   """
   def get_role!(id), do: Repo.get!(Role, id)
+  def get_role(id), do: Repo.get(Role, id)
 
   @doc """
   Creates a role.

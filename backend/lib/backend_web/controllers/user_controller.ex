@@ -36,6 +36,8 @@ defmodule BackendWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    user_params = Map.put(user_params, "role_id", 1) # Employee (default role)
+
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
