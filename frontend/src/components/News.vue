@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full"
+    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full align-middle items-center"
   >
     <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
       The latest updates
@@ -14,7 +14,7 @@
       </a>
       on Instagram to stay updated with the latest news.
     </p>
-    <div class="overflow-y-auto pr-4 space-y-4 w-full">
+    <div class="overflow-y-auto space-y-4 w-full">
       <div
         v-for="(article, index) in articles"
         :key="index"
