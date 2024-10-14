@@ -11,33 +11,13 @@ defmodule BackendWeb.RoleController do
     render(conn, :index, roles: roles)
   end
 
-  def create(conn, %{"role" => role_params}) do
-    with {:ok, %Role{} = role} <- Accounts.create_role(role_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/roles/#{role}")
-      |> render(:show, role: role)
-    end
-  end
-
   def show(conn, %{"id" => id}) do
-    role = Accounts.get_role!(id)
-    render(conn, :show, role: role)
-  end
-
-  def update(conn, %{"id" => id, "role" => role_params}) do
-    role = Accounts.get_role!(id)
-
-    with {:ok, %Role{} = role} <- Accounts.update_role(role, role_params) do
-      render(conn, :show, role: role)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    role = Accounts.get_role!(id)
-
-    with {:ok, %Role{}} <- Accounts.delete_role(role) do
-      send_resp(conn, :no_content, "")
+    role = Accounts.get_role(id)
+    case role do
+      nil -> conn
+      |> put_status(:not_found)
+      |> json(%{errors: ["Role not found"]})
+      _ -> render(conn, :show, role: role)
     end
   end
 end
