@@ -51,6 +51,10 @@
               in / Clock out</router-link>
           </li>
           <li>
+            <router-link to="/dashboard/1"
+              class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 md:p-0">Dashboard</router-link>
+          </li>
+          <li>
             <router-link to="/workingTimes/1"
               class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 md:p-0">Working
               Times</router-link>
