@@ -65,6 +65,11 @@
               class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 md:p-0">Chart
               Manager</router-link>
           </li>
+          <li>
+            <router-link to="/news"
+              class="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:hover:text-blue-500 md:p-0">
+              News</router-link>
+          </li>
         </ul>
       </div>
     </div>
