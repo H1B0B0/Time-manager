@@ -2,7 +2,7 @@
   <div class="p-4 rounded-lg shadow bg-gray-800">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
     <div class="bg-gray-800 p-4 rounded-lg">
-      <Bar
+      <Line
         :key="chartKey"
         id="my-chart-id"
         :options="chartOptions"
@@ -13,50 +13,46 @@
 </template>
 
 <script>
-import { Bar } from "vue-chartjs";
+import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  LineElement,
+  PointElement,
   CategoryScale,
   LinearScale,
 } from "chart.js";
 import { ref } from "vue";
-import { getClocksDate, hoursWorkedPerDay } from "../functions/Clock";
 import router from "@/router";
 import { getWorkingTimes } from "../functions/WorkingTime";
+import { getClocksDate, hoursWorkedPerDay } from '../functions/Clock'
 
 ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  LineElement,
+  PointElement,
   CategoryScale,
   LinearScale
 );
 
 export default {
-  name: "BarChart",
-  components: { Bar },
+  name: "LineChart",
+  components: { Line },
   setup() {
     const chartData = ref({
-      labels: [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
+      labels: [],
       datasets: [
         {
           data: [],
-          backgroundColor: "#7B61FF",
+          backgroundColor: "rgba(123, 97, 255, 0.2)",
           borderColor: "#7B61FF",
-          label: "Schedule of the week",
+          label: "Worked hours per month",
+          fill: true,
+          tension: 0.4,
         },
       ],
     });
@@ -91,46 +87,24 @@ export default {
     const date = ref("");
 
     date.value = new Date();
-    const dayOfWeek = date.value.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const diffToMonday = (dayOfWeek + 6) % 7; // Calculate difference to Monday (1)
 
-    startDate.value = new Date(date.value);
-    startDate.value.setDate(date.value.getDate() - diffToMonday);
+    // Calculer le premier jour du mois
+    startDate.value = new Date(date.value.getFullYear(), date.value.getMonth(), 1);
     startDate.value.setHours(0, 0, 0, 0);
 
-    endDate.value = new Date(startDate.value);
-    endDate.value.setDate(startDate.value.getDate() + 6);
+    // Calculer le dernier jour du mois
+    endDate.value = new Date(date.value.getFullYear(), date.value.getMonth() + 1, 0);
     endDate.value.setHours(23, 59, 59, 999);
 
     const fetchData = async () => {
       try {
-        const response = await getWorkingTimes(
-          1,
-          startDate.value.toISOString(),
-          endDate.value.toISOString()
-        );
+        const response = await getClocksDate(router.currentRoute.value.params.userID, startDate.value, endDate.value)
+        const workedTimePerDay = await hoursWorkedPerDay(response)
 
-        const workHoursPerDay = Array(7).fill(0);
+        chartData.value.labels = workedTimePerDay.map(day => day.date)
+        chartData.value.datasets[0].data = workedTimePerDay.map(day => day.hours)
 
-        response.data.forEach((element) => {
-          const startDate = new Date(element.start);
-          const endDate = new Date(element.end);
-
-          const startHours = startDate.getHours();
-          const startMinutes = startDate.getMinutes();
-          const endHours = endDate.getHours();
-          const endMinutes = endDate.getMinutes();
-
-          const durationHours = endHours - startHours;
-          const durationMinutes = endMinutes - startMinutes;
-          const totalDuration = durationHours + durationMinutes / 60;
-
-          const dayOfWeek = startDate.getDay();
-          workHoursPerDay[dayOfWeek] += totalDuration;
-        });
-
-        chartData.value.datasets[0].data = workHoursPerDay;
-        chartKey.value += 1;
+        chartKey.value += 1
       } catch (error) {
         errorMessage.value = "Failed to fetch data";
         console.error(error);

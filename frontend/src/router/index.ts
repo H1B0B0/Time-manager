@@ -8,6 +8,7 @@ import LoginRegister from "../components/LoginRegister.vue";
 import UserSettings from "../components/UserSettings.vue";
 import Home from "../components/Home.vue";
 import News from "../components/News.vue";
+import WorkedHoursPerMonth from "@/components/WorkedHoursPerMonth.vue";
 
 const routes = [
   {
@@ -46,7 +47,7 @@ const routes = [
   {
     path: "/chartManager/:userID",
     name: "ChartManager",
-    component: ChartManager,
+    component: WorkedHoursPerMonth,
     props: true,
   },
   {
