@@ -31,9 +31,13 @@ user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gm
 
 # INSERT WORKING TIME RECORDS
 
-startTime1 = NaiveDateTime.from_iso8601!("2024-10-05T12:20:00")
-endTime1 = NaiveDateTime.from_iso8601!("2024-10-06T20:13:00")
+startTime1 = NaiveDateTime.from_iso8601!("2024-10-14T12:20:00")
+endTime1 = NaiveDateTime.from_iso8601!("2024-10-14T20:13:00")
 Backend.Repo.insert!(%Workingtime{start: startTime1, end: endTime1, user_id: user1.id})
+
+startTime2 = NaiveDateTime.from_iso8601!("2024-10-15T08:20:00")
+endTime2 = NaiveDateTime.from_iso8601!("2024-10-15T17:40:00")
+Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
 
 startTime2 = NaiveDateTime.from_iso8601!("2024-10-07T09:00:00")
 endTime2 = NaiveDateTime.from_iso8601!("2024-10-07T17:00:00")

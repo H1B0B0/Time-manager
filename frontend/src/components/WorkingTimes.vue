@@ -17,8 +17,8 @@ const fetchData = async () => {
   try {
     const response = await getWorkingTimes(
       userId.value,
-      "2024-10-05 12:10:00Z",
-      "2024-10-06 20:14:00Z"
+      "2024-10-14 12:10:00Z",
+      "2024-10-14 20:14:00Z"
     );
     console.log(response.data);
     workingTimes.value = response.data;
