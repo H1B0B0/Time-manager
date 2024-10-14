@@ -62,7 +62,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
     volumes:
-       - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik.yml:/etc/traefik/traefik.yml
       - /var/run/docker.sock:/var/run/docker.sock
       - certs:/acme
       - ./volumes/traefik/logs:/logs
