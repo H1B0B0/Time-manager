@@ -160,7 +160,32 @@
 
 <script>
 import { onMounted } from "vue";
-import { Chart } from "chart.js";
+import {
+  Chart,
+  LineElement,
+  BarElement,
+  PointElement,
+  LineController,
+  BarController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+Chart.register(
+  LineElement,
+  BarElement,
+  PointElement,
+  LineController,
+  BarController,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export default {
   name: "Dashboard",
