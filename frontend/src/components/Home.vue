@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen text-white">
+  <div class="min-h-screen text-white flex flex-col">
     <div>
       <header class="absolute inset-x-0 top-0 z-50">
         <nav
-          class="flex items-center justify-between p-6 lg:px-8"
+          class="flex items-center justify-between p-4 sm:p-6 lg:px-8"
           aria-label="Global"
         >
           <div class="flex lg:hidden">
@@ -22,8 +22,9 @@
               :key="item.name"
               :href="item.href"
               class="text-sm font-semibold leading-6 text-white"
-              >{{ item.name }}</a
             >
+              {{ item.name }}
+            </a>
           </div>
           <div class="hidden lg:flex lg:flex-1 lg:justify-end">
             <a href="#" class="text-sm font-semibold leading-6 text-white"
@@ -57,16 +58,18 @@
                     v-for="item in navigation"
                     :key="item.name"
                     :href="item.href"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                    >{{ item.name }}</a
+                    class="-mx-3 block rounded-3xl px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                   >
+                    {{ item.name }}
+                  </a>
                 </div>
                 <div class="py-6">
                   <a
                     href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                    >Log in</a
+                    class="-mx-3 block rounded-3xl px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                   >
+                    Log in
+                  </a>
                 </div>
               </div>
             </div>
@@ -75,35 +78,38 @@
       </header>
 
       <div class="relative isolate overflow-hidden pt-14">
-        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div class="mx-auto max-w-2xl py-24 sm:py-32 lg:py-40">
           <div class="hidden sm:mb-8 sm:flex sm:justify-center">
             <div
               class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20"
             >
               Announcing our next round of funding.
-              <a href="/news" class="font-semibold text-white"
-                ><span class="absolute inset-0" aria-hidden="true" />Read more
-                <span aria-hidden="true">&rarr;</span></a
-              >
+              <a href="/news" class="font-semibold text-white">
+                <span class="absolute inset-0" aria-hidden="true" />Read more
+                <span aria-hidden="true">&rarr;</span>
+              </a>
             </div>
           </div>
-          <div class="text-center">
+          <div class="text-center px-0 sm:px-4">
             <h1
               class="text-balance text-4xl font-bold tracking-tight text-white sm:text-6xl"
             >
-              Time Manger for your Projects / Company
+              Time Manager for your Projects / Company
             </h1>
             <p class="mt-6 text-lg leading-8 text-gray-300">
               Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
               lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat
               fugiat aliqua.
             </p>
-            <div class="mt-10 flex items-center justify-center gap-x-6">
+            <div
+              class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-4"
+            >
               <a
                 href="/user"
                 class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-                >Get started</a
               >
+                Get started
+              </a>
               <a href="/news" class="text-sm font-semibold leading-6 text-white"
                 >Learn more <span aria-hidden="true">→</span></a
               >
@@ -112,18 +118,22 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-wrap gap-8 justify-center align-middle mb-20">
+    <div
+      class="flex flex-wrap gap-8 justify-center align-middle mb-20 px-4 sm:px-0"
+    >
       <div
-        class="bg-gray-800 p-6 rounded-lg flex flex-col items-center w-full md:w-5/12 opacity-0"
+        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart1"
       >
         <h2 class="text-xl mb-4">Project Time Utilization</h2>
-        <div class="flex justify-between text-center mb-4 w-full">
-          <div>
+        <div
+          class="flex flex-col sm:flex-row justify-between text-center mb-4 w-full"
+        >
+          <div class="mb-4 sm:mb-0">
             <p class="text-2xl font-bold">26,171</p>
             <p>Active Users</p>
           </div>
-          <div>
+          <div class="mb-4 sm:mb-0">
             <p class="text-2xl font-bold">5,617</p>
             <p>Hours Tracked</p>
           </div>
@@ -136,7 +146,7 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-lg flex flex-col items-center w-full md:w-5/12 opacity-0"
+        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart2"
       >
         <h2 class="text-xl mb-4">Productivity Trends</h2>
@@ -144,7 +154,7 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-lg flex flex-col items-center w-full md:w-5/12 opacity-0"
+        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart3"
       >
         <h2 class="text-xl mb-4">Monthly Time Distribution</h2>
@@ -152,16 +162,16 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-lg flex flex-col items-center w-full md:w-5/12 opacity-0"
+        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart4"
       >
         <h2 class="text-xl mb-4">Tasks Over Time</h2>
         <canvas id="areaChart" class="w-full"></canvas>
       </div>
     </div>
-    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 mb-40" id="avis">
+    <div class="mx-auto max-w-7xl lg:px-8 mb-40 px-4 sm:px-0" id="avis">
       <div
-        class="relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl sm:rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20"
+        class="relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20"
       >
         <img
           class="absolute inset-0 h-full w-full object-cover brightness-150 saturate-0"

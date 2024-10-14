@@ -49,6 +49,13 @@
         state: started
         enabled: yes
 
+    - name: Install Node.js
+      become: yes
+      become_user: root
+      yum:
+        name: nodejs
+        update_cache: yes
+
     - name: Check if /app folder exists
       stat:
         path: /app
@@ -84,7 +91,7 @@
         dest: /app/.env
         force: yes
 
-    - name: Create .env
+    - name: Create .env for frontend
       become: yes
       become_user: root
       copy:
@@ -93,20 +100,27 @@
         dest: /app/frontend/.env
         force: yes
 
-    - name: create cert folder
+    - name: Create cert folder
       become: yes
       become_user: root
       command: mkdir -p /app/cert
 
-    - name: kuramacert
+    - name: Copy kuramacert
       copy:
         dest: /app/cert/kuramacert.pem
         content: "{{ kuramacert }}"
 
-    - name: kuramakey
+    - name: Copy kuramakey
       copy:
         dest: /app/cert/kurama.key
         content: "{{ kuramakey }}"
+
+    - name: Run npm install in /app/frontend
+      become: yes
+      become_user: root
+      command: npm install
+      args:
+        chdir: /app/frontend
 
     - name: Deploy Docker Compose stack
       become: yes
