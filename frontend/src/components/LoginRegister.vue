@@ -17,7 +17,7 @@
       <button
         @click="login"
         :disabled="!email || !username"
-        class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-400 transition duration-300 disabled:bg-indigo-300 disabled:cursor-not-allowed"
+        class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed"
       >
         Log in
       </button>
@@ -28,7 +28,7 @@
     <button
       v-if="!isCreating"
       @click="startCreating"
-      class="w-full bg-gradient-to-r from-[#3AA0A0] to-[#2A8080] text-white p-3 rounded-lg hover:from-[#2A8080] hover:to-[#1A6060] transition duration-300"
+      class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300"
     >
       Create an account
     </button>
@@ -52,16 +52,16 @@
       <button
         @click="register"
         :disabled="!newEmail || !newUsername"
-        class="w-full bg-[#36A2EB] text-white p-3 rounded-lg hover:bg-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed"
+        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed"
       >
         Create an account
       </button>
       <button
         type="button"
         @click="cancelCreating"
-        class="w-full bg-gray-500 text-white p-3 rounded-lg hover:bg-gray-600 transition duration-300 mt-5"
+        class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 mt-5"
       >
-        Already have an account
+        Already have an account ?
       </button>
     </div>
   </div>
