@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full align-middle items-center"
+    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full align-middle"
   >
     <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
       The latest updates
@@ -65,14 +65,13 @@
           v-html="article.content"
         ></div>
         <span
-          v-if="!article.isRead"
+          v-if="index === 0 && !article.isRead"
           class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full z-50"
         ></span>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import { ref, onMounted } from "vue";
 
