@@ -6,12 +6,18 @@ import ChartManager from "@/components/ChartManager.vue";
 import NotFound from "@/components/NotFound.vue";
 import LoginRegister from "../components/LoginRegister.vue";
 import UserSettings from "../components/UserSettings.vue";
+import Home from "../components/Home.vue";
 import News from "../components/News.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
+    component: Home,
+  },
+  {
+    path: "/user",
+    name: "User",
     component: LoginRegister,
   },
   {
