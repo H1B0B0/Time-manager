@@ -1,5 +1,5 @@
 <template>
-  <div class=" mx-auto mt-10 p-10 bg-gray-900 rounded-lg shadow-xl max-h-96 overflow-y-auto">
+  <div class="mt-10 w-max p-10 bg-gray-900 rounded-lg shadow-xl max-h-96 overflow-y-auto">
     <h1 class="font-bold text-white text-xl mb-4 sticky top-0 bg-black/85 p-3 rounded border border-blue-800">The latest updates</h1>
     <div class="content">
       <div v-for="(article, index) in articles" :key="index" class="mb-4">
