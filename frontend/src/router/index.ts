@@ -6,6 +6,8 @@ import ChartManager from "@/components/ChartManager.vue";
 import NotFound from "@/components/NotFound.vue";
 import LoginRegister from "../components/LoginRegister.vue";
 import UserSettings from "../components/UserSettings.vue";
+import News from "../components/News.vue";
+
 const routes = [
   {
     path: "/",
@@ -45,6 +47,11 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFound,
+  },
+  {
+    path: "/news",
+    name: "News Feed",
+    component: News,
   },
 ];
 
