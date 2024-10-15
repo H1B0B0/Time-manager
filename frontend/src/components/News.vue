@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-10 p-6 backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full align-middle"
+    class="mt-10 p-6 border backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full max-w-4xl align-middle m-10"
   >
     <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
       The latest updates
@@ -8,7 +8,7 @@
     <p class="border-b mb-6 p-3 text-white items-center text-center">
       <a
         href="https://www.instagram.com/gothamtimenews/"
-        class="underline underline-offset-2 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 bg-clip-text text-transparent text-lg transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+        class="neon-text text-lg transition duration-300 ease-in-out transform hover:scale-105 follow-us-text"
       >
         Follow us
       </a>
@@ -18,7 +18,7 @@
       <div
         v-for="(article, index) in articles"
         :key="index"
-        class="bg-gray-800 rounded-lg overflow-visible transition-all duration-300 ease-in-out relative"
+        class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out relative"
       >
         <button
           @click="toggleArticle(index)"
@@ -63,6 +63,7 @@
           v-if="article.isOpen"
           class="p-4 bg-gray-700 text-white prose prose-lg max-w-none"
           v-html="article.content"
+          :ref="(el) => (articleRefs[index] = el)"
         ></div>
         <span
           v-if="index === 0 && !article.isRead"
@@ -72,8 +73,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
+import anime from "animejs";
 
 const markdownFiles = import.meta.glob("../content/*.md");
 
@@ -82,6 +85,7 @@ export default {
   setup() {
     const articles = ref([]);
     const latestVersion = ref("");
+    const articleRefs = ref([]);
 
     onMounted(async () => {
       for (const path in markdownFiles) {
@@ -117,9 +121,23 @@ export default {
       checkAllArticlesRead();
     });
 
-    const toggleArticle = (index) => {
-      articles.value[index].isOpen = !articles.value[index].isOpen;
+    const toggleArticle = async (index) => {
       if (articles.value[index].isOpen) {
+        // Animation for closing
+        articleRefs.value[index].style.padding = "";
+        anime({
+          targets: articleRefs.value[index],
+          height: [articleRefs.value[index].scrollHeight, 0],
+          opacity: [1, 0],
+          padding: [articleRefs.value[index].style.padding, 0],
+          duration: 1000,
+          easing: "easeInOutQuad",
+          complete: () => {
+            articles.value[index].isOpen = false;
+          },
+        });
+      } else {
+        articles.value[index].isOpen = true;
         articles.value[index].isRead = true;
         localStorage.setItem(
           `article-${articles.value[index].version}`,
@@ -127,6 +145,16 @@ export default {
         );
         checkAllArticlesRead();
         window.dispatchEvent(new Event("latest-news-read"));
+
+        await nextTick();
+        // Animation for opening
+        anime({
+          targets: articleRefs.value[index],
+          height: [0, articleRefs.value[index].scrollHeight],
+          opacity: [0, 1],
+          padding: [0, "1rem"], // Adjust padding as needed
+          duration: 1000,
+        });
       }
     };
 
@@ -142,12 +170,60 @@ export default {
     return {
       articles,
       toggleArticle,
+      articleRefs,
     };
   },
 };
 </script>
 
 <style>
+.neon-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500;
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+    0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
+  animation: neon 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes neon {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+      0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff;
+  }
+  to {
+    text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff,
+      0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 60px #ff00ff, 0 0 70px #ff00ff,
+      0 0 80px #ff00ff;
+  }
+}
+
+.follow-us-text {
+  font-size: 1.25rem; /* Increase font size */
+  color: #ffffff; /* Change text color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow */
+  background: linear-gradient(to right, #ff00ff, #00ffff);
+  -webkit-background-clip: text;
+  color: transparent;
+  transition: background 0.3s ease-in-out;
+}
+
+.follow-us-text:hover {
+  background: linear-gradient(to right, #ff0000, #ffff00);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.article-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.article-content.open {
+  max-height: 1000px; /* Un grand nombre pour s'assurer que le contenu s'ouvre correctement */
+  opacity: 1;
+}
+
 /* Add styling for better readability of the markdown content */
 .prose h2 {
   color: #8b5cf6; /* Tailwind violet-500 */
