@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen text-white flex flex-col">
-    <div>
+    <div class="mb-40">
       <div class="relative isolate overflow-hidden pt-14">
         <div class="mx-auto max-w-2xl py-24 sm:py-32 lg:py-40">
           <div class="hidden sm:mb-8 sm:flex sm:justify-center">
@@ -93,13 +93,13 @@
         <canvas id="areaChart" class="w-full"></canvas>
       </div>
     </div>
-    <div class="mx-auto max-w-7xl lg:px-8 mb-40 px-4 sm:px-0" id="avis">
+    <div class="mx-auto w-11/12 lg:px-8 mb-40 px-4 sm:px-0" id="avis">
       <div
         class="relative overflow-hidden bg-gray-900 px-6 py-20 shadow-xl rounded-3xl sm:px-10 sm:py-24 md:px-12 lg:px-20"
       >
         <img
           class="absolute inset-0 h-full w-full object-cover brightness-150 saturate-0"
-          src="https://images.unsplash.com/photo-1601381718415-a05fb0a261f3?ixid=MXwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8ODl8fHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1216&q=80"
+          src="https://img.lemde.fr/2012/07/07/4/0/1024/512/1342/671/60/0/ill_1729361_c0b3_201207071.0.988834193face_batman_ori.jpg"
           alt=""
         />
         <div class="absolute inset-0 bg-gray-900/90 mix-blend-multiply" />
@@ -170,14 +170,17 @@
               class="mt-6 text-lg font-semibold text-white sm:text-xl sm:leading-8"
             >
               <p>
-                “Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo
-                expedita voluptas culpa sapiente alias molestiae. Numquam
-                corrupti in laborum sed rerum et corporis.”
+                “As the protector of Gotham, managing my time efficiently is
+                crucial. The TimeManager has been an invaluable tool in
+                organizing my patrols, missions, and Wayne Enterprises meetings.
+                It's like having Alfred's assistance, but in a digital form.
+                Highly recommended for anyone who needs to keep their city safe
+                and their business running smoothly.”
               </p>
             </blockquote>
             <figcaption class="mt-6 text-base text-white">
-              <div class="font-semibold">Judith Black</div>
-              <div class="mt-1">CEO of Workcation</div>
+              <div class="font-semibold">Batman</div>
+              <div class="mt-1">CEO of Gotham</div>
             </figcaption>
           </figure>
         </div>
