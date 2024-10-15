@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-10 p-6 border backdrop-blur-2xl rounded-lg shadow-xl max-h-auto overflow-visible flex flex-col items-center mx-auto w-full max-w-4xl align-middle m-10"
+    class="mt-10 p-6 border backdrop-blur-2xl rounded-lg shadow-xl overflow-visible flex flex-col items-center w-full max-w-4xl align-middle mx-auto sm:mt-8 sm:p-4 md:mt-6 md:p-5 lg:m-10 lg:p-6 sm:m-4 md:m-6"
   >
     <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
       The latest updates
@@ -8,7 +8,7 @@
     <p class="border-b mb-6 p-3 text-white items-center text-center">
       <a
         href="https://www.instagram.com/gothamtimenews/"
-        class="neon-text text-lg transition duration-300 ease-in-out transform hover:scale-105 follow-us-text"
+        class="neon-text text-lg hover:scale-105 follow-us-text"
       >
         Follow us
       </a>
@@ -18,7 +18,7 @@
       <div
         v-for="(article, index) in articles"
         :key="index"
-        class="bg-gray-800 rounded-lg overflow-hidden transition-all duration-300 ease-in-out relative"
+        class="rounded-lg relative p-4 shadow-xl bg-slate-800"
       >
         <button
           @click="toggleArticle(index)"
@@ -61,7 +61,7 @@
         </button>
         <div
           v-if="article.isOpen"
-          class="p-4 bg-gray-700 text-white prose prose-lg max-w-none"
+          class="p-4 border-indigo-500 border shadow-xl text-white rounded-lg markdown-content"
           v-html="article.content"
           :ref="(el) => (articleRefs[index] = el)"
         ></div>
@@ -124,7 +124,6 @@ export default {
     const toggleArticle = async (index) => {
       if (articles.value[index].isOpen) {
         // Animation for closing
-        articleRefs.value[index].style.padding = "";
         anime({
           targets: articleRefs.value[index],
           height: [articleRefs.value[index].scrollHeight, 0],
@@ -212,27 +211,60 @@ export default {
   color: transparent;
 }
 
-.article-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  opacity: 0;
-}
-
-.article-content.open {
-  max-height: 1000px; /* Un grand nombre pour s'assurer que le contenu s'ouvre correctement */
-  opacity: 1;
-}
-
-/* Add styling for better readability of the markdown content */
-.prose h2 {
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
   color: #8b5cf6; /* Tailwind violet-500 */
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
-.prose ul {
+
+.markdown-content p {
+  color: #d1d5db; /* Tailwind cool-gray-300 */
+  margin-bottom: 1rem;
+}
+
+.markdown-content ul {
   list-style-type: disc;
   margin-left: 1.5rem;
-}
-.prose li {
   color: #d1d5db; /* Tailwind cool-gray-300 */
+}
+
+.markdown-content li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content a {
+  color: #60a5fa; /* Tailwind blue-400 */
+  text-decoration: underline;
+}
+
+.markdown-content a:hover {
+  color: #3b82f6; /* Tailwind blue-500 */
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid #8b5cf6; /* Tailwind violet-500 */
+  padding-left: 1rem;
+  color: #d1d5db; /* Tailwind cool-gray-300 */
+  margin: 1rem 0;
+}
+
+.markdown-content code {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: #f9fafb; /* Tailwind gray-50 */
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+.markdown-content pre {
+  background-color: #1f2937; /* Tailwind gray-800 */
+  color: #f9fafb; /* Tailwind gray-50 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
 }
 </style>
