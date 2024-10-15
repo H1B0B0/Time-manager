@@ -53,23 +53,18 @@ const message = computed(() => {
 </script>
 
 <template>
-  <div
-    class="flex flex-col bg-gray-900 text-gray-100 items-center justify-center p-8 rounded-lg"
-  >
+  <div class="flex flex-col  text-gray-100 items-center justify-center p-8 rounded-lg">
     <main class="w-full flex flex-col items-center py-4">
-      <button
-        v-on:click="handleClockCreation"
-        :class="[
-          'text-2xl',
-          'font-bold',
-          'text-white',
-          'py-2',
-          'px-4',
-          'rounded-full',
-          'shadow-lg',
-          clockedIn ? 'bg-red-500' : 'bg-green-500',
-        ]"
-      >
+      <button v-on:click="handleClockCreation" :class="[
+        'text-2xl',
+        'font-bold',
+        'text-white',
+        'py-2',
+        'px-4',
+        'rounded-full',
+        'shadow-lg',
+        clockedIn ? 'bg-red-500' : 'bg-green-500',
+      ]">
         {{ clockedIn ? "Clock Out" : "Clock In" }}
       </button>
 
