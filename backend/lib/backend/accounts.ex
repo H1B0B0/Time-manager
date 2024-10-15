@@ -98,6 +98,10 @@ defmodule Backend.Accounts do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, user} -> {:ok, Repo.preload(user, :role)}
+      error -> error
+    end
   end
 
   @doc """
@@ -116,6 +120,10 @@ defmodule Backend.Accounts do
     user
     |> User.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, updated_user} -> {:ok, Repo.preload(updated_user, :role)}
+      error -> error
+    end
   end
 
   @doc """
