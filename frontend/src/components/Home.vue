@@ -1,82 +1,6 @@
 <template>
   <div class="min-h-screen text-white flex flex-col">
     <div>
-      <header class="absolute inset-x-0 top-0 z-50">
-        <nav
-          class="flex items-center justify-between p-4 sm:p-6 lg:px-8"
-          aria-label="Global"
-        >
-          <div class="flex lg:hidden">
-            <button
-              type="button"
-              class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400"
-              @click="mobileMenuOpen = true"
-            >
-              <span class="sr-only">Open main menu</span>
-              <Bars3Icon class="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div class="hidden lg:flex lg:gap-x-12">
-            <a
-              v-for="item in navigation"
-              :key="item.name"
-              :href="item.href"
-              class="text-sm font-semibold leading-6 text-white"
-            >
-              {{ item.name }}
-            </a>
-          </div>
-          <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" class="text-sm font-semibold leading-6 text-white"
-              >Log in <span aria-hidden="true">&rarr;</span></a
-            >
-          </div>
-        </nav>
-        <Dialog
-          class="lg:hidden"
-          @close="mobileMenuOpen = false"
-          :open="mobileMenuOpen"
-        >
-          <div class="fixed inset-0 z-50" />
-          <DialogPanel
-            class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10"
-          >
-            <div class="flex items-center justify-between">
-              <button
-                type="button"
-                class="-m-2.5 rounded-md p-2.5 text-gray-400"
-                @click="mobileMenuOpen = false"
-              >
-                <span class="sr-only">Close menu</span>
-                <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div class="mt-6 flow-root">
-              <div class="-my-6 divide-y divide-gray-500/25">
-                <div class="space-y-2 py-6">
-                  <a
-                    v-for="item in navigation"
-                    :key="item.name"
-                    :href="item.href"
-                    class="-mx-3 block rounded-3xl px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    {{ item.name }}
-                  </a>
-                </div>
-                <div class="py-6">
-                  <a
-                    href="#"
-                    class="-mx-3 block rounded-3xl px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    Log in
-                  </a>
-                </div>
-              </div>
-            </div>
-          </DialogPanel>
-        </Dialog>
-      </header>
-
       <div class="relative isolate overflow-hidden pt-14">
         <div class="mx-auto max-w-2xl py-24 sm:py-32 lg:py-40">
           <div class="hidden sm:mb-8 sm:flex sm:justify-center">
@@ -122,7 +46,7 @@
       class="flex flex-wrap gap-8 justify-center align-middle mb-20 px-4 sm:px-0"
     >
       <div
-        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart1"
       >
         <h2 class="text-xl mb-4">Project Time Utilization</h2>
@@ -146,7 +70,7 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart2"
       >
         <h2 class="text-xl mb-4">Productivity Trends</h2>
@@ -154,7 +78,7 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart3"
       >
         <h2 class="text-xl mb-4">Monthly Time Distribution</h2>
@@ -162,7 +86,7 @@
       </div>
 
       <div
-        class="bg-gray-800 p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
         id="chart4"
       >
         <h2 class="text-xl mb-4">Tasks Over Time</h2>
@@ -341,6 +265,52 @@ export default {
         },
         options: {
           responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "white",
+              },
+            },
+            title: {
+              display: true,
+              color: "white",
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              titleColor: "black",
+              bodyColor: "black",
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+            y: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+          },
         },
       });
 
@@ -363,6 +333,52 @@ export default {
         options: {
           indexAxis: "y",
           responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "white",
+              },
+            },
+            title: {
+              display: true,
+              color: "white",
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              titleColor: "black",
+              bodyColor: "black",
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+            y: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+          },
         },
       });
 
@@ -382,6 +398,52 @@ export default {
         },
         options: {
           responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "white",
+              },
+            },
+            title: {
+              display: true,
+              color: "white",
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              titleColor: "black",
+              bodyColor: "black",
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+            y: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+          },
         },
       });
 
@@ -403,6 +465,52 @@ export default {
         },
         options: {
           responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "white",
+              },
+            },
+            title: {
+              display: true,
+              color: "white",
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              titleColor: "black",
+              bodyColor: "black",
+            },
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+            y: {
+              ticks: {
+                color: "white",
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.2)",
+                lineWidth: 1,
+                drawOnChartArea: true,
+                drawTicks: true,
+                tickColor: "white",
+                tickLength: 10,
+                tickWidth: 1,
+              },
+            },
+          },
         },
       });
 
