@@ -9,18 +9,22 @@ defmodule Backend.Auth do
     Joken.Config.default_claims(default_exp: 43200, iss: "backend", aud: "backend")
   end
 
-
-  def sign_in(user_id, _password) do
+  def sign_in(user_id, password) do
     case Accounts.get_user(user_id) do
       nil ->
         {:error, %{reason: :not_found}}
 
       user ->
-        case generate_and_sign(%{"user_id" => user.id}) do
-          {:ok, token, _claims} ->
-            {:ok, %{token: token}}
-          {:error, reason} ->
-            {:error, %{reason: reason}}
+        if Pbkdf2.verify_pass(password, user.password) do
+          case generate_and_sign(%{"user_id" => user.id}) do
+            {:ok, token, _claims} ->
+              {:ok, %{token: token}}
+
+            {:error, reason} ->
+              {:error, %{reason: reason}}
+          end
+        else
+          {:error, %{reason: :invalid_password}}
         end
     end
   end
@@ -29,6 +33,7 @@ defmodule Backend.Auth do
     case verify_and_validate(token) do
       {:ok, claims} ->
         user_id = claims["user_id"]
+
         case Accounts.get_user(user_id) do
           nil -> {:error, :not_found}
           user -> {:ok, user}

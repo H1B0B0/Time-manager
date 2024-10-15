@@ -53,8 +53,27 @@ defmodule BackendWeb.UserController do
       |> put_status(:not_found)
       |> json(%{errors: ["User not found, no update made"]})
     else
-      with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
-        render(conn, :show, user: user)
+      case user_params do
+        %{"old_password" => old_password} ->
+          if Pbkdf2.verify_pass(old_password, user.password) do
+            with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+              render(conn, :show, user: user)
+            end
+          else
+            conn
+            |> put_status(:unauthorized)
+            |> json(%{errors: ["Old password is incorrect"]})
+          end
+
+        %{"password" => _new_password} ->
+          conn
+          |> put_status(:bad_request)
+          |> json(%{errors: ["Old password is required"]})
+
+        _ ->
+          with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
+            render(conn, :show, user: user)
+          end
       end
     end
   end

@@ -4,8 +4,13 @@ meta {
   seq: 6
 }
 
-get {
-  url: https://backend.traefik.me/api/auth/user
-  body: none
+post {
+  url: http://localhost:4000/api/auth/user
+  body: json
   auth: none
+}
+
+body:json {
+  {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MDQyNTg5LCJpYXQiOjE3Mjg5OTkzODksImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZhN2k1bGQzaGY3ZjFqdmMwMDAwczgiLCJuYmYiOjE3Mjg5OTkzODksInVzZXJfaWQiOjR9.k1iOxmgmKzqA35MmuRXNtlRE0ka0FE4qxSo-x0gNhFo"
+  }
 }

@@ -95,6 +95,13 @@ defmodule Backend.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
+    attrs =
+      if Map.has_key?(attrs, "password") do
+        Map.put(attrs, "password", Pbkdf2.hash_pwd_salt(attrs["password"]))
+      else
+        attrs
+      end
+
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
@@ -117,6 +124,13 @@ defmodule Backend.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
+    attrs =
+      if Map.has_key?(attrs, "password") do
+        Map.put(attrs, "password", Pbkdf2.hash_pwd_salt(attrs["password"]))
+      else
+        attrs
+      end
+
     user
     |> User.changeset(attrs)
     |> Repo.update()

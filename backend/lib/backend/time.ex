@@ -38,6 +38,18 @@ defmodule Backend.Time do
   def get_clock!(id), do: Repo.get!(Clock, id)
 
   @doc """
+  Get latest clock for a user.
+  """
+
+  def get_latest_clock(user_id) do
+    from(c in Clock,
+      where: c.user_id == ^user_id,
+      order_by: [desc: c.inserted_at],
+      limit: 1)
+    |> Repo.one()
+  end
+
+  @doc """
   Creates a clock.
 
   ## Examples
