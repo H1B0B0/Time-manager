@@ -79,3 +79,21 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }} FRONTEND_DNS=${{ secrets.FRONTEND_DNS }} BACKEND_DNS=${{ secrets.BACKEND_DNS }} PGADMIN_DNS=${{ secrets.PGADMIN_DNS }} kuramacert=${{ secrets.kuramacert }} kuramakey=${{ secrets.kuramakey }}"
+          - name: Send mail
+          if: always()
+          uses: dawidd6/action-send-mail@v2
+          with:
+            # mail server settings
+            server_address: smtp.gmail.com
+            server_port: 465
+            # user credentials
+            username: rafalebot@gmail.com
+            password: bdtw bejg rksr orek
+            # email subject
+            subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+            # email body as text
+            body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+            # comma-separated string, send email to
+            to: mroess365@gmail.com
+            # from email name
+            from: John Doe
