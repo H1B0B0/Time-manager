@@ -25,6 +25,9 @@ defmodule BackendWeb.Router do
 
     get "/roles", RoleController, :index
     get "/roles/:id", RoleController, :show
+
+    post "/auth/login", AuthController, :login
+    post "/auth/user", AuthController, :user
   end
 
   if Application.compile_env(:backend, :dev_routes) do

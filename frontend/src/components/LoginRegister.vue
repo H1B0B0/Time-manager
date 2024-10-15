@@ -1,18 +1,20 @@
 <template>
-  <div class="max-w-md mx-auto mt-10 p-6 bg-gray-900 rounded-lg shadow-2xl">
+  <div
+    class="max-w-md mx-auto mt-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl"
+  >
     <div v-if="!isCreating" class="mb-6">
       <h2 class="text-3xl font-bold mb-6 text-center text-white">Log in 🔐</h2>
       <input
         v-model="email"
         placeholder="Email"
         required
-        class="w-full p-3 mb-4 border rounded-lg text-white bg-gray-700 border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <input
         v-model="username"
         placeholder="Username"
         required
-        class="w-full p-3 mb-4 border rounded-lg text-white bg-gray-700 border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <button
         @click="login"
@@ -22,8 +24,6 @@
         Log in
       </button>
     </div>
-
-    <p v-if="!isCreating" class="text-white text-center my-4 font-bold">or</p>
 
     <button
       v-if="!isCreating"
@@ -41,13 +41,13 @@
         v-model="newEmail"
         placeholder="Email"
         required
-        class="w-full p-3 mb-4 border rounded-lg text-white bg-gray-700 border-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+        class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <input
         v-model="newUsername"
         placeholder="Username"
         required
-        class="w-full p-3 mb-4 border rounded-lg text-white bg-gray-700 border-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+        class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <button
         @click="register"

@@ -21,4 +21,18 @@ defmodule BackendWeb.FallbackController do
     |> put_view(html: BackendWeb.ErrorHTML, json: BackendWeb.ErrorJSON)
     |> render(:"404")
   end
+
+  # Catch-all for any unexpected errors
+  def call(conn, {:error, reason}) do
+    conn
+    |> put_status(:internal_server_error)
+    |> json(%{error: "Internal server error", reason: reason})
+  end
+
+  # Fallback for any unexpected results
+  def call(conn, result) do
+    conn
+    |> put_status(:internal_server_error)
+    |> json(%{error: "Unexpected result", result: result})
+  end
 end

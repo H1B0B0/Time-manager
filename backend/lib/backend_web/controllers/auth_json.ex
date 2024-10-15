@@ -1,18 +1,18 @@
-defmodule BackendWeb.UserJSON do
+defmodule BackendWeb.AuthJSON do
   alias Backend.Accounts.User
 
   @doc """
-  Renders a list of users.
+  Renders a single user with token.
   """
-  def index(%{users: users}) do
-    %{data: for(user <- users, do: data(user))}
+  def show(%{user: user, token: token}) do
+    %{data: data(user), token: token}
   end
 
   @doc """
   Renders a single user.
   """
   def show(%{user: user}) do
-      %{data: data(user)}
+    %{data: data(user)}
   end
 
   defp data(%User{} = user) do
