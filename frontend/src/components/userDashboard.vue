@@ -1,5 +1,5 @@
 <template>
-  <aside id="default-sidebar"
+  <aside v-if="role === 'admin'" id="default-sidebar"
     class="fixed top-1/2 left-0 z-50 w-64 h-auto transform -translate-y-1/2 transition-transform sm:translate-x-0"
     aria-label="Sidebar">
     <div
@@ -102,11 +102,11 @@
     </div>
   </aside>
 
-  <div class="p-4 sm:ml-64">
+  <div :class="['p-4', { 'sm:ml-64': role === 'admin' }]">
     <div class="gap-8">
       <ClockManager />
       <ChartManager class="flex-1 w-full gap-4" />
-      <div class="flex flex-row gap-4 mt-4 h-full">
+      <div class="flex flex-col sm:flex-row gap-4 mt-4">
         <div class="flex-1 flex flex-col">
           <WorkedHoursPerMonth class="flex-1" />
         </div>
@@ -123,6 +123,9 @@ import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
 import WorkedHoursPerMonth from "./WorkedHoursPerMonth.vue";
+import { ref } from "vue";
+
+const role = ref('admin');
 
 export default {
   name: "UserDashboard",
@@ -132,9 +135,11 @@ export default {
     WorkedHoursPerMonth,
     ClockManager,
   },
+  data() {
+    return {
+      role: 'user',
+    };
+  },
 };
 </script>
 
-<style scoped>
-/* Ajoutez des styles supplémentaires si nécessaire */
-</style>
