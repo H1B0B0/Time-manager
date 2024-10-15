@@ -10,13 +10,15 @@ defmodule Backend.AccountsTest do
 
     @create_attrs %{
       username: "Jake Doe",
-      email: "jake.doe@mail.com"
+      email: "jake.doe@mail.com",
+      password: "password"
     }
     @update_attrs %{
       username: "Jana Doe",
-      email: "jana.doe@mail.zz"
+      email: "jana.doe@mail.zz",
+      password: "passwooord"
     }
-    @invalid_attrs %{username: nil, email: nil}
+    @invalid_attrs %{username: nil, email: nil, password: nil}
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -30,7 +32,7 @@ defmodule Backend.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       role = role_fixture()
-      valid_attrs = %{username: @create_attrs.username, email: @create_attrs.email, role_id: role.id}
+      valid_attrs = %{username: @create_attrs.username, email: @create_attrs.email, password: @create_attrs.password, role_id: role.id}
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.username == "Jake Doe"
