@@ -46,7 +46,8 @@ defmodule Backend.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:plug, "~> 1.0"},
-      {:corsica, "~> 2.0"}
+      {:corsica, "~> 2.0"},
+      {:joken, "~> 2.6"}
     ]
   end
 
