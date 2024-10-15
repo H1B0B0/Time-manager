@@ -36,7 +36,6 @@ defmodule BackendWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     user_params = Map.put(user_params, "role_id", 1) # Employee (default role)
-    user_params = Map.put(user_params, "password", Pbkdf2.hash_pwd_salt(user_params["password"]))
 
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
