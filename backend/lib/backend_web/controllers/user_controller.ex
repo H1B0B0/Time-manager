@@ -4,34 +4,33 @@ defmodule BackendWeb.UserController do
   alias Hex.API.User
   alias Backend.Accounts
   alias Backend.Accounts.User
+  alias Backend.Auth
 
   action_fallback BackendWeb.FallbackController
-
-  # GET method : http://localhost:4000/api/users?email=XXX&username=YYY
-  # GET method : http://localhost:4000/api/users/:userID
-  # POST method : http://localhost:4000/api/users
-  # PUT method : http://localhost:4000/api/users/:userID
-  # DELETE method : http://localhost:4000/api/users/:userID
 
   def index(conn, %{"email" => email, "username" => username}) do
     user = Accounts.get_user_by_username_and_email(username, email)
     case user do
-      nil -> conn
-      |> put_status(:not_found)
-      |> json(%{errors: ["User not found"]})
-      _ -> conn
-      render(conn, :show, user: user)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{errors: ["User not found"]})
+
+      _ ->
+        render(conn, :show, user: user)
     end
   end
 
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user(id)
     case user do
-      nil -> conn
-      |> put_status(:not_found)
-      |> json(%{errors: ["User not found"]})
-      _ -> conn
-      render(conn, :show, user: user)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{errors: ["User not found"]})
+
+      _ ->
+        render(conn, :show, user: user)
     end
   end
 
