@@ -19,19 +19,19 @@ defmodule BackendWeb.RoleControllerTest do
 
   describe "index" do
     test "lists all roles", %{conn: conn} do
-      %{role: role} = create_role(@create_attrs)
+      %{role: role} = create_role()
       conn = get(conn, ~p"/api/roles")
       assert json_response(conn, 200)["data"] == [%{"id" => role.id, "category" => role.category}]
     end
 
     test "list a specific role", %{conn: conn} do
-      %{role: role} = create_role(@create_attrs)
+      %{role: role} = create_role()
       conn = get(conn, ~p"/api/roles/#{role.id}")
       assert json_response(conn, 200)["data"] == %{"id" => role.id, "category" => role.category}
     end
   end
 
-  defp create_role(_) do
+  defp create_role() do
     role = role_fixture()
     %{role: role}
   end
