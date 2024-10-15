@@ -33,7 +33,7 @@ jobs:
       - name: Read email content
         id: read_email_content
         run: |
-          content=$(cat ./frontend/src/content/released-0.0.md)
+          content=$(cat ./frontend/src/content/release-0.0.md)
           echo "::set-output name=content::$content"
 
       - name: Send mail
