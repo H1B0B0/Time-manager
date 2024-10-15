@@ -1,13 +1,8 @@
 <template>
-  <div class="p-4 rounded-lg shadow bg-gray-800">
+  <div class="p-4 rounded-lg h-full flex flex-col">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
-    <div class="bg-gray-800 p-4 rounded-lg">
-      <Line
-        :key="chartKey"
-        id="my-chart-id"
-        :options="chartOptions"
-        :data="chartData"
-      />
+    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex-1">
+      <Line :key="chartKey" id="my-chart-id" :options="chartOptions" :data="chartData" />
     </div>
   </div>
 </template>
@@ -26,7 +21,6 @@ import {
 } from "chart.js";
 import { ref } from "vue";
 import router from "@/router";
-import { getWorkingTimes } from "../functions/WorkingTime";
 import { getClocksDate, hoursWorkedPerDay } from '../functions/Clock'
 
 ChartJS.register(
@@ -48,8 +42,8 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "rgba(123, 97, 255, 0.2)",
-          borderColor: "#7B61FF",
+          backgroundColor: "#36A2EB",
+          borderColor: "#36A2EB",
           label: "Worked hours per month",
           fill: true,
           tension: 0.4,
@@ -72,10 +66,28 @@ export default {
           ticks: {
             color: "white",
           },
+          grid: {
+            color: "rgba(255, 255, 255, 0.2)",
+            lineWidth: 1,
+            drawOnChartArea: true,
+            drawTicks: true,
+            tickColor: "white",
+            tickLength: 10,
+            tickWidth: 1,
+          },
         },
         y: {
           ticks: {
             color: "white",
+          },
+          grid: {
+            color: "rgba(255, 255, 255, 0.2)",
+            lineWidth: 1,
+            drawOnChartArea: true,
+            drawTicks: true,
+            tickColor: "white",
+            tickLength: 10,
+            tickWidth: 1,
           },
         },
       },
@@ -101,7 +113,6 @@ export default {
       try {
         const response = await getClocksDate(router.currentRoute.value.params.userID, startDate.value, endDate.value)
         const workedTimePerDay = await hoursWorkedPerDay(response)
-
         chartData.value.labels = workedTimePerDay.map(day => day.date)
         chartData.value.datasets[0].data = workedTimePerDay.map(day => day.hours)
 

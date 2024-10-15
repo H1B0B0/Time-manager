@@ -1,13 +1,8 @@
 <template>
-  <div class="p-4 rounded-lg shadow bg-gray-800">
+  <div class="p-4 rounded-lg">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
-    <div class="bg-gray-800 p-Z rounded-lg">
-      <Bar
-        :key="chartKey"
-        id="my-chart-id"
-        :options="chartOptions"
-        :data="chartData"
-      />
+    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl">
+      <Bar :key="chartKey" id="my-chart-id" :options="chartOptions" :data="chartData" />
     </div>
   </div>
 </template>
@@ -54,8 +49,8 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "#7B61FF",
-          borderColor: "#7B61FF",
+          backgroundColor: "#36A2EB",
+          borderColor: "#36A2EB",
           label: "Schedule of the week",
         },
       ],
@@ -76,10 +71,28 @@ export default {
           ticks: {
             color: "white",
           },
+          grid: {
+            color: "rgba(255, 255, 255, 0.2)",
+            lineWidth: 1,
+            drawOnChartArea: true,
+            drawTicks: true,
+            tickColor: "white",
+            tickLength: 10,
+            tickWidth: 1,
+          },
         },
         y: {
           ticks: {
             color: "white",
+          },
+          grid: {
+            color: "rgba(255, 255, 255, 0.2)",
+            lineWidth: 1,
+            drawOnChartArea: true,
+            drawTicks: true,
+            tickColor: "white",
+            tickLength: 10,
+            tickWidth: 1,
           },
         },
       },
