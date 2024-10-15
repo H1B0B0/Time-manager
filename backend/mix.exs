@@ -47,7 +47,8 @@ defmodule Backend.MixProject do
       {:bandit, "~> 1.5"},
       {:plug, "~> 1.0"},
       {:corsica, "~> 2.0"},
-      {:joken, "~> 2.6"}
+      {:joken, "~> 2.6"},
+      {:pbkdf2_elixir, "~> 2.3"}
     ]
   end
 
