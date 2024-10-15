@@ -75,7 +75,6 @@
 <script>
 import { ref, onMounted } from "vue";
 
-// Utiliser import.meta.glob pour charger tous les fichiers Markdown dans le dossier 'content'
 const markdownFiles = import.meta.glob("../content/*.md");
 
 export default {
@@ -89,14 +88,14 @@ export default {
         const fileContent = await markdownFiles[path]();
         const { attributes, html } = fileContent;
         const title = attributes.title;
-        const description = attributes.description; // Ajout de la description
+        const description = attributes.description;
         const content = html;
         const versionMatch = title.match(/\d+(\.\d+)+/);
         const version = versionMatch ? versionMatch[0] : title;
         const isRead = localStorage.getItem(`article-${version}`) === "true";
         articles.value.push({
           title,
-          description, // Ajout de la description
+          description,
           content,
           version,
           isOpen: false,
@@ -104,20 +103,17 @@ export default {
         });
       }
 
-      // Trier les articles par version de release
       articles.value.sort((a, b) => {
         const versionA = a.version;
         const versionB = b.version;
         return versionB.localeCompare(versionA, undefined, { numeric: true });
       });
 
-      // Mettre à jour la version la plus récente
       if (articles.value.length > 0) {
         latestVersion.value = articles.value[0].version;
         localStorage.setItem("latest-news-version", latestVersion.value);
       }
 
-      // Vérifier si toutes les nouvelles ont été lues
       checkAllArticlesRead();
     });
 
@@ -130,7 +126,6 @@ export default {
           "true"
         );
         checkAllArticlesRead();
-        // Émettre un événement global pour notifier le changement
         window.dispatchEvent(new Event("latest-news-read"));
       }
     };
