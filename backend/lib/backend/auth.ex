@@ -15,7 +15,7 @@ defmodule Backend.Auth do
         {:error, %{reason: :not_found}}
 
       user ->
-        if check_password(password, user.password) do
+        if Pbkdf2.verify_pass(password, user.password) do
           case generate_and_sign(%{"user_id" => user.id}) do
             {:ok, token, _claims} ->
               {:ok, %{token: token}}
@@ -42,9 +42,5 @@ defmodule Backend.Auth do
       {:error, _reason} ->
         {:error, "Invalid or expired token"}
     end
-  end
-
-  def check_password(password, hashed_password) do
-    Pbkdf2.verify_pass(password, hashed_password)
   end
 end
