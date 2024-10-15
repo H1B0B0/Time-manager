@@ -65,7 +65,7 @@ setTimeout(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col relative">
+  <div class="min-h-screen flex flex-col relative bg-black">
     <header class="w-full z-20 bg-transparent">
       <NavBar />
     </header>
