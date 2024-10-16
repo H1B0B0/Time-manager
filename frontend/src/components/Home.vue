@@ -29,7 +29,7 @@
               class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-4"
             >
               <a
-                href="/user"
+                href="/login"
                 class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
               >
                 Get started
@@ -191,6 +191,9 @@
 
 <script>
 import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/use-user-store";
+import { GetUserByToken } from "@/functions/User";
 import {
   Chart,
   LineElement,
@@ -220,8 +223,23 @@ Chart.register(
 );
 
 export default {
-  name: "Dashboard",
+  name: "Home",
   setup() {
+    const router = useRouter();
+    const userStore = useUserStore();
+
+    onMounted(async () => {
+      try {
+        const user = await GetUserByToken();
+        if (user) {
+          userStore.setUser(user);
+          router.push(`/dashboard/${user.id}`); // Rediriger vers le tableau de bord si déjà connecté
+        }
+      } catch (error) {
+        console.log("User not logged in");
+      }
+    });
+
     const animateOnScroll = (element, animationIn, animationOut) => {
       let threshold = 0.3;
       const observer = new IntersectionObserver(

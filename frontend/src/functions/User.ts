@@ -108,7 +108,6 @@ export const GetUserByToken = async () => {
     if (!token) {
       throw new Error("No token found");
     }
-    console.log(token);
     const response = await axios.post(
       `${BASE_URL}/auth/user`,
       {

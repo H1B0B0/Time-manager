@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <button @click="toggleDropdown" class="text-white flex items-center">
-      {{ username }}
+    <img :src="`https://api.dicebear.com/9.x/pixel-art/svg?seed=${username}`" class="rounded-full h-8 mx-2" />      {{ username }}
       <svg
         class="w-4 h-4 ml-1"
         fill="none"
@@ -19,20 +19,20 @@
     </button>
     <div
       v-if="isOpen"
-      class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50"
+      class="absolute right-0 mt-2 w-48 z-50 border border-white rounded backdrop-blur-sm"
     >
       <ul class="py-2">
         <li>
           <router-link
             to="/edit"
-            class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block px-4 py-2 text-white "
             >Edit</router-link
           >
         </li>
         <li>
           <button
             @click="handleLogout"
-            class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+            class="block w-full text-left px-4 py-2 text-white "
           >
             Logout
           </button>
