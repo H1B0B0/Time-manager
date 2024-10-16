@@ -103,15 +103,15 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send mail
-        if: always()
         uses: dawidd6/action-send-mail@v2
         with:
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.SMTP_USER }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Workflow Notification"
+          subject: ${{ github.ref_name }}
           convert_markdown: true
           body: ${{ env.content }}
           to: mroess365@gmail.com
           from: Batman
+          content_type: text/html
