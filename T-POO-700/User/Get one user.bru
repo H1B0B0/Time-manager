@@ -7,5 +7,9 @@ meta {
 get {
   url: http://localhost:4000/api/users/1
   body: none
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MTE1MjExLCJpYXQiOjE3MjkwNzIwMTEsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZlYmxhZjV0cDRtbGJmb28wMDAzazYiLCJuYmYiOjE3MjkwNzIwMTEsInVzZXJfaWQiOjR9.oarRrBAGAmOP1I4zuS6AXvXN8_4nau68y74b4M-gWks
 }
