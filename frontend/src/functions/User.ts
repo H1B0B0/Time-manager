@@ -12,22 +12,21 @@ export const getUserById = async (id: number) => {
     throw error;
   }
 };
-
-export const getUser = async (username: string, email: string) => {
+export const getUser = async (email: string, password: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/`, {
-      params: {
-        username,
-        email,
-      },
+    const response = await axios.post(`${BASE_URL}/auth/login`, {
+      user: { email, password }
     });
     return response.data.data;
   } catch (error) {
-    console.error(error);
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error:", error.message);
+    } else {
+      console.error("Unexpected error:", error);
+    }
     throw error;
   }
 };
-
 export const createUser = async (data: UserType) => {
   try {
     const config = {

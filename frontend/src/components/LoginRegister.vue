@@ -7,18 +7,20 @@
       <input
         v-model="email"
         placeholder="Email"
+        type="email"
         required
         class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <input
-        v-model="username"
-        placeholder="Username"
+        v-model="password"
+        placeholder="Password"
+        type="password"
         required
         class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <button
         @click="login"
-        :disabled="!email || !username"
+        :disabled="!email || !password"
         class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed"
       >
         Log in
@@ -49,6 +51,13 @@
         required
         class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
+      <input
+        v-model="newPassword"
+        placeholder="Password"
+        type="password"
+        required
+        class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+      />
       <button
         @click="register"
         :disabled="!newEmail || !newUsername"
@@ -73,28 +82,42 @@ import { useUserStore } from "@/stores/use-user-store";
 import { createUser, getUser } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
+import axios from "axios"; // Import axios
+
 
 const email = ref("");
 const username = ref("");
+const password = ref("");
 const newEmail = ref("");
 const newUsername = ref("");
 const isCreating = ref(false);
+const error = ref("");
+
 
 const login = async () => {
   try {
-    const response = await getUser(username.value, email.value);
+    error.value = "";
+    const response = await getUser(email.value, password.value);
     useUserStore().setUser(response);
+    console.log(response);
     toast.success("Successfully logged in");
-  } catch (error) {
-    toast.error("Error logging in");
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      error.value = err.response.data.message || "Error logging in";
+    } else {
+      error.value = "An unexpected error occurred";
+    }
+    toast.error(error.value);
   }
 };
+
 
 const register = async () => {
   try {
     await createUser({
       email: newEmail.value,
       username: newUsername.value,
+      password: password.value,
     });
     toast.success("Account created successfully");
     confetti({
