@@ -103,10 +103,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Read email content
+      - name: Read and filter email content
         id: read_email_content
         run: |
-          content=$(cat frontend/src/content/release-${{ github.ref_name }}.md)
+          content=$(sed '/^---$/d;/^title:/d;/^description:/d' frontend/src/content/release-${{ github.ref_name }}.md)
           echo "content<<EOF" >> $GITHUB_ENV
           echo "$content" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
