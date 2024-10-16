@@ -46,7 +46,7 @@ onMounted(() => {
   }
 
   window.addEventListener("keydown", async (event) => {
-    if (event.ctrlKey && event.key === "t") {
+    if (event.ctrlKey && event.key === "m") {
       // Toggle tristant mode
       const currentMode = localStorage.getItem("tristantMode") === "true";
       localStorage.setItem("tristantMode", (!currentMode).toString());
