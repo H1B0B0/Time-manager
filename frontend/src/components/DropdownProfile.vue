@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <button @click="toggleDropdown" class="text-white flex items-center">
-    <img :src="`https://api.dicebear.com/9.x/pixel-art/svg?seed=${username}`" class="rounded-full h-8 mx-2" />      {{ username }}
+    <img :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${username}`" class="rounded-full h-8 mx-2" />      {{ username }}
       <svg
         class="w-4 h-4 ml-1"
         fill="none"
