@@ -16,7 +16,7 @@
             >
           </li>
           <li v-if="!isHomePage">
-            <router-link to="/news" class="text-white hover:text-blue-200 mr-9"
+            <router-link to="/news" class="text-white hover:text-blue-200"
               >News</router-link
             >
           </li>
@@ -25,13 +25,16 @@
       <div class="hidden lg:flex ml-auto">
         <ul class="flex space-x-4">
           <li
-            v-if="userStore.getUser.username === undefined"
+            v-if="!userStore.user.username"
             class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950"
           >
             <router-link to="/user" class="text-white">Sign in →</router-link>
           </li>
           <li v-else>
-            <p class="text-white">Welcome {{ userStore.user.username }}</p>
+            <DropdownProfile
+              :username="userStore.user.username"
+              @logout="logout"
+            />
           </li>
         </ul>
       </div>
@@ -54,29 +57,47 @@
         </button>
         <div
           v-if="menuOpen"
-          class="absolute right-0 mt-4 w-full rounded-lg shadow-lg z-50"
+          class="absolute right-0 mt-12 w-48 bg-white rounded-lg shadow-lg z-50"
         >
-          <ul class="flex flex-col space-y-2 p-4">
+          <ul class="py-2">
             <li v-if="!isHomePage">
               <router-link
                 to="/dashboard/1"
-                class="text-white hover:text-blue-200 p-2"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >Dashboard</router-link
               >
             </li>
             <li v-if="!isHomePage">
-              <router-link to="/news" class="text-white hover:text-blue-200 p-2"
+              <router-link
+                to="/news"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >News</router-link
               >
             </li>
-            <li v-if="userStore.getUser === null">
-              class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950"
+            <li v-if="!userStore.user.username">
+              <router-link
+                to="/user"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >Sign in →</router-link
               >
-              <router-link to="/user" class="text-white">Sign in →</router-link>
             </li>
-            <li v-else>
-              <p class="text-white">Welcome {{ userStore.user.email }}</p>
-            </li>
+            <template v-else>
+              <li>
+                <router-link
+                  to="/profile"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  >Profile</router-link
+                >
+              </li>
+              <li>
+                <button
+                  @click="logout"
+                  class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
@@ -85,20 +106,23 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
-import { getUser } from "@/functions/User";
 import { useUserStore } from "@/stores/use-user-store";
+import DropdownProfile from "./DropdownProfile.vue";
 
 const route = useRoute();
+const router = useRouter();
 const isHomePage = computed(() => route.path === "/");
-const showSignIn = true; // Always show Sign In
 const menuOpen = ref(false);
 const userStore = useUserStore();
 
-console.log(userStore.user.username);
-
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
+};
+
+const logout = () => {
+  userStore.logout();
+  router.push("/");
 };
 </script>

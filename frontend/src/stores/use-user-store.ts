@@ -24,6 +24,12 @@ export const useUserStore = defineStore("storeUser", {
         }
       }
     },
+    logout() {
+      this.user = {} as UserType;
+      if (Cookies.get("token")) {
+        Cookies.remove("token");
+      }
+    }
   },
   getters: {
     getUser(): UserType {
