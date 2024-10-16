@@ -31,6 +31,8 @@ defmodule BackendWeb.Router do
     get "/roles/:id", RoleController, :show
 
     post "/auth/user", AuthController, :user
+
+    post "/user/:id/role/:role_id", UserRoleController, :update
   end
 
   scope "/api", BackendWeb do
