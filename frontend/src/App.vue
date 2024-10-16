@@ -12,6 +12,7 @@ const tristantModeSplineViewerUrl =
 
 const splineViewerUrl = ref(defaultSplineViewerUrl);
 const isTristantMode = ref(false);
+const performanceMode = ref(false);
 
 const updateSplineViewerUrl = () => {
   isTristantMode.value = localStorage.getItem("tristantMode") === "true";
@@ -27,8 +28,20 @@ const updateSplineViewerUrl = () => {
   }
 };
 
+const handlePerformanceMode = () => {
+  performanceMode.value = !performanceMode.value;
+};
+
+const isMobileDevice = () => {
+  return /Mobi|Android/i.test(navigator.userAgent);
+};
+
 onMounted(() => {
   updateSplineViewerUrl();
+
+  if (isMobileDevice()) {
+    performanceMode.value = true;
+  }
 
   window.addEventListener("keydown", async (event) => {
     if (event.ctrlKey && event.key === "t") {
@@ -108,11 +121,6 @@ setTimeout(() => {
     else favicon_video_image_counter++;
   }, 100);
 }, 2000);
-
-const performanceMode = ref(false);
-const handlePerformanceMode = () => {
-  performanceMode.value = !performanceMode.value;
-};
 </script>
 
 <template>
@@ -135,6 +143,16 @@ const handlePerformanceMode = () => {
       />
       <div class="z-20">
         <RouterView />
+      </div>
+      <div
+        v-show="performanceMode"
+        class="absolute inset-0 w-full h-full bg-animated-lights"
+      >
+        <div class="circle1"></div>
+        <div class="circle2"></div>
+        <div class="circle3"></div>
+        <div class="circle4"></div>
+        <div class="circle5"></div>
       </div>
     </main>
   </div>
@@ -162,5 +180,99 @@ const handlePerformanceMode = () => {
 
 body.tristant-mode {
   cursor: url("./assets/tristan.png"), auto;
+}
+
+.bg-animated-lights {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+}
+
+.bg-animated-lights .circle1,
+.bg-animated-lights .circle2,
+.bg-animated-lights .circle3,
+.bg-animated-lights .circle4,
+.bg-animated-lights .circle5 {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: move 20s linear infinite;
+}
+
+.bg-animated-lights .circle1 {
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.5) 0%,
+    rgba(79, 70, 229, 0.5) 100%
+  );
+  animation-delay: 0s;
+  top: -50%;
+  left: -50%;
+}
+
+.bg-animated-lights .circle2 {
+  background: radial-gradient(
+    circle,
+    rgba(79, 70, 229, 0.5) 0%,
+    rgba(6, 182, 212, 0.5) 100%
+  );
+  animation-delay: 5s;
+  top: 50%;
+  left: 50%;
+}
+
+.bg-animated-lights .circle3 {
+  background: radial-gradient(
+    circle,
+    rgba(6, 182, 212, 0.5) 0%,
+    rgba(139, 92, 246, 0.5) 100%
+  );
+  animation-delay: 10s;
+  top: -50%;
+  left: 50%;
+}
+
+.bg-animated-lights .circle4 {
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.5) 0%,
+    rgba(79, 70, 229, 0.5) 100%
+  );
+  animation-delay: 15s;
+  top: 50%;
+  left: -50%;
+}
+
+.bg-animated-lights .circle5 {
+  background: radial-gradient(
+    circle,
+    rgba(79, 70, 229, 0.5) 0%,
+    rgba(6, 182, 212, 0.5) 100%
+  );
+  animation-delay: 20s;
+  top: 0%;
+  left: 0%;
+}
+
+@keyframes move {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, 50%);
+  }
+  75% {
+    transform: translate(50%, 50%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 </style>
