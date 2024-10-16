@@ -10,6 +10,8 @@ import Home from "../components/Home.vue";
 import News from "../components/News.vue";
 import WorkedHoursPerMonth from "@/components/WorkedHoursPerMonth.vue";
 import UserDashboard from "@/components/userDashboard.vue";
+import path from "path";
+import adminDashboard from "@/components/adminDashboard.vue";
 
 const routes = [
   {
@@ -43,6 +45,12 @@ const routes = [
     path: "/dashboard/:userID",
     name: "Dashboard",
     component: UserDashboard,
+    props: true,
+  },
+  {
+    path: "/admin/dashboard",
+    name: "AdminDashboard",
+    component: adminDashboard,
     props: true,
   },
   {

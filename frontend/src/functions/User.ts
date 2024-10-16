@@ -124,3 +124,25 @@ export const GetUserByToken = async () => {
     throw error;
   }
 };
+
+export const getAllUsers = async () => {
+  try {
+    const token = Cookies.get("token");
+    if (!token) {
+      throw new Error("No token found");
+    }
+    console.log(token);
+    const response = await axios.get(
+      `${BASE_URL}/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
