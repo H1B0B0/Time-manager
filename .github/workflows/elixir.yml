@@ -91,14 +91,11 @@ jobs:
     runs-on: ubuntu-latest
     # if: startsWith(github.ref, 'refs/tags/')
 
-    defaults:
-      run:
-        working-directory: frontend
-
     steps:
+      - uses: actions/checkout@v4
+
       - name: Read email content
         id: read_email_content
-        # script multiline string
         run: |
           content=$(cat frontend/src/content/release-0.0.md)
           echo "::set-output name=content::$content"
@@ -107,15 +104,11 @@ jobs:
         if: always()
         uses: dawidd6/action-send-mail@v2
         with:
-          # mail server settings
           server_address: smtp.gmail.com
           server_port: 465
-          # user credentials
-          username: ${{ secrets.SMTP_PASSWORD }}
+          username: ${{ secrets.SMTP_USER }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Workflow Notification"
           body: ${{ steps.read_email_content.outputs.content }}
-          # comma-separated string, send email to
           to: mroess365@gmail.com
-          # from email name
           from: Batman
