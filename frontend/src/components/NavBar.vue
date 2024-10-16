@@ -16,7 +16,7 @@
             >
           </li>
           <li v-if="!isHomePage">
-            <router-link to="/news" class="text-white hover:text-blue-200 mr-9"
+            <router-link to="/news" class="text-white hover:text-blue-200"
               >News</router-link
             >
           </li>

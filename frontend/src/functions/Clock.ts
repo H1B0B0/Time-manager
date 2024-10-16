@@ -1,11 +1,19 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import type { ClockType } from "../types/ClockType";
 
 const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
+const getAuthHeaders = () => {
+  const token = Cookies.get("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const getClock = async (userId: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/clocks/${userId}`);
+    const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
+      headers: getAuthHeaders(),
+    });
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -15,7 +23,9 @@ export const getClock = async (userId: number) => {
 
 export const getLatestClock = async (userId: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/clocks/${userId}`);
+    const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
+      headers: getAuthHeaders(),
+    });
     return response.data.data[response.data.data.length - 1];
   } catch (error) {
     console.error(error);
@@ -28,6 +38,7 @@ export const createClock = async (userId: number, data: ClockType) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        ...getAuthHeaders(),
       },
     };
     const response = await axios.post(
@@ -42,14 +53,15 @@ export const createClock = async (userId: number, data: ClockType) => {
   }
 };
 
-// Get clocks by create a key value pair where the key is the date and the value are all the clocks for that date
 export const getClocksDate = async (
   userId: number,
   start: string,
   end: string
 ) => {
   try {
-    const response = await axios.get(`${BASE_URL}/clocks/${userId}`);
+    const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
+      headers: getAuthHeaders(),
+    });
     const clocks: ClockType[] = response.data.data;
     const clocksByDateArray: { date: string; clocks: ClockType[] }[] = [];
 
@@ -79,7 +91,6 @@ export const getClocksDate = async (
   }
 };
 
-// Get the time worked per day by creating a key value pair where the key is the date and the value is the time worked in that specific date
 export const hoursWorkedPerDay = (
   clocksByDateArray: { date: string; clocks: ClockType[] }[]
 ) => {
