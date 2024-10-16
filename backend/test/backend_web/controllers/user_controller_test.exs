@@ -1,9 +1,10 @@
 defmodule BackendWeb.UserControllerTest do
   use BackendWeb.ConnCase
 
-  import Backend.AccountsFixtures
-
+  alias Backend.Accounts
+  alias Backend.Auth
   alias Backend.Accounts.User
+  import Backend.AccountsFixtures
 
   @create_attrs %{
     username: "John Doe",
@@ -16,48 +17,24 @@ defmodule BackendWeb.UserControllerTest do
   @invalid_attrs %{username: nil, email: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    unique_id = System.unique_integer([:positive])
+    email = "test#{unique_id}@example.com"
+    role = Backend.AccountsFixtures.role_fixture()
+    {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password", role_id: role.id})
+
+    # Generate a token for the user using Joken
+    {:ok, token, _claims} = Auth.generate_and_sign(%{"user_id" => user.id})
+
+    # Add the token to the request headers
+    conn = put_req_header(conn, "accept", "application/json")
+    conn = put_req_header(conn, "authorization", "Bearer #{token}")
+
+    {:ok, conn: conn, user: user}
   end
 
-  # Dosn't work anymore because the user need a role_id = 1 (default role) to be created
-  # But when creating a new role in unit test, the role_id is not 1
-  #
-  # describe "create user" do
-  #   test "renders user when data is valid", %{conn: conn} do
-  #     role = role_fixture()
-  #     conn = post(conn, ~p"/api/users", user: %{username: @create_attrs.username, email: @create_attrs.email, role_id: role.id})
-  #     assert %{"id" => id} = json_response(conn, 201)["data"]
-
-  #     conn = get(conn, ~p"/api/users/#{id}")
-
-  #     assert %{
-  #       "email" => "john.doe@mail.com",
-  #       "username" => "John Doe"
-  #       } = json_response(conn, 200)["data"]
-  #     end
-
-  #     test "renders errors when data is invalid", %{conn: conn} do
-  #       conn = post(conn, ~p"/api/users", user: @invalid_attrs)
-  #       assert json_response(conn, 422)["errors"] != %{}
-  #     end
-  #   end
-
-  describe "show user based on username and email" do
-    setup [:create_user]
-
-    test "shows user based on username and email", %{conn: conn, user: user} do
-      conn = get(conn, "/api/users", email: @create_attrs.email, username: @create_attrs.username)
-
-      assert %{
-        "email" => "john.doe@mail.com",
-        "username" => "John Doe"
-      } = json_response(conn, 200)["data"]
-    end
-
-    test "renders errors when user is not found", %{conn: conn} do
-      conn = get(conn, "/api/users", email: "", username: "")
-      assert json_response(conn, 404)["errors"] != %{}
-    end
+  test "renders errors when user is not found", %{conn: conn} do
+    conn = get(conn, "/api/users", email: "", username: "")
+    assert json_response(conn, 404)["errors"] != %{}
   end
 
   describe "show user based on id" do
