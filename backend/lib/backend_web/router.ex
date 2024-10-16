@@ -15,6 +15,7 @@ defmodule BackendWeb.Router do
     get "/clocks/:userID", ClockController, :show
     post "/clocks/:userID", ClockController, :create
 
+    get "/user", UserController, :getAllUsers
     get "/users", UserController, :index
     get "/users/:id/", UserController, :show
     put "/users/:id", UserController, :update

@@ -60,6 +60,14 @@ defmodule Backend.Accounts do
     |> Repo.preload(:role)
   end
 
+  def get_all_users() do
+    query = from u in User,
+      select: u
+
+    Repo.all(query)
+    |> Repo.preload(:role)
+  end
+
   # Get the user by email
   def get_user_by_email(email) do
     query = from u in User,

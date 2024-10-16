@@ -8,6 +8,18 @@ defmodule BackendWeb.UserController do
 
   action_fallback BackendWeb.FallbackController
 
+  def getAllUsers(conn, _params) do
+    users = Accounts.get_all_users()
+    case users do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{errors: ["User not found"]})
+      _ ->
+        render(conn, :index, users: users)
+    end
+  end
+
   def index(conn, %{"email" => email, "username" => username}) do
     user = Accounts.get_user_by_username_and_email(username, email)
     case user do
