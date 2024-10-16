@@ -30,30 +30,6 @@ jobs:
         working-directory: backend
 
     steps:
-      - name: Read email content
-        id: read_email_content
-        # script multiline string
-        run: |
-          content=$(cat ${{ github.workspace }}/frontend/src/content/released-0.0.md)
-          echo "::set-output name=content::$content"
-
-      - name: Send mail
-        if: always()
-        uses: dawidd6/action-send-mail@v2
-        with:
-          # mail server settings
-          server_address: smtp.gmail.com
-          server_port: 465
-          # user credentials
-          username: ${{ secrets.SMTP_PASSWORD }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Workflow Notification"
-          body: ${{ steps.read_email_content.outputs.content }}
-          # comma-separated string, send email to
-          to: mroess365@gmail.com
-          # from email name
-          from: Batman
-
       - uses: actions/checkout@v4
       - name: Set up Elixir
         uses: erlef/setup-beam@61e01a43a562a89bfc54c7f9a378ff67b03e4a21 # v1.16.0
@@ -108,4 +84,35 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }} FRONTEND_DNS=${{ secrets.FRONTEND_DNS }} BACKEND_DNS=${{ secrets.BACKEND_DNS }} PGADMIN_DNS=${{ secrets.PGADMIN_DNS }} kuramacert=${{ secrets.kuramacert }} kuramakey=${{ secrets.kuramakey }}"
+  
+  mail:
+    name: Send mail
+    # needs: deploy
+    runs-on: ubuntu-latest
+    # if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Read email content
+        id: read_email_content
+        # script multiline string
+        run: |
+          content=$(cat ${{ github.workspace }}/frontend/src/content/released-0.0.md)
+          echo "::set-output name=content::$content"
+
+      - name: Send mail
+        if: always()
+        uses: dawidd6/action-send-mail@v2
+        with:
+          # mail server settings
+          server_address: smtp.gmail.com
+          server_port: 465
+          # user credentials
+          username: ${{ secrets.SMTP_PASSWORD }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Workflow Notification"
+          body: ${{ steps.read_email_content.outputs.content }}
+          # comma-separated string, send email to
+          to: mroess365@gmail.com
+          # from email name
+          from: Batman
      
