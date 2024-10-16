@@ -100,7 +100,7 @@ jobs:
         id: read_email_content
         # script multiline string
         run: |
-          content=$(cat /src/content/release-0.0.md)
+          content=$(cat frontend/src/content/release-0.0.md)
           echo "::set-output name=content::$content"
 
       - name: Send mail
