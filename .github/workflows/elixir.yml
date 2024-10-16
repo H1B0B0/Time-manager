@@ -97,7 +97,7 @@ jobs:
       - name: Read email content
         id: read_email_content
         run: |
-          content=$(cat frontend/src/content/release-0.0.md)
+          content=$(cat frontend/src/content/${{ github.ref_name }}.md)
           echo "content<<EOF" >> $GITHUB_ENV
           echo "$content" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
