@@ -3,6 +3,7 @@ defmodule BackendWeb.WorkingtimeControllerTest do
 
   import Backend.WorkingTimeFixtures
   alias Backend.Accounts
+  alias Backend.Auth
 
   @create_attrs %{
     start: ~N[2024-10-06 12:13:00],
@@ -19,7 +20,15 @@ defmodule BackendWeb.WorkingtimeControllerTest do
     email = "test#{unique_id}@example.com"
     role = Backend.AccountsFixtures.role_fixture()
     {:ok, user} = Accounts.create_user(%{username: "testuser#{unique_id}", name: "Test User", email: email, password: "password", role_id: role.id})
-    {:ok, conn: put_req_header(conn, "accept", "application/json"), user: user}
+
+    # Generate a token for the user using Joken
+    {:ok, token, _claims} = Auth.generate_and_sign(%{"user_id" => user.id})
+
+    # Add the token to the request headers
+    conn = put_req_header(conn, "accept", "application/json")
+    conn = put_req_header(conn, "authorization", "Bearer #{token}")
+
+    {:ok, conn: conn, user: user}
   end
 
   describe "create workingtime" do
@@ -76,10 +85,8 @@ defmodule BackendWeb.WorkingtimeControllerTest do
       conn = delete(conn, ~p"/api/workingtime/#{workingtime_id}")
       assert response(conn, 204)
 
-
       conn = get(conn, ~p"/api/workingtime/#{user.id}/#{workingtime_id}")
       assert response(conn, 404)
-
     end
   end
 
