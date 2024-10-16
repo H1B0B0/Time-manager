@@ -50,6 +50,8 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=5173"
     command: /bin/sh -c "npm install && npm run dev -- --host"
+    depends_on:
+      - traefik
 
   traefik:
     restart: always
@@ -84,6 +86,7 @@ services:
       - "traefik.http.services.pgadmin.loadbalancer.server.port=80"
     depends_on:
       - database
+      - traefik
     volumes:
       - pgadmin:/var/lib/pgadmin
 
