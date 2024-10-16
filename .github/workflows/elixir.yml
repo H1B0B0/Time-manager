@@ -115,3 +115,4 @@ jobs:
           body: ${{ env.content }}
           to: mroess365@gmail.com
           from: Batman
+          content_type: text/html
