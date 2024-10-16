@@ -98,7 +98,6 @@ jobs:
         id: read_email_content
         run: |
           content=$(cat frontend/src/content/release-0.0.md)
-          content="<html><body>${content}</body></html>"
           echo "content<<EOF" >> $GITHUB_ENV
           echo "$content" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
