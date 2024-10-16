@@ -1,0 +1,13 @@
+{
+  "elixirLS.projectDir": "backend",
+  "elixirLS.mixEnv": "test",
+  "files.exclude": {
+    "backend/_build": true
+  },
+  "search.exclude": {
+    "backend/_build": true
+  },
+  "files.watcherExclude": {
+    "backend/_build": true
+  }
+}
