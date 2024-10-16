@@ -16,7 +16,7 @@
             >
           </li>
           <li v-if="!isHomePage">
-            <router-link to="/news" class="text-white hover:text-blue-200 mr-9"
+            <router-link to="/news" class="text-white hover:text-blue-200"
               >News</router-link
             >
           </li>
@@ -87,7 +87,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
-import { getUser } from "@/functions/User";
 import { useUserStore } from "@/stores/use-user-store";
 
 const route = useRoute();
