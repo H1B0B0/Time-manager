@@ -19,7 +19,7 @@
         class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
       <button
-        @click="login"
+        @click="Handlelogin"
         :disabled="!email || !password"
         class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed"
       >
@@ -79,11 +79,10 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
-import { createUser, getUser } from "@/functions/User";
+import { createUser, login } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
 import axios from "axios"; // Import axios
-
 
 const email = ref("");
 const username = ref("");
@@ -93,13 +92,12 @@ const newUsername = ref("");
 const isCreating = ref(false);
 const error = ref("");
 
-
-const login = async () => {
+const Handlelogin = async () => {
   try {
     error.value = "";
-    const response = await getUser(email.value, password.value);
-    useUserStore().setUser(response);
-    console.log(response);
+    const response = await login(email.value, password.value);
+    useUserStore().setUser(response.data);
+    console.log(response.data);
     toast.success("Successfully logged in");
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
@@ -110,7 +108,6 @@ const login = async () => {
     toast.error(error.value);
   }
 };
-
 
 const register = async () => {
   try {

@@ -1,32 +1,42 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import type { UserType } from "../types/UserType";
 
 const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
+const getAuthHeaders = () => {
+  const token = Cookies.get("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const getUserById = async (id: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/${id}`);
+    const response = await axios.get(`${BASE_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
-export const getUser = async (email: string, password: string) => {
+
+export const getUser = async (username: string, email: string) => {
   try {
-    const response = await axios.post(`${BASE_URL}/auth/login`, {
-      user: { email, password }
+    const response = await axios.get(`${BASE_URL}/users/`, {
+      params: {
+        username,
+        email,
+      },
+      headers: getAuthHeaders(),
     });
     return response.data.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.message);
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    console.error(error);
     throw error;
   }
 };
+
 export const createUser = async (data: UserType) => {
   try {
     const config = {
@@ -51,6 +61,7 @@ export const updateUser = async (id: number, data: UserType) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
+        ...getAuthHeaders(),
       },
     };
     const response = await axios.put(
@@ -67,15 +78,45 @@ export const updateUser = async (id: number, data: UserType) => {
 
 export const deleteUser = async (id: number) => {
   try {
-    return await axios.delete(`${BASE_URL}/users/${id}`);
+    return await axios.delete(`${BASE_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
 
-// Usage:
-// onMounted(async () => {
-//   const user = await getUserById(5)
-//   console.log(user)
-// })
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/login`, {
+      user: { email, password },
+    });
+    const token = response.data.token;
+    const expirationDate = new Date(new Date().getTime() + 12 * 60 * 60 * 1000);
+    Cookies.set("token", token, { expires: expirationDate });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const GetUserByToken = async () => {
+  try {
+    const token = Cookies.get("token");
+    if (!token) {
+      throw new Error("No token found");
+    }
+    console.log(token);
+    const response = await axios.get(`${BASE_URL}/auth/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
