@@ -13,6 +13,7 @@ const tristantModeSplineViewerUrl =
 const splineViewerUrl = ref(defaultSplineViewerUrl);
 const isTristantMode = ref(false);
 const performanceMode = ref(false);
+const isMobile = ref(false);
 
 const updateSplineViewerUrl = () => {
   isTristantMode.value = localStorage.getItem("tristantMode") === "true";
@@ -41,6 +42,7 @@ onMounted(() => {
 
   if (isMobileDevice()) {
     performanceMode.value = true;
+    isMobile.value = true;
   }
 
   window.addEventListener("keydown", async (event) => {
@@ -157,6 +159,7 @@ setTimeout(() => {
     </main>
   </div>
   <label
+    v-if="!isMobile"
     class="inline-flex items-center cursor-pointer fixed bottom-4 left-4 z-30"
   >
     <input
