@@ -98,7 +98,9 @@ jobs:
         id: read_email_content
         run: |
           content=$(cat frontend/src/content/release-0.0.md)
-          echo "::set-output name=content::$content"
+          echo "content<<EOF" >> $GITHUB_ENV
+          echo "$content" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Send mail
         if: always()
@@ -110,6 +112,6 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Workflow Notification"
           convert_markdown: true
-          body: ${{ steps.read_email_content.outputs.content }}
+          body: ${{ steps.read_email_content.outputs }}
           to: mroess365@gmail.com
           from: Batman
