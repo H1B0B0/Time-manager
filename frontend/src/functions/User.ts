@@ -140,7 +140,7 @@ export const getAllUsers = async () => {
         },
       }
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error(error);
     throw error;
