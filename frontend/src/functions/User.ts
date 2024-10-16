@@ -37,10 +37,13 @@ export const getUser = async (username: string, email: string) => {
   }
 };
 
-
-export const createUser = async (email: string, username: string, password: string) => {
+export const createUser = async (
+  email: string,
+  username: string,
+  password: string
+) => {
   try {
-    const response = await axios.post("/api/users", {
+    const response = await axios.post(`${BASE_URL}/api/users`, {
       email,
       username,
       password,
@@ -132,14 +135,11 @@ export const getAllUsers = async () => {
       throw new Error("No token found");
     }
     console.log(token);
-    const response = await axios.get(
-      `${BASE_URL}/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
