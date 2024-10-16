@@ -109,11 +109,17 @@ export const GetUserByToken = async () => {
       throw new Error("No token found");
     }
     console.log(token);
-    const response = await axios.get(`${BASE_URL}/auth/user`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.post(
+      `${BASE_URL}/auth/user`,
+      {
+        token: token,
       },
-    });
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data.data;
   } catch (error) {
     console.error(error);

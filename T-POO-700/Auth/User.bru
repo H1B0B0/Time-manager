@@ -7,10 +7,14 @@ meta {
 post {
   url: http://localhost:4000/api/auth/user
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MTIzOTg2LCJpYXQiOjE3MjkwODA3ODYsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZlcmszN2kxb25jajc3ZGswMDEwMjEiLCJuYmYiOjE3MjkwODA3ODYsInVzZXJfaWQiOjV9.iCaccVhKmrD6vTWqGw1ZrIKjmPLvXBC923AVzhjF2-g
 }
 
 body:json {
-  {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MDQyNTg5LCJpYXQiOjE3Mjg5OTkzODksImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZhN2k1bGQzaGY3ZjFqdmMwMDAwczgiLCJuYmYiOjE3Mjg5OTkzODksInVzZXJfaWQiOjR9.k1iOxmgmKzqA35MmuRXNtlRE0ka0FE4qxSo-x0gNhFo"
+  {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MTIzOTg2LCJpYXQiOjE3MjkwODA3ODYsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZlcmszN2kxb25jajc3ZGswMDEwMjEiLCJuYmYiOjE3MjkwODA3ODYsInVzZXJfaWQiOjV9.iCaccVhKmrD6vTWqGw1ZrIKjmPLvXBC923AVzhjF2-g"
   }
 }
