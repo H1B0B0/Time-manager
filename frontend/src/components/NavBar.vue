@@ -8,7 +8,11 @@
         class="hidden lg:flex lg:flex-grow lg:justify-center lg:items-center lg:space-x-4"
       >
         <ul class="flex space-x-4">
-          <li v-if="!isHomePage">
+          <li
+            v-if="
+              userStore.user.username && (!isHomePage || !userStore.getUser)
+            "
+          >
             <router-link
               to="/dashboard/1"
               class="text-white hover:text-blue-200"
@@ -28,7 +32,7 @@
             v-if="!userStore.user.username"
             class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950"
           >
-            <router-link to="/user" class="text-white">Sign in →</router-link>
+            <router-link to="/login" class="text-white">Sign in →</router-link>
           </li>
           <li v-else>
             <DropdownProfile
@@ -60,7 +64,7 @@
           class="absolute right-0 mt-12 w-48 bg-white rounded-lg shadow-lg z-50"
         >
           <ul class="py-2">
-            <li v-if="!isHomePage">
+            <li v-if="userStore.user.username && !isHomePage">
               <router-link
                 to="/dashboard/1"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -76,7 +80,7 @@
             </li>
             <li v-if="!userStore.user.username">
               <router-link
-                to="/user"
+                to="/login"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >Sign in →</router-link
               >
