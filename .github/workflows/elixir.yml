@@ -98,7 +98,7 @@ jobs:
         id: read_email_content
         run: |
           content=$(cat frontend/src/content/release-0.0.md)
-          content="<html>${content}</html>"
+          content="<html><body>${content}</body></html>"
           echo "content<<EOF" >> $GITHUB_ENV
           echo "$content" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -111,6 +111,7 @@ jobs:
           username: ${{ secrets.SMTP_USER }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Workflow Notification"
+          convert_markdown: true
           body: ${{ env.content }}
           to: mroess365@gmail.com
           from: Batman
