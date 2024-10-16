@@ -24,9 +24,14 @@
       </div>
       <div class="hidden lg:flex ml-auto">
         <ul class="flex space-x-4">
-          <li class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950">
+          <li v-if="(userStore.getUser.email === undefined)"  class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950">
             <router-link to="/user" class="text-white">Sign in →</router-link>
           </li>
+          <li v-else>
+            <p class="text-white">Welcome {{ userStore.user.email }} </p>
+          </li>
+
+
         </ul>
       </div>
       <div class="flex flex-col lg:hidden">
@@ -63,10 +68,13 @@
                 >News</router-link
               >
             </li>
-            <li
+            <li v-if="(userStore.getUser === null)">
               class="border border-blue-950 p-2 rounded-lg hover:bg-indigo-950"
             >
               <router-link to="/user" class="text-white">Sign in →</router-link>
+            </li>
+            <li v-else >
+              <p class="text-white">Welcome {{ userStore.user.email }}</p>
             </li>
           </ul>
         </div>
@@ -78,11 +86,18 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { computed, ref } from "vue";
+import { getUser } from "@/functions/User";
+import { useUserStore } from "@/stores/use-user-store";
+
 
 const route = useRoute();
 const isHomePage = computed(() => route.path === "/");
 const showSignIn = true; // Always show Sign In
 const menuOpen = ref(false);
+const userStore = useUserStore();
+
+console.log(userStore.getUser.email);
+
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
