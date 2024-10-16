@@ -87,7 +87,7 @@ jobs:
 
   mail:
     name: Send mail
-    # needs: deploy
+    needs: deploy
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
 
