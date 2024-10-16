@@ -111,7 +111,6 @@ jobs:
           username: ${{ secrets.SMTP_USER }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Workflow Notification"
-          convert_markdown: true
           body: ${{ env.content }}
           to: mroess365@gmail.com
           from: Batman
