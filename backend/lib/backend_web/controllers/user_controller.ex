@@ -48,6 +48,9 @@ defmodule BackendWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = Accounts.get_user(id)
 
+    # The user can't update his own role
+    user_params = Map.delete(user_params, "role_id")
+
     if !user do
       conn
       |> put_status(:not_found)
