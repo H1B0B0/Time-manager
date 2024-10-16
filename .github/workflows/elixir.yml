@@ -25,16 +25,13 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - name: Read email content
-        working-directory: frontend
         id: read_email_content
+        # script multiline string
         run: |
-          content=$(cat /src/content/release-0.0.md)
+          content=$(cat ${{ github.workspace }}/frontend/src/content/released-0.0.md)
           echo "::set-output name=content::$content"
 
       - name: Send mail
@@ -45,8 +42,8 @@ jobs:
           server_address: smtp.gmail.com
           server_port: 465
           # user credentials
-          username: rafalebot@gmail.com
-          password: bdtw bejg rksr orek
+          username: ${{ secrets.SMTP_PASSWORD }}
+          password: ${{ secrets.SMTP_PASSWORD }}
           subject: "Workflow Notification"
           body: ${{ steps.read_email_content.outputs.content }}
           # comma-separated string, send email to
