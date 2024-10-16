@@ -1,9 +1,54 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import NavBar from "./components/NavBar.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js"; // Spline Viewer
+
+const defaultSplineViewerUrl =
+  "https://prod.spline.design/soRsUYV4PO0dCd6S/scene.splinecode";
+const tristantModeSplineViewerUrl =
+  "https://prod.spline.design/yYE1SLuUDlq5OnM8/scene.splinecode";
+
+const splineViewerUrl = ref(defaultSplineViewerUrl);
+const isTristantMode = ref(false);
+
+const updateSplineViewerUrl = () => {
+  isTristantMode.value = localStorage.getItem("tristantMode") === "true";
+  splineViewerUrl.value = isTristantMode.value
+    ? tristantModeSplineViewerUrl
+    : defaultSplineViewerUrl;
+
+  // Ajouter ou supprimer la classe tristant-mode au body
+  if (isTristantMode.value) {
+    document.body.classList.add("tristant-mode");
+  } else {
+    document.body.classList.remove("tristant-mode");
+  }
+};
+
+onMounted(() => {
+  updateSplineViewerUrl();
+
+  window.addEventListener("keydown", async (event) => {
+    if (event.ctrlKey && event.key === "t") {
+      // Toggle tristant mode
+      const currentMode = localStorage.getItem("tristantMode") === "true";
+      localStorage.setItem("tristantMode", (!currentMode).toString());
+
+      // Clear cache
+      if ("caches" in window) {
+        const cacheNames = await caches.keys();
+        for (const cacheName of cacheNames) {
+          await caches.delete(cacheName);
+        }
+      }
+      console.log("Cache cleared!");
+
+      location.reload();
+    }
+  });
+});
 
 setTimeout(() => {
   let favicon_video_image_counter = 0;
@@ -64,37 +109,58 @@ setTimeout(() => {
   }, 100);
 }, 2000);
 
-const performanceMode = ref(false)
+const performanceMode = ref(false);
 const handlePerformanceMode = () => {
   performanceMode.value = !performanceMode.value;
 };
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col relative bg-black">
+  <div
+    :class="{ 'tristant-mode': isTristantMode }"
+    class="min-h-screen flex flex-col relative bg-black"
+  >
     <header class="w-full z-20 bg-transparent">
       <NavBar />
     </header>
 
-    <main class="flex-grow flex items-center justify-center bg-transparent z-10">
-      <spline-viewer class="absolute inset-0 w-full h-full"
-        url="https://prod.spline.design/soRsUYV4PO0dCd6S/scene.splinecode" play="true" v-show="!performanceMode" />
+    <main
+      class="flex-grow flex items-center justify-center bg-transparent z-10"
+    >
+      <spline-viewer
+        class="absolute inset-0 w-full h-full"
+        :url="splineViewerUrl"
+        play="true"
+        v-show="!performanceMode"
+      />
       <div class="z-20">
         <RouterView />
       </div>
     </main>
   </div>
-  <label class="inline-flex items-center cursor-pointer fixed bottom-4 left-4 z-30">
-    <input type="checkbox" @change="handlePerformanceMode" class="sr-only peer">
+  <label
+    class="inline-flex items-center cursor-pointer fixed bottom-4 left-4 z-30"
+  >
+    <input
+      type="checkbox"
+      @change="handlePerformanceMode"
+      class="sr-only peer"
+    />
     <div
-      class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-    </div>
-    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Performance Mode</span>
+      class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+    ></div>
+    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+      >Performance Mode</span
+    >
   </label>
 </template>
 
 <style>
 #container #logo {
   display: none !important;
+}
+
+body.tristant-mode {
+  cursor: url("./assets/tristan.png"), auto;
 }
 </style>
