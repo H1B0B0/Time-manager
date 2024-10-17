@@ -39,6 +39,14 @@ startTime2 = NaiveDateTime.from_iso8601!("2024-10-15T08:20:00")
 endTime2 = NaiveDateTime.from_iso8601!("2024-10-15T17:40:00")
 Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
 
+startTime2 = NaiveDateTime.from_iso8601!("2024-10-16T08:20:00")
+endTime2 = NaiveDateTime.from_iso8601!("2024-10-16T15:40:00")
+Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
+
+startTime2 = NaiveDateTime.from_iso8601!("2024-10-17T08:20:00")
+endTime2 = NaiveDateTime.from_iso8601!("2024-10-17T12:40:00")
+Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
+
 startTime2 = NaiveDateTime.from_iso8601!("2024-10-07T09:00:00")
 endTime2 = NaiveDateTime.from_iso8601!("2024-10-07T17:00:00")
 Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user2.id})
