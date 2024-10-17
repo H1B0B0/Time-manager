@@ -6,8 +6,14 @@ import { toast, type ToastOptions } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
 const route = useRoute();
-const workingTimes = ref([]);
-const userId = ref(route.params.userID);
+interface WorkingTime {
+  id: number;
+  start: string;
+  end: string;
+}
+
+const workingTimes = ref<WorkingTime[]>([]);
+const userId = ref(Array.isArray(route.params.userID) ? route.params.userID[0] : route.params.userID);
 
 const toastOptions: ToastOptions = {
   autoClose: 3000,
@@ -20,8 +26,7 @@ const fetchData = async () => {
       "2024-10-14 12:10:00Z",
       "2024-10-14 20:14:00Z"
     );
-    console.log(response.data);
-    workingTimes.value = response.data;
+    workingTimes.value = response;
     toast.success("Working times fetched successfully", toastOptions);
   } catch (error) {
     console.error(error);
@@ -36,7 +41,7 @@ onMounted(() => {
 
 watch(route, () => {
   console.log("Route changed, fetching new data...");
-  userId.value = route.params.userID;
+  userId.value = Array.isArray(route.params.userID) ? route.params.userID[0] : route.params.userID;
   fetchData();
 });
 </script>

@@ -12,8 +12,8 @@ import "vue3-toastify/dist/index.css";
 
 const route = useRoute();
 const router = useRouter();
-const userID = ref(route.params.userID);
-const workingTimeID = ref(route.params.workingTimeID);
+const userID = ref(route.params.userID as string);
+const workingTimeID = ref(route.params.workingTimeID as string);
 const workingTimeData = ref({
   start: "",
   end: "",
@@ -91,7 +91,7 @@ const handleUpdate = async () => {
 const handleDelete = async () => {
   try {
     console.log("Deleting working time with ID:", workingTimeID.value);
-    await deleteWorkingTime(userID.value, workingTimeID.value);
+    await deleteWorkingTime(workingTimeID.value);
     console.log("Working time deleted successfully");
     toast.success("Working time deleted successfully", toastOptions);
   } catch (error) {
@@ -107,8 +107,8 @@ onMounted(() => {
 
 watch(route, () => {
   console.log("Route changed, fetching new data...");
-  userID.value = route.params.userID;
-  workingTimeID.value = route.params.workingTimeID;
+  userID.value = route.params.userID as string;
+  workingTimeID.value = route.params.workingTimeID as string;
   fetchData();
 });
 </script>

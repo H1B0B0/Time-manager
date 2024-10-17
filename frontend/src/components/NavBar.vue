@@ -14,10 +14,15 @@
             "
           >
             <router-link
-              to="/dashboard/1"
               class="text-white hover:text-blue-200"
-              >Dashboard</router-link
+              :to="
+                userStore.user.role === 'Manager'
+                  ? `/admin/dashboard/${userStore.user.id}`
+                  : '/dashboard/1'
+              "
             >
+              Dashboard
+            </router-link>
           </li>
           <li v-if="!isHomePage">
             <router-link to="/news" class="text-white hover:text-blue-200"

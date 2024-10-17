@@ -33,7 +33,7 @@ export const getLatestClock = async (userId: number) => {
   }
 };
 
-export const createClock = async (userId: number, data: ClockType) => {
+export const createClock = async (userId: string, data: ClockType) => {
   try {
     const config = {
       headers: {

@@ -114,7 +114,13 @@ const Handlelogin = async () => {
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
     console.log(response.data);
-    router.push(`/dashboard/${response.data.id}`);
+    toast.success("Successfully logged in");
+    if (response.data.role === "Manager") {
+      router.push(`/admin/dashboard/${response.data.id}`);
+    }
+    else {
+      router.push(`/dashboard/${response.data.id}`); // Rediriger vers le tableau de bord
+    }
 
   } catch (err) {
 
