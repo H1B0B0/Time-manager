@@ -1,7 +1,11 @@
 <template>
-  <div class="relative">
+  <div class="relative border p-1 rounded-xl">
     <button @click="toggleDropdown" class="text-white flex items-center">
-    <img :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${username}`" class="rounded-full h-8 mx-2" />      {{ username }}
+      <img
+        :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${username}`"
+        class="rounded-full h-8 mx-2"
+      />
+      {{ username }}
       <svg
         class="w-4 h-4 ml-1"
         fill="none"
@@ -19,20 +23,18 @@
     </button>
     <div
       v-if="isOpen"
-      class="absolute right-0 mt-2 w-48 z-50 border border-white rounded backdrop-blur-sm"
+      class="absolute right-0 mt-4 w-48 z-50 border border-white rounded-xl backdrop-blur-sm"
     >
       <ul class="py-2">
         <li>
-          <router-link
-            to="/settings"
-            class="block px-4 py-2 text-white "
+          <router-link to="/settings" class="block px-4 py-2 text-white"
             >Edit</router-link
           >
         </li>
         <li>
           <button
             @click="handleLogout"
-            class="block w-full text-left px-4 py-2 text-white "
+            class="block w-full text-left px-4 py-2 text-white"
           >
             Logout
           </button>
@@ -43,13 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const props = defineProps<{
   username: string;
 }>();
 
-const emit = defineEmits(['logout']);
+const emit = defineEmits(["logout"]);
 
 const isOpen = ref(false);
 
@@ -58,7 +60,7 @@ const toggleDropdown = () => {
 };
 
 const handleLogout = () => {
-  emit('logout');
+  emit("logout");
   isOpen.value = false;
 };
 </script>
