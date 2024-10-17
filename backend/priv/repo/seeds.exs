@@ -71,4 +71,4 @@ time7 = NaiveDateTime.from_iso8601!("2024-10-08T08:30:00")
 Backend.Repo.insert!(%Clock{status: true, time: time7, user_id: user3.id})
 
 time8 = NaiveDateTime.from_iso8601!("2024-10-08T15:30:00")
-Backend.Repo.insert!(%Clock{status: true, time: time8, user_id: user3.id})
+Backend.Repo.insert!(%Clock{status: false, time: time8, user_id: user3.id})

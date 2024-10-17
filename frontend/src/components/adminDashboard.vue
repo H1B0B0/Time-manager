@@ -148,7 +148,7 @@ export default {
     const users = ref([]);
 
     const viewUserInfo = (id) => {
-      router.push({ name: "Dashboard", params: { id: id } });
+      router.push({ path: `/dashboard/${id}` });
     };
 
     getAllUsers().then((response) => {
