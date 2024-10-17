@@ -3,7 +3,7 @@ import { getClock } from "@/functions/Clock";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const clockData = ref(null);
+const clockData = ref<any[]>([]);
 const render = ref(false);
 const route = useRoute();
 const router = useRouter();
@@ -11,10 +11,10 @@ const userID = ref(route.params.userID);
 
 const fetchClockData = async () => {
   try {
-    const result = await getClock(userID.value);
+    const result = await getClock(Number(userID.value));
     clockData.value = result.data;
     console.log("Fetched clock data:", clockData.value);
-    render.value = clockData.value.length > 0;
+    render.value = clockData.value && clockData.value.length > 0;
   } catch (error) {
     console.error("Error fetching clock data:", error);
   }

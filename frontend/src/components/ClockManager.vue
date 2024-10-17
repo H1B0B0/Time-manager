@@ -29,8 +29,8 @@ const formatDate = (date: string) => {
 
 const handleClockCreation = async () => {
   try {
-    const newClock = await createClock(userId.value, {
-      user_id: userId.value,
+    const newClock = await createClock(userId.value.toString(), {
+      user_id: userId.value.toString(),
       status: !clockedIn.value,
       time: new Date(),
     });
@@ -53,18 +53,23 @@ const message = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col  text-gray-100 items-center justify-center p-8 rounded-lg">
+  <div
+    class="flex flex-col text-gray-100 items-center justify-center p-8 rounded-lg"
+  >
     <main class="w-full flex flex-col items-center py-4">
-      <button v-on:click="handleClockCreation" :class="[
-        'text-2xl',
-        'font-bold',
-        'text-white',
-        'py-2',
-        'px-4',
-        'rounded-full',
-        'shadow-lg',
-        clockedIn ? 'bg-red-500' : 'bg-green-500',
-      ]">
+      <button
+        v-on:click="handleClockCreation"
+        :class="[
+          'text-2xl',
+          'font-bold',
+          'text-white',
+          'py-2',
+          'px-4',
+          'rounded-full',
+          'shadow-lg',
+          clockedIn ? 'bg-red-500' : 'bg-green-500',
+        ]"
+      >
         {{ clockedIn ? "Clock Out" : "Clock In" }}
       </button>
 
