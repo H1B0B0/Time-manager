@@ -92,7 +92,7 @@ import { useUserStore } from "@/stores/use-user-store";
 import { createUser, login, GetUserByToken } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -113,6 +113,14 @@ const Handlelogin = async () => {
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
     console.log(response.data);
+    setTimeout(() => {
+      confetti({
+        particleCount: 200,
+        spread: 160,
+        origin: { x: 0.5, y: 0.5 },
+        zIndex: 9999, // Augmenter le z-index
+      });
+    }, 100);
     toast.success("Successfully logged in");
     if (response.data.role === "Manager") {
       router.push(`/admin/dashboard/${response.data.id}`);
@@ -155,14 +163,15 @@ const register = async () => {
       username: newUsername.value,
       password: newPassword.value,
     });
+    setTimeout(() => {
+      confetti({
+        particleCount: 200,
+        spread: 160,
+        origin: { x: 0.5, y: 0.5 },
+        zIndex: 9999, // Augmenter le z-index
+      });
+    }, 100);
     toast.success("Account created successfully");
-    confetti({
-      particleCount: 200,
-      spread: 160,
-      origin: { x: 0.5, y: 0.5 },
-      zIndex: 2,
-    });
-    router.push("/dashboard");
   } catch (error) {
     toast.error("Error creating the account");
   }

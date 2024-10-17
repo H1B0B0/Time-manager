@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import type { UserType } from "../types/UserType";
+import router from "../router";
 
 const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
@@ -101,6 +102,7 @@ export const deleteUser = async (id: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
+    router.push("/");
   } catch (error) {
     console.error(`Failed to delete user with id ${id}:`, error);
     throw new Error(`Failed to delete user with id ${id}`);
