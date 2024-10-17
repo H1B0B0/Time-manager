@@ -33,6 +33,12 @@ defmodule BackendWeb.Router do
     post "/auth/user", AuthController, :user
 
     post "/user/:id/role/:role_id", UserRoleController, :update
+
+    get "/teams", TeamController, :index
+    get "/teams/:id", TeamController, :show
+    post "/teams", TeamController, :create
+    put "/teams/:id", TeamController, :update
+    delete "/teams/:id", TeamController, :delete
   end
 
   scope "/api", BackendWeb do
