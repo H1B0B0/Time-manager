@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "serve": "serve -s dist"
+    "serve": "serve -s dist -p 5173"
   },
   "dependencies": {
     "@splinetool/react-spline": "^4.0.0",
