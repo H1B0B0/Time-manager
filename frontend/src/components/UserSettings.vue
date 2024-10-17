@@ -77,7 +77,7 @@ const updateAccount = async () => {
         );
         return;
       }
-      if (passwordStrength(newPassword.value).id < 2) {
+      if (passwordStrength(newPassword.value).id < 2 && newPassword.value.length < 8) {
         const contains = passwordStrength(newPassword.value).contains;
         if (!contains.includes('lowercase')) {
           toast.error("Password must contain at least one lowercase letter.");
