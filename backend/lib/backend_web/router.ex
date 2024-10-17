@@ -39,6 +39,9 @@ defmodule BackendWeb.Router do
     post "/teams", TeamController, :create
     put "/teams/:id", TeamController, :update
     delete "/teams/:id", TeamController, :delete
+
+    post "/user/:id/team/:team_id", UserTeamController, :update
+    delete "/user/:id/team", UserTeamController, :delete
   end
 
   scope "/api", BackendWeb do
