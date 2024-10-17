@@ -109,7 +109,6 @@ const error = ref("");
 
 const Handlelogin = async () => {
   try {
-
     error.value = "";
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
@@ -117,13 +116,10 @@ const Handlelogin = async () => {
     toast.success("Successfully logged in");
     if (response.data.role === "Manager") {
       router.push(`/admin/dashboard/${response.data.id}`);
+    } else {
+      router.push(`/dashboard/${response.data.id}`);
     }
-    else {
-      router.push(`/dashboard/${response.data.id}`); // Rediriger vers le tableau de bord
-    }
-
   } catch (err) {
-
     if (axios.isAxiosError(err) && err.response) {
       if (err.response.status === 401) {
         error.value = "Invalid login credentials";
@@ -185,7 +181,7 @@ onMounted(async () => {
     const user = await GetUserByToken();
     if (user) {
       userStore.setUser(user);
-      router.push(`/dashboard/${user.id}`); // Rediriger vers le tableau de bord si déjà connecté
+      router.push(`/dashboard/${user.id}`);
     }
   } catch (error) {
     console.log("User not logged in");
