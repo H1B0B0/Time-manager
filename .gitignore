@@ -1,3 +1,4 @@
 .env
 inventory.ini
 key.pem
+.ds_store

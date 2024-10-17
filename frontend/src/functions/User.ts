@@ -56,17 +56,17 @@ export const createUser = async (data: UserType) => {
   }
 };
 
-
-
-
-export const updateUser = async (id: number, data: {
-  username: string;
-  email: string;
-  old_password?: string;
-  password?: string;
-  oldPassword?: string;
-  newPassword?: string;
-}) => {
+export const updateUser = async (
+  id: number,
+  data: {
+    username: string;
+    email: string;
+    old_password?: string;
+    password?: string;
+    oldPassword?: string;
+    newPassword?: string;
+  }
+) => {
   try {
     const config = {
       headers: {
@@ -78,7 +78,7 @@ export const updateUser = async (id: number, data: {
     const userData = {
       ...data,
       old_password: data.old_password || data.oldPassword,
-      password: data.password || data.newPassword
+      password: data.password || data.newPassword,
     };
 
     delete userData.oldPassword;
@@ -96,14 +96,14 @@ export const updateUser = async (id: number, data: {
   }
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: number): Promise<void> => {
   try {
-    return await axios.delete(`${BASE_URL}/users/${id}`, {
+    await axios.delete(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
   } catch (error) {
-    console.error(error);
-    throw error;
+    console.error(`Failed to delete user with id ${id}:`, error);
+    throw new Error(`Failed to delete user with id ${id}`);
   }
 };
 

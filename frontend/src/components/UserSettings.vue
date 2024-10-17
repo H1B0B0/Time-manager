@@ -64,22 +64,23 @@ const updateAccount = async () => {
   }
 
   try {
-const updatedData = {
-  email: email.value,
-  username: username.value,
-};
+    const updatedData = {
+      email: email.value,
+      username: username.value,
+    };
 
-if (oldPassword.value || newPassword.value) {
-  if (!oldPassword.value || !newPassword.value) {
-    toast.error("Both old and new passwords are required for password update.");
-    return;
-  }
-  updatedData.old_password = oldPassword.value;
-  updatedData.password = newPassword.value;
-}
+    if (oldPassword.value || newPassword.value) {
+      if (!oldPassword.value || !newPassword.value) {
+        toast.error(
+          "Both old and new passwords are required for password update."
+        );
+        return;
+      }
+      updatedData.old_password = oldPassword.value;
+      updatedData.password = newPassword.value;
+    }
 
     const response = await updateUser(userStore.user.id, updatedData);
-
 
     if (response && response.id) {
       userStore.setUser(response);
@@ -99,17 +100,20 @@ if (oldPassword.value || newPassword.value) {
 };
 
 const confirmDeleteAccount = () => {
-  if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+  if (
+    confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    )
+  ) {
     deleteAccount();
   }
 };
 
 const deleteAccount = async () => {
   try {
-    await deleteUser();
+    await deleteUser(userStore.user.id);
     userStore.setUser(null);
     toast.success("Successfully deleted account");
-    // Redirect to home page or login page
   } catch (error) {
     toast.error(`Error deleting account: ${error.message}`);
   }
