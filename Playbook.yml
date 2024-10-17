@@ -115,4 +115,4 @@
     - name: Deploy Docker Compose stack
       become: yes
       become_user: root
-      command: docker compose -f /app/docker-compose.prod.yml up -d
+      command: docker compose -f /app/Docker-compose.prod.yml up -d
