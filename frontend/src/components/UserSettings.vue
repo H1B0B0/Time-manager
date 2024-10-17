@@ -50,6 +50,7 @@ import { ref } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 import { updateUser, deleteUser } from "@/functions/User";
 import { toast } from "vue3-toastify";
+import { passwordStrength } from 'check-password-strength'
 
 const userStore = useUserStore();
 const email = ref(userStore.user?.email ?? "");
@@ -76,6 +77,21 @@ const updateAccount = async () => {
         );
         return;
       }
+      if (passwordStrength(newPassword.value).id < 2) {
+        const contains = passwordStrength(newPassword.value).contains;
+        if (!contains.includes('lowercase')) {
+          toast.error("Password must contain at least one lowercase letter.");
+          return;
+        }
+        if (!contains.includes('uppercase')) {
+          toast.error("Password must contain at least one uppercase letter.");
+          return;
+        }
+        if (!contains.includes('number')) {
+          toast.error("Password must contain at least one number.");
+          return;
+        }
+      }
       updatedData.old_password = oldPassword.value;
       updatedData.password = newPassword.value;
     }
@@ -88,6 +104,7 @@ const updateAccount = async () => {
       if (updatedData.newPassword) {
         toast.info("Password has been changed");
       }
+
       oldPassword.value = "";
       newPassword.value = "";
     } else {
