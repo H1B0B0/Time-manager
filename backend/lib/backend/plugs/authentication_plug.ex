@@ -11,8 +11,6 @@ defmodule Backend.Plugs.AuthenticationPlug do
     authorization_header = get_req_header(conn, "authorization") |> List.first()
 
     if authorization_header do
-      IO.puts("Authorization Header: #{authorization_header}")
-
       token = String.replace_prefix(authorization_header, "Bearer ", "")
 
       case Auth.get_user_from_token(token) do
@@ -24,9 +22,9 @@ defmodule Backend.Plugs.AuthenticationPlug do
             |> put_status(:unauthorized)
             |> json(%{error: "User not found"})
             |> halt()
-          else
-            conn  # Return the connection if user is found
-          end
+            else
+              assign(conn, :current_user, user)  # Assign the user to the connection and return it
+            end
 
         {:error, reason} ->
           conn
