@@ -90,6 +90,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
 import { createUser, login, GetUserByToken } from "@/functions/User";
+import { passwordStrength } from "check-password-strength";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
 import axios from "axios";
@@ -157,6 +158,29 @@ const register = async () => {
     return;
   }
 
+  if (newPassword.value) {
+    const strength = passwordStrength(newPassword.value);
+    if (strength.id < 3 && newPassword.value.length < 8) {
+      const contains = strength.contains;
+      if (!contains.includes("lowercase")) {
+        toast.error("Password must contain at least one lowercase letter.");
+        return;
+      }
+      if (!contains.includes("uppercase")) {
+        toast.error("Password must contain at least one uppercase letter.");
+        return;
+      }
+      if (!contains.includes("number")) {
+        toast.error("Password must contain at least one number.");
+        return;
+      }
+      if (!contains.includes("symbol")) {
+        toast.error("Password must contain at least one special character.");
+        return;
+      }
+    }
+  }
+
   try {
     await createUser({
       email: newEmail.value,
@@ -168,9 +192,10 @@ const register = async () => {
         particleCount: 200,
         spread: 160,
         origin: { x: 0.5, y: 0.5 },
-        zIndex: 9999, // Augmenter le z-index
+        zIndex: 9999,
       });
     }, 100);
+    cancelCreating();
     toast.success("Account created successfully");
   } catch (error) {
     toast.error("Error creating the account");
