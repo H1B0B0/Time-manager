@@ -109,13 +109,15 @@ const error = ref("");
 
 const Handlelogin = async () => {
   try {
+
     error.value = "";
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
     console.log(response.data);
-    toast.success("Successfully logged in");
-    router.push(`/dashboard/${response.data.id}`); // Rediriger vers le tableau de bord
+    router.push(`/dashboard/${response.data.id}`);
+
   } catch (err) {
+
     if (axios.isAxiosError(err) && err.response) {
       if (err.response.status === 401) {
         error.value = "Invalid login credentials";
@@ -156,9 +158,9 @@ const register = async () => {
       particleCount: 200,
       spread: 160,
       origin: { x: 0.5, y: 0.5 },
-      zIndex: 9999,
+      zIndex: 2,
     });
-    isCreating.value = false; // Revenir à l'écran de connexion
+    router.push("/dashboard");
   } catch (error) {
     toast.error("Error creating the account");
   }
