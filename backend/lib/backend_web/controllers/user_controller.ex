@@ -62,6 +62,8 @@ defmodule BackendWeb.UserController do
 
     # The user can't update his own role
     user_params = Map.delete(user_params, "role_id")
+    # The user can't update his own team
+    user_params = Map.delete(user_params, "team_id")
 
     if !user do
       conn
