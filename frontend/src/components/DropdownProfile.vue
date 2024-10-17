@@ -24,7 +24,7 @@
       <ul class="py-2">
         <li>
           <router-link
-            to="/edit"
+            to="/settings"
             class="block px-4 py-2 text-white "
             >Edit</router-link
           >

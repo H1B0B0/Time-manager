@@ -56,7 +56,17 @@ export const createUser = async (data: UserType) => {
   }
 };
 
-export const updateUser = async (id: number, data: UserType) => {
+
+
+
+export const updateUser = async (id: number, data: {
+  username: string;
+  email: string;
+  old_password?: string;
+  password?: string;
+  oldPassword?: string;
+  newPassword?: string;
+}) => {
   try {
     const config = {
       headers: {
@@ -64,9 +74,19 @@ export const updateUser = async (id: number, data: UserType) => {
         ...getAuthHeaders(),
       },
     };
+
+    const userData = {
+      ...data,
+      old_password: data.old_password || data.oldPassword,
+      password: data.password || data.newPassword
+    };
+
+    delete userData.oldPassword;
+    delete userData.newPassword;
+
     const response = await axios.put(
       `${BASE_URL}/users/${id}`,
-      JSON.stringify({ user: data }),
+      JSON.stringify({ user: userData }),
       config
     );
     return response.data.data;
