@@ -9,6 +9,7 @@
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Username</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Schedule</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-white">
@@ -17,6 +18,7 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ user.username }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ user.email }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{{ user.role }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300"><button type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Modify</button></td>
           </tr>
         </tbody>
       </table>
