@@ -20,7 +20,8 @@ defmodule BackendWeb.AuthJSON do
       id: user.id,
       username: user.username,
       email: user.email,
-      role: user.role.category
+      role_id: user.role_id,
+      team_id: user.team_id
     }
   end
 end
