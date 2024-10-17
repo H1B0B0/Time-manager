@@ -8,7 +8,7 @@ defmodule Backend.TeamsTest do
 
     import Backend.TeamsFixtures
 
-    @invalid_attrs %{name: nil}
+    @invalid_attrs %{name: nil, owner_id: nil}
 
     test "list_teams/0 returns all teams" do
       team = team_fixture()
@@ -21,10 +21,12 @@ defmodule Backend.TeamsTest do
     end
 
     test "create_team/1 with valid data creates a team" do
-      valid_attrs = %{name: "some name"}
+      user = Backend.AccountsFixtures.user_fixture()
+      valid_attrs = %{name: "some name", owner_id: user.id}
 
       assert {:ok, %Team{} = team} = Teams.create_team(valid_attrs)
       assert team.name == "some name"
+      assert team.owner_id == user.id
     end
 
     test "create_team/1 with invalid data returns error changeset" do
@@ -33,10 +35,11 @@ defmodule Backend.TeamsTest do
 
     test "update_team/2 with valid data updates the team" do
       team = team_fixture()
-      update_attrs = %{name: "some updated name"}
+      update_attrs = %{name: "some updated name", owner_id: team.owner_id}
 
       assert {:ok, %Team{} = team} = Teams.update_team(team, update_attrs)
       assert team.name == "some updated name"
+      assert team.owner_id == team.owner_id
     end
 
     test "update_team/2 with invalid data returns error changeset" do
