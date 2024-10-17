@@ -1,8 +1,14 @@
 <template>
-  <div class="p-4 rounded-lg">
+  <div class="p-4 rounded-lg w-full">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
-    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl">
-      <Bar :key="chartKey" id="my-chart-id" :options="chartOptions" :data="chartData" />
+    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
+      <Bar
+        :key="chartKey"
+        id="my-chart-id"
+        :options="chartOptions"
+        :data="chartData"
+        class="w-full"
+      />
     </div>
   </div>
 </template>

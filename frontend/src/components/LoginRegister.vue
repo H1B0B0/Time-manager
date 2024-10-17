@@ -114,14 +114,6 @@ const Handlelogin = async () => {
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
     console.log(response.data);
-    setTimeout(() => {
-      confetti({
-        particleCount: 200,
-        spread: 160,
-        origin: { x: 0.5, y: 0.5 },
-        zIndex: 9999, // Augmenter le z-index
-      });
-    }, 100);
     toast.success("Successfully logged in");
     if (response.data.role === "Manager") {
       router.push(`/admin/dashboard/${response.data.id}`);

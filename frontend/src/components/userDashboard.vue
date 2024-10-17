@@ -1,22 +1,24 @@
 <template>
-  <div class="p-4 min-h-screen" ref="chartContainer">
-    <div class="max-w-7xl mx-auto space-y-6">
+  <div class="p-4 min-h-screen w-full" ref="chartContainer">
+    <div
+      class="flex flex-col max-w-7xl mx-auto space-y-6 justify-center items-center w-full"
+    >
       <!-- Clock Manager -->
-      <div class="rounded-lg p-4">
+      <div class="rounded-lg p-4 w-full flex justify-center items-center">
         <ClockManager />
       </div>
 
       <!-- Chart Manager -->
-      <div class="rounded-lg p-4">
+      <div class="rounded-lg p-4 w-full">
         <ChartManager />
       </div>
 
       <!-- Worked Hours Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="rounded-lg p-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+        <div class="rounded-lg p-4 w-full">
           <WorkedHoursPerMonth />
         </div>
-        <div class="rounded-lg p-4">
+        <div class="rounded-lg p-4 w-full">
           <WorkedHoursPerDayChart />
         </div>
       </div>
@@ -69,7 +71,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-/* Add any additional custom styles here if needed */
-</style>

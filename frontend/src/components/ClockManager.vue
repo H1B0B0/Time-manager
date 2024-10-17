@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { getLatestClock, createClock } from "@/functions/Clock";
 import type { ClockType } from "@/types/ClockType";
+import confetti from "canvas-confetti";
 
 const route = useRoute();
 
@@ -36,6 +37,18 @@ const handleClockCreation = async () => {
     });
     latestClock.value = newClock;
     clockedIn.value = newClock.status;
+
+    // Ajouter des confettis lors du clock out
+    if (!clockedIn.value) {
+      setTimeout(() => {
+        confetti({
+          particleCount: 200,
+          spread: 160,
+          origin: { x: 0.5, y: 0.5 },
+          zIndex: 9999, // Augmenter le z-index
+        });
+      }, 100);
+    }
   } catch (error) {
     console.error("Error creating clock:", error);
   }
@@ -54,9 +67,9 @@ const message = computed(() => {
 
 <template>
   <div
-    class="flex flex-col text-gray-100 items-center justify-center p-8 rounded-lg"
+    class="flex flex-col text-gray-100 items-center justify-center p-8 rounded-2xl backdrop-blur-2xl border max-w-96"
   >
-    <main class="w-full flex flex-col items-center py-4">
+    <main class="flex flex-col items-center py-4">
       <button
         v-on:click="handleClockCreation"
         :class="[
@@ -65,9 +78,12 @@ const message = computed(() => {
           'text-white',
           'py-2',
           'px-4',
-          'rounded-full',
+          'rounded-2xl',
           'shadow-lg',
-          clockedIn ? 'bg-red-500' : 'bg-green-500',
+          'backdrop-blur-2xl',
+          clockedIn
+            ? 'border border-red-500 hover:bg-red-500 hover:text-white'
+            : 'border border-green-500 hover:bg-green-500 hover:text-white',
         ]"
       >
         {{ clockedIn ? "Clock Out" : "Clock In" }}
