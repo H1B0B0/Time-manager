@@ -26,7 +26,7 @@ defmodule BackendWeb.TeamController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", ~p"/api/teams/#{team.id}")
-        |> render("show.json", team: team)
+        |> render(conn, :show, team: team)
 
       {:error, changeset} ->
         conn
@@ -47,7 +47,7 @@ defmodule BackendWeb.TeamController do
       _ ->
         case Teams.update_team(team, team_params) do
           {:ok, team} ->
-            render(conn, "show.json", team: team)
+            render(conn, :show, team: team)
 
           {:error, changeset} ->
             conn
