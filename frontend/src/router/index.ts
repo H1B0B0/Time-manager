@@ -48,7 +48,7 @@ const routes = [
     props: true,
   },
   {
-    path: "/admin/dashboard",
+    path: "/admin/dashboard/:userID",
     name: "AdminDashboard",
     component: adminDashboard,
     props: true,
