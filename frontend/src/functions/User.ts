@@ -37,21 +37,22 @@ export const getUser = async (username: string, email: string) => {
   }
 };
 
-
-export const createUser = async (email: string, username: string, password: string) => {
+export const createUser = async (data: UserType) => {
   try {
-    const response = await axios.post("/api/users", {
-      email,
-      username,
-      password,
-    });
-    return response;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(
+      `${BASE_URL}/users`,
+      JSON.stringify({ user: data }),
+      config
+    );
+    return response.data.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.message || "Failed to create user");
-    } else {
-      throw new Error("Failed to create user");
-    }
+    console.error(error);
+    throw error;
   }
 };
 
@@ -132,14 +133,11 @@ export const getAllUsers = async () => {
       throw new Error("No token found");
     }
     console.log(token);
-    const response = await axios.get(
-      `${BASE_URL}/user`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);

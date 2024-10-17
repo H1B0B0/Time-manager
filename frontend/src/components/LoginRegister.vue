@@ -35,7 +35,7 @@
       Create an account
     </button>
 
-    <div v-if="isCreating">
+    <div v-if="isCreating" class="">
       <h2 class="text-3xl font-bold mb-6 text-center text-white mt-2">
         Create an account 👋🏻
       </h2>
@@ -63,23 +63,23 @@
         placeholder="Confirm Password"
         type="password"
         required
-        class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
+      <button
+        type="button"
+        @click="cancelCreating"
+        class="mb-4 text-purple-500 hover:text-purple-700 transition duration-300 underline items-center ml-2 text-sm"
+      >
+        Already have an account?
+      </button>
       <button
         @click="register"
         :disabled="
           !newEmail || !newUsername || !newPassword || !confirmPassword
         "
-        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed"
+        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed mb-4"
       >
         Create an account
-      </button>
-      <button
-        type="button"
-        @click="cancelCreating"
-        class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 mt-5"
-      >
-        Already have an account ?
       </button>
     </div>
   </div>
@@ -123,7 +123,11 @@ const Handlelogin = async () => {
     
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
-      error.value = err.response.data.message || "Error logging in";
+      if (err.response.status === 401) {
+        error.value = "Invalid login credentials";
+      } else {
+        error.value = err.response.data.message || "Error logging in";
+      }
     } else {
       error.value = "An unexpected error occurred";
     }

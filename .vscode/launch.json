@@ -8,7 +8,7 @@
       "type": "mix_task",
       "name": "mix (Default task)",
       "request": "launch",
-      "projectDir": "${workspaceRoot}/backend"
+      "projectDir": "${workspaceFolder}/backend"
     },
     {
       "type": "mix_task",
@@ -17,7 +17,7 @@
       "task": "test",
       "taskArgs": ["--trace"],
       "startApps": true,
-      "projectDir": "${workspaceRoot}}/backend",
+      "projectDir": "${workspaceFolder}/backend",
       "requireFiles": ["test/**/test_helper.exs", "test/**/*_test.exs"]
     }
   ]
