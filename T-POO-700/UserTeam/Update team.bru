@@ -1,0 +1,25 @@
+meta {
+  name: Update team
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:4000/api/user/4/team/3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MjM0MDMzLCJpYXQiOjE3MjkxOTA4MzMsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZsM3BscXQ5bGswdTZ1MzgwMDAwaTEiLCJuYmYiOjE3MjkxOTA4MzMsInVzZXJfaWQiOjR9.IlrHyGxoHCJW4_Q0ZJ_bOJqa1uma3hwcQv74vZvRiw8
+}
+
+body:json {
+  {
+    "user": {
+      "username": "testuser",
+      "email": "testusedddsdr@example.com",
+      "password": "hello"
+    }
+  }
+}
