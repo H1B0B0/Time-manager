@@ -47,7 +47,7 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          backgroundColor: "rgba(123, 97, 255, 0.2)",
           borderColor: "#36A2EB",
           label: "Worked hours per month",
           fill: true,

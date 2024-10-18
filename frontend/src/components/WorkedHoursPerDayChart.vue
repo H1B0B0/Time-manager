@@ -24,6 +24,7 @@
             name="startDate"
             class="border border-gray-300 text-white bg-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Select date start"
+            @change="validateDateRange"
           />
         </div>
         <span class="mx-4 text-white capitalize">to</span>
@@ -35,9 +36,13 @@
             name="endDate"
             class="border border-gray-300 text-white bg-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Select date end"
+            @change="validateDateRange"
           />
         </div>
       </div>
+      <p v-if="!isDateRangeValid" class="text-red-500 mt-2">
+        The end date cannot be earlier than the start date.
+      </p>
     </div>
   </div>
 </template>
@@ -141,9 +146,18 @@ export default {
     const chartKey = ref(0);
     const startDate = ref("");
     const endDate = ref("");
+    const isDateRangeValid = ref(true);
+
+    const validateDateRange = () => {
+      if (startDate.value && endDate.value) {
+        isDateRangeValid.value =
+          new Date(startDate.value) <= new Date(endDate.value);
+      }
+    };
 
     watch([startDate, endDate], async () => {
-      if (!startDate.value || !endDate.value) {
+      validateDateRange();
+      if (!startDate.value || !endDate.value || !isDateRangeValid.value) {
         return;
       }
 
@@ -174,6 +188,8 @@ export default {
       chartKey,
       startDate,
       endDate,
+      isDateRangeValid,
+      validateDateRange,
     };
   },
 };
