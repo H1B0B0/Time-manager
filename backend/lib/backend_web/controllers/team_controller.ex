@@ -8,7 +8,7 @@ defmodule BackendWeb.TeamController do
     render(conn, :index, teams: teams)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"team_id" => id}) do
     case Teams.get_team(id) do
       nil ->
         conn
@@ -35,7 +35,7 @@ defmodule BackendWeb.TeamController do
     end
   end
 
-  def update(conn, %{"id" => id, "team" => team_params}) do
+  def update(conn, %{"team_id" => id, "team" => team_params}) do
     team = Teams.get_team(id)
 
     case team do
@@ -57,7 +57,7 @@ defmodule BackendWeb.TeamController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"team_id" => id}) do
     team = Teams.get_team(id)
 
     case team do

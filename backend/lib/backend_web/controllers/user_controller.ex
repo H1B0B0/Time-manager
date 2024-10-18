@@ -45,7 +45,7 @@ defmodule BackendWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"user_id" => id}) do
     user = Accounts.get_user(id)
     case user do
       nil ->
@@ -69,7 +69,7 @@ defmodule BackendWeb.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
+  def update(conn, %{"user_id" => id, "user" => user_params}) do
     user = Accounts.get_user(id)
 
     # The user can't update his own role
@@ -107,7 +107,7 @@ defmodule BackendWeb.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"user_id" => id}) do
     user = Accounts.get_user(id)
 
     if !user do

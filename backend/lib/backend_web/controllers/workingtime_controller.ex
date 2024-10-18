@@ -22,7 +22,7 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def show(conn, %{"userID" => userID, "id" => id}) do
+  def show(conn, %{"user_id" => userID, "working_time_id" => id}) do
     case WorkingTime.get_workingtime_by_user_and_id(userID, id) do
       nil ->
         conn
@@ -33,7 +33,7 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def update(conn, %{"userID" => userID, "workingtime" => workingtime_params}) do
+  def update(conn, %{"user_id" => userID, "workingtime" => workingtime_params}) do
     case WorkingTime.get_workingtime_by_user_and_id(userID, workingtime_params["id"]) do
       nil ->
         conn
@@ -51,7 +51,7 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"working_time_id" => id}) do
     workingtime = WorkingTime.get_workingtime!(id)
 
     with {:ok, %Workingtime{}} <- WorkingTime.delete_workingtime(workingtime) do
@@ -64,7 +64,7 @@ defmodule BackendWeb.WorkingtimeController do
     end
   end
 
-  def getAll(conn, %{"userID" => userID} = params) do
+  def getAll(conn, %{"user_id" => userID} = params) do
     startTime = Map.get(params, "start", DateTime.utc_now() |> DateTime.to_iso8601())
     endTime = Map.get(params, "end", DateTime.utc_now() |> DateTime.to_iso8601())
 

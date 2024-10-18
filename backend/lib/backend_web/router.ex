@@ -9,40 +9,57 @@ defmodule BackendWeb.Router do
     plug Backend.Plugs.AuthenticationPlug
   end
 
+  pipeline :at_least_manager do
+    plug Backend.Plugs.AtLeastManager
+  end
+
+  pipeline :at_least_general_manager do
+    plug Backend.Plugs.AtLeastGeneralManager
+  end
+
   scope "/api", BackendWeb do
     pipe_through [:api, :auth]
 
-    get "/clocks/:userID", ClockController, :show
-    post "/clocks/:userID", ClockController, :create
+    get "/clocks/:user_id", ClockController, :show
+    post "/clocks/:user_id", ClockController, :create
 
-    get "/user", UserController, :getAllUsers
     get "/users", UserController, :index
-    get "/users/:id/", UserController, :show
-    put "/users/:id", UserController, :update
-    delete "/users/:id", UserController, :delete
-    get "/users/team/:team_id", UserController, :getUserByTeam
+    get "/users/:user_id/", UserController, :show
+    put "/users/:user_id", UserController, :update
 
-    delete "/workingtime/:id", WorkingtimeController, :delete
-    put "/workingtime/:userID", WorkingtimeController, :update
+    delete "/workingtime/:working_time_id", WorkingtimeController, :delete
+    put "/workingtime/:user_id", WorkingtimeController, :update
     post "/workingtime/users", WorkingtimeController, :create
-    get "/workingtime/:userID/:id", WorkingtimeController, :show
-    get "/workingtime/:userID", WorkingtimeController, :getAll
+    get "/workingtime/:user_id/:working_time_id", WorkingtimeController, :show
+    get "/workingtime/:user_id", WorkingtimeController, :getAll
 
     get "/roles", RoleController, :index
-    get "/roles/:id", RoleController, :show
+    get "/roles/:role_id", RoleController, :show
 
     post "/auth/user", AuthController, :user
 
-    post "/user/:id/role/:role_id", UserRoleController, :update
+    post "/user/:user_id/role/:role_id", UserRoleController, :update
 
     get "/teams", TeamController, :index
-    get "/teams/:id", TeamController, :show
+    get "/teams/:team_id", TeamController, :show
     post "/teams", TeamController, :create
-    put "/teams/:id", TeamController, :update
-    delete "/teams/:id", TeamController, :delete
+    put "/teams/:team_id", TeamController, :update
+    delete "/teams/:team_id", TeamController, :delete
+  end
 
-    post "/user/:id/team/:team_id", UserTeamController, :update
-    delete "/user/:id/team", UserTeamController, :delete
+  scope "/api", BackendWeb do
+    pipe_through [:api, :auth, :at_least_manager]
+
+    get "/user", UserController, :getAllUsers
+  end
+
+  scope "/api", BackendWeb do
+    pipe_through [:api, :auth, :at_least_general_manager]
+
+    post "/user/:user_id/team/:team_id", UserTeamController, :update
+    delete "/user/:user_id/team", UserTeamController, :delete
+
+    delete "/users/:user_id", UserController, :delete
   end
 
   scope "/api", BackendWeb do

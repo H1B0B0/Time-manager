@@ -6,7 +6,7 @@ defmodule BackendWeb.UserRoleController do
 
   action_fallback BackendWeb.FallbackController
 
-  def update(conn, %{"id" => id, "role_id" => role_id}) do
+  def update(conn, %{"user_id" => id, "role_id" => role_id}) do
     user = Accounts.get_user(id)
     role_id = String.to_integer(role_id)
 

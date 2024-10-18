@@ -8,7 +8,7 @@ defmodule BackendWeb.UserTeamController do
 
   action_fallback BackendWeb.FallbackController
 
-  def update(conn, %{"id" => id, "team_id" => team_id}) do
+  def update(conn, %{"user_id" => id, "team_id" => team_id}) do
     team = Teams.get_team(team_id)
     user = Accounts.get_user(id)
 
@@ -36,7 +36,7 @@ defmodule BackendWeb.UserTeamController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"user_id" => id}) do
     user = Accounts.get_user(id)
 
     if user === nil do

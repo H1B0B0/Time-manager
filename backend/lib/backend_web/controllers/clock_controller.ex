@@ -7,7 +7,7 @@ defmodule BackendWeb.ClockController do
 
   action_fallback BackendWeb.FallbackController
 
-  def create(conn, %{"userID" => user_id}) do
+  def create(conn, %{"user_id" => user_id}) do
     case Accounts.get_user(user_id) do
       nil ->
         conn
@@ -30,7 +30,7 @@ defmodule BackendWeb.ClockController do
     end
   end
 
-  def show(conn, %{"userID" => user_id}) do
+  def show(conn, %{"user_id" => user_id}) do
     case Accounts.get_user(user_id) do
       nil ->
         conn

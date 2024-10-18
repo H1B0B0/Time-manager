@@ -11,7 +11,7 @@ defmodule BackendWeb.RoleController do
     render(conn, :index, roles: roles)
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"role_id" => id}) do
     role = Accounts.get_role(id)
     case role do
       nil -> conn
