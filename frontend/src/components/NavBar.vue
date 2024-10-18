@@ -28,6 +28,10 @@
             <router-link to="/news" class="text-white hover:text-blue-200"
               >News</router-link
             >
+            <span
+              v-if="!isLatestNewsRead"
+              class="absolute top-30 right-15 inline-block w-2 h-2 bg-red-500 rounded-full"
+            ></span>
           </li>
         </ul>
       </div>
@@ -116,7 +120,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 import DropdownProfile from "./DropdownProfile.vue";
 
@@ -125,6 +129,7 @@ const router = useRouter();
 const isHomePage = computed(() => route.path === "/");
 const menuOpen = ref(false);
 const userStore = useUserStore();
+const isLatestNewsRead = ref(true);
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
@@ -134,4 +139,19 @@ const logout = () => {
   userStore.logout();
   router.push("/");
 };
+
+const checkLatestNewsRead = () => {
+  const latestNewsVersion = localStorage.getItem("latest-news-version");
+  isLatestNewsRead.value =
+    localStorage.getItem(`article-${latestNewsVersion}`) === "true";
+};
+
+onMounted(() => {
+  checkLatestNewsRead();
+  window.addEventListener("latest-news-read", checkLatestNewsRead);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("latest-news-read", checkLatestNewsRead);
+});
 </script>
