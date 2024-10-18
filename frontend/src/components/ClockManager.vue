@@ -47,7 +47,6 @@ const handleClockCreation = async () => {
     });
     latestClock.value = newClock;
     clockedIn.value = newClock.status;
-
     if (!clockedIn.value) {
       setTimeout(() => {
         confetti({
