@@ -70,7 +70,8 @@
         </button>
         <div
           v-if="menuOpen"
-          class="absolute right-0 mt-12 w-48 bg-white rounded-lg shadow-lg z-50"
+          class="absolute right-0 mt-12 w-48 bg-white rounded-lg shadow-lg z-50 transition-transform transform origin-top-right scale-95"
+          @click.outside="closeMenu"
         >
           <ul class="py-2">
             <li v-if="userStore.user.username && !isHomePage">
@@ -135,6 +136,10 @@ const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
+const closeMenu = () => {
+  menuOpen.value = false;
+};
+
 const logout = () => {
   userStore.logout();
   router.push("/");
@@ -149,9 +154,18 @@ const checkLatestNewsRead = () => {
 onMounted(() => {
   checkLatestNewsRead();
   window.addEventListener("latest-news-read", checkLatestNewsRead);
+  document.addEventListener("click", handleClickOutside);
 });
 
 onUnmounted(() => {
   window.removeEventListener("latest-news-read", checkLatestNewsRead);
+  document.removeEventListener("click", handleClickOutside);
 });
+
+const handleClickOutside = (event: MouseEvent) => {
+  const menuElement = document.querySelector(".dropdown-menu");
+  if (menuElement && !menuElement.contains(event.target as Node)) {
+    closeMenu();
+  }
+};
 </script>

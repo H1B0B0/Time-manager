@@ -102,6 +102,7 @@ export const deleteUser = async (id: number): Promise<void> => {
     await axios.delete(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
+    Cookies.remove("token");
     router.push("/");
   } catch (error) {
     console.error(`Failed to delete user with id ${id}:`, error);
