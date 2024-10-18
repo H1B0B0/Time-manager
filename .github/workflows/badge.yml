@@ -1,0 +1,34 @@
+name: Generate Badges
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-badges:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Generate latest tag badge
+        id: latest-tag
+        run: |
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+          echo "![Latest Tag](https://img.shields.io/badge/latest%20tag-$latest_tag-blue)" > latest-tag-badge.md
+
+      - name: Generate workflow status badge
+        id: workflow-status
+        run: |
+          echo "![GitHub Workflow Status](https://img.shields.io/github/workflow/status/${{ github.repository }}/Generate%20Badges/main.yml?label=build)" > workflow-status-badge.md
+
+      - name: Commit and push badges
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add latest-tag-badge.md workflow-status-badge.md
+          git commit -m "Update badges"
+          git push
