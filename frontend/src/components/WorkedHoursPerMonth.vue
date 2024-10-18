@@ -2,7 +2,12 @@
   <div class="p-4 rounded-lg h-full flex flex-col">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
     <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex-1">
-      <Line :key="chartKey" id="my-chart-id" :options="chartOptions" :data="chartData" />
+      <Line
+        :key="chartKey"
+        id="my-chart-id"
+        :options="chartOptions"
+        :data="chartData"
+      />
     </div>
   </div>
 </template>
@@ -19,9 +24,9 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import router from "@/router";
-import { getClocksDate, hoursWorkedPerDay } from '../functions/Clock'
+import { getClocksDate, hoursWorkedPerDay } from "../functions/Clock";
 
 ChartJS.register(
   Title,
@@ -42,7 +47,7 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "#36A2EB",
+          backgroundColor: "rgba(54, 162, 235, 0.2)",
           borderColor: "#36A2EB",
           label: "Worked hours per month",
           fill: true,
@@ -58,6 +63,15 @@ export default {
         legend: {
           labels: {
             color: "white",
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const hours = Math.floor(context.raw);
+              const minutes = Math.round((context.raw - hours) * 60);
+              return `${hours}h ${minutes}m`;
+            },
           },
         },
       },
@@ -79,6 +93,11 @@ export default {
         y: {
           ticks: {
             color: "white",
+            callback: function (value) {
+              const hours = Math.floor(value);
+              const minutes = Math.round((value - hours) * 60);
+              return `${hours}h ${minutes}m`;
+            },
           },
           grid: {
             color: "rgba(255, 255, 255, 0.2)",
@@ -97,33 +116,59 @@ export default {
     const chartKey = ref(0);
     const startDate = ref("");
     const endDate = ref("");
-    const date = ref("");
+    const date = ref(new Date());
 
-    date.value = new Date();
+    startDate.value = new Date(
+      date.value.getFullYear(),
+      date.value.getMonth(),
+      1
+    );
+    startDate.value.setUTCHours(0, 0, 0, 0);
 
-    // Calculer le premier jour du mois
-    startDate.value = new Date(date.value.getFullYear(), date.value.getMonth(), 1);
-    startDate.value.setHours(0, 0, 0, 0);
-
-    // Calculer le dernier jour du mois
-    endDate.value = new Date(date.value.getFullYear(), date.value.getMonth() + 1, 0);
-    endDate.value.setHours(23, 59, 59, 999);
+    endDate.value = new Date(
+      date.value.getFullYear(),
+      date.value.getMonth() + 1,
+      0
+    );
+    endDate.value.setUTCHours(23, 59, 59, 999);
 
     const fetchData = async () => {
       try {
-        const response = await getClocksDate(router.currentRoute.value.params.userID, startDate.value, endDate.value)
-        const workedTimePerDay = await hoursWorkedPerDay(response)
-        chartData.value.labels = workedTimePerDay.map(day => day.date)
-        chartData.value.datasets[0].data = workedTimePerDay.map(day => day.hours)
+        const response = await getClocksDate(
+          router.currentRoute.value.params.userID,
+          startDate.value.toString(),
+          endDate.value.toString()
+        );
+        const workedTimePerDay = hoursWorkedPerDay(response);
 
-        chartKey.value += 1
+        const daysInMonth = new Date(
+          date.value.getFullYear(),
+          date.value.getMonth() + 1,
+          0
+        ).getDate();
+        const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+        const data = Array(daysInMonth).fill(0);
+
+        workedTimePerDay.forEach((workDay) => {
+          const [day, month, year] = workDay.date.split("/").map(Number);
+          const dayOfMonth = new Date(
+            Date.UTC(year, month - 1, day)
+          ).getUTCDate();
+          data[dayOfMonth - 1] = workDay.hours;
+        });
+
+        chartData.value.labels = labels;
+        chartData.value.datasets[0].data = data;
+
+        chartKey.value += 1;
       } catch (error) {
         errorMessage.value = "Failed to fetch data";
         console.error(error);
       }
     };
 
-    fetchData();
+    onMounted(fetchData);
 
     return {
       chartData,

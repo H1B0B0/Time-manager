@@ -90,6 +90,15 @@ export default {
             color: "white",
           },
         },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              const hours = Math.floor(context.raw);
+              const minutes = Math.round((context.raw - hours) * 60);
+              return `${hours}h ${minutes}m`;
+            },
+          },
+        },
       },
       scales: {
         x: {
@@ -109,6 +118,11 @@ export default {
         y: {
           ticks: {
             color: "white",
+            callback: function (value) {
+              const hours = Math.floor(value);
+              const minutes = Math.round((value - hours) * 60);
+              return `${hours}h ${minutes}m`;
+            },
           },
           grid: {
             color: "rgba(255, 255, 255, 0.2)",
@@ -164,7 +178,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Ajoutez des styles personnalisés si nécessaire */
-</style>
