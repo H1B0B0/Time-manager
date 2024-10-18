@@ -1,5 +1,5 @@
 ---
-title: Release 1.1.3
+title: Release 1.1.2
 description: Release note of 18/10/2024
 ---
 
