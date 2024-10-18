@@ -4,8 +4,8 @@
 
 ## Stats
 
-![Latest Tag](./latest-tag-badge.md)
-![GitHub Workflow Status](./workflow-status-badge.md)
+![Latest Tag](latest-tag-badge.md)
+![GitHub Workflow Status](workflow-status-badge.md)
 
 ### Project Overview
 
