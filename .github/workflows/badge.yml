@@ -25,9 +25,10 @@ jobs:
       - name: Generate workflow status badge
         id: workflow-status
         run: |
-          echo "![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/EpitechMscProPromo2026/T-POO-700-STG_9/main.yml?branch=main&label=build)" > workflow-status-badge.md
+          echo "![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/EpitechMscProPromo2026/T-POO-700-STG_9/badge.yml?branch=main&label=build)" > workflow-status-badge.md
 
       - name: Commit and push badges
+        continue-on-error: true
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

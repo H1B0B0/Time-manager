@@ -6,8 +6,6 @@
 
 ![Latest Tag](./latest-tag-badge.md)
 ![GitHub Workflow Status](./workflow-status-badge.md)
-![GitHub Issues](https://img.shields.io/github/issues/EpitechMscProPromo2026/T-POO-700-STG_9)
-![GitHub Pull Requests](https://img.shields.io/github/issues-pr/EpitechMscProPromo2026/T-POO-700-STG_9)
 
 ### Project Overview
 
