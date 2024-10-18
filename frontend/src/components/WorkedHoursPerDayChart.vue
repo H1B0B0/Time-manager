@@ -1,15 +1,21 @@
 <template>
-  <div class="p-4 rounded-lg h-full flex flex-col">
+  <div class="h-full flex flex-col justify-center items-center p-4">
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
 
-    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex-1">
+    <div
+      class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full max-w-4xl"
+    >
       <Bar
         :key="chartKey"
         id="my-chart-id"
         :options="chartOptions"
         :data="chartData"
+        class="w-full"
       />
-      <div id="date-range-picker" class="flex items-center mt-10">
+      <div
+        id="date-range-picker"
+        class="flex items-center mt-10 justify-center"
+      >
         <div class="relative">
           <input
             type="date"
@@ -158,3 +164,7 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Ajoutez des styles personnalisés si nécessaire */
+</style>
