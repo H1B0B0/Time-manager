@@ -35,7 +35,7 @@ defmodule BackendWeb.AuthController do
   end
 
   def user(conn, _params) do
-    user = conn.assigns[:current_user]
+    user = conn.assigns[:auth_user]
 
     conn
     |> put_status(:ok)

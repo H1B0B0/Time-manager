@@ -23,7 +23,7 @@ defmodule Backend.Plugs.AuthenticationPlug do
             |> json(%{error: "User not found"})
             |> halt()
             else
-              assign(conn, :current_user, user)  # Assign the user to the connection and return it
+              assign(conn, :auth_user, user)  # Assign the user to the connection and return it
             end
 
         {:error, reason} ->
