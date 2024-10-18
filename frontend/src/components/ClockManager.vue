@@ -10,6 +10,7 @@ const route = useRoute();
 const userId = ref(parseInt(route.params.userID as string));
 const latestClock = ref({} as ClockType);
 const clockedIn = ref(false);
+const isButtonDisabled = ref(false);
 
 onMounted(async () => {
   try {
@@ -29,6 +30,13 @@ const formatDate = (date: string) => {
 };
 
 const handleClockCreation = async () => {
+  if (isButtonDisabled.value) return;
+
+  isButtonDisabled.value = true;
+  setTimeout(() => {
+    isButtonDisabled.value = false;
+  }, 2000); // Désactive le bouton pendant 3 secondes
+
   try {
     const newClock = await createClock(userId.value.toString(), {
       user_id: userId.value.toString(),
@@ -72,6 +80,7 @@ const message = computed(() => {
     <main class="flex flex-col items-center py-4">
       <button
         v-on:click="handleClockCreation"
+        :disabled="isButtonDisabled"
         :class="[
           'text-2xl',
           'font-bold',
@@ -84,6 +93,9 @@ const message = computed(() => {
           clockedIn
             ? 'border border-red-500 hover:bg-red-500 hover:text-white'
             : 'border border-green-500 hover:bg-green-500 hover:text-white',
+          isButtonDisabled
+            ? 'opacity-50 cursor-not-allowed'
+            : 'opacity-100 cursor-pointer',
         ]"
       >
         {{ clockedIn ? "Clock Out" : "Clock In" }}
