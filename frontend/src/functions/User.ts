@@ -6,8 +6,6 @@ import { useUserStore } from "@/stores/use-user-store";
 
 const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
-const userStore = useUserStore();
-
 const getAuthHeaders = () => {
   const token = Cookies.get("token");
   return token ? { Authorization: `Bearer ${token}` } : {};
@@ -102,6 +100,7 @@ export const updateUser = async (
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
+    const userStore = useUserStore();
     await axios.delete(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
