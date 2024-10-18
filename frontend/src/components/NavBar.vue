@@ -5,7 +5,7 @@
         <router-link to="/" class="text-white">Time Manager</router-link>
       </div>
       <div
-        class="hidden lg:flex lg:flex-grow lg:justify-center lg:items-center lg:space-x-4"
+        class="hidden lg:flex lg:justify-center lg:items-center lg:space-x-4"
       >
         <ul class="flex space-x-4">
           <li

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="max-w-md mx-auto mt-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl"
-  >
+  <div class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl">
     <div v-if="!isCreating" class="mb-6">
       <h2 class="text-3xl font-bold mb-6 text-center text-white">Log in 🔐</h2>
       <input

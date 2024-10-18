@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-w-md mx-auto mt-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl"
+    class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl items-center justify-center"
   >
     <h2 class="text-3xl font-bold mb-6 text-center text-white">
       Update Account 🔄
