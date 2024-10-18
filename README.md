@@ -56,3 +56,20 @@ Managers have the opportunity to group their employees into teams.
 Here is an example of a dashboard, that you may or may not reproduce.
 
 ![Example Dashboard](./images/dashboards.png)
+
+## Usage
+
+1. Create the .env file in frontend and in source folder
+
+2. Launch the app with docker
+   dev
+
+   ```yaml
+   docker compose up -d
+   ```
+
+   prod
+
+   ```yaml
+   docker compose -f docker-compose.prod.yml up -d
+   ```
