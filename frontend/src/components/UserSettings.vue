@@ -135,8 +135,6 @@ const confirmDeleteAccount = () => {
 const deleteAccount = async () => {
   try {
     await deleteUser(userStore.user.id);
-    userStore.setUser(null);
-    userStore.setToken("");
     toast.success("Successfully deleted account");
   } catch (error) {
     toast.error(`Error deleting account: ${error.message}`);
