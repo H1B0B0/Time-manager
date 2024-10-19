@@ -278,7 +278,7 @@ export default {
           const durationMinutes = endMinutes - startMinutes;
           const totalDuration = durationHours + durationMinutes / 60;
 
-          const dayOfWeek = startDate.getUTCDay();
+          const dayOfWeek = (startDate.getUTCDay() + 6) % 7; // Adjust to make Monday the first day of the week
           const dayOfMonth = startDate.getUTCDate() - 1;
 
           if (view.value === "day") {
@@ -295,13 +295,13 @@ export default {
           chartData.value.datasets[0].data = workHoursPerDay.slice(0, 1);
         } else if (view.value === "week") {
           chartData.value.labels = [
-            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
+            "Sunday",
           ];
           chartData.value.datasets[0].data = workHoursPerDay;
         } else if (view.value === "month") {

@@ -29,54 +29,30 @@ user1 = Backend.Repo.insert!(%User{username: "johnDoe", email: "johnDoe@gmail.co
 user2 = Backend.Repo.insert!(%User{username: "janeDoe", email: "janeDoe@gmail.com", role_id: role2.id, password: Pbkdf2.hash_pwd_salt("password2")})
 user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gmail.com", role_id: role3.id, password: Pbkdf2.hash_pwd_salt("password3")})
 
-# INSERT WORKING TIME RECORDS
+# Module to generate working times and clock times
+defmodule SeedData do
+  def generate_working_times_and_clocks(user, start_date, end_date) do
+    Enum.each(Date.range(start_date, end_date), fn date ->
+      if Date.day_of_week(date) in 1..5 do
+        start_hour = Enum.random(7..9)
+        start_minute = Enum.random(0..59)
+        end_hour = start_hour + Enum.random(6..9)
+        end_minute = Enum.random(0..59)
 
-startTime1 = NaiveDateTime.from_iso8601!("2024-10-14T12:20:00")
-endTime1 = NaiveDateTime.from_iso8601!("2024-10-14T20:13:00")
-Backend.Repo.insert!(%Workingtime{start: startTime1, end: endTime1, user_id: user1.id})
+        start_time = NaiveDateTime.new!(date, Time.new!(start_hour, start_minute, 0))
+        end_time = NaiveDateTime.new!(date, Time.new!(end_hour, end_minute, 0))
+        Backend.Repo.insert!(%Workingtime{start: start_time, end: end_time, user_id: user.id})
 
-startTime2 = NaiveDateTime.from_iso8601!("2024-10-15T08:20:00")
-endTime2 = NaiveDateTime.from_iso8601!("2024-10-15T17:40:00")
-Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
+        clock_in_time = NaiveDateTime.new!(date, Time.new!(start_hour, start_minute, 0))
+        clock_out_time = NaiveDateTime.new!(date, Time.new!(end_hour, end_minute, 0))
+        Backend.Repo.insert!(%Clock{status: true, time: clock_in_time, user_id: user.id})
+        Backend.Repo.insert!(%Clock{status: false, time: clock_out_time, user_id: user.id})
+      end
+    end)
+  end
+end
 
-startTime2 = NaiveDateTime.from_iso8601!("2024-10-16T08:20:00")
-endTime2 = NaiveDateTime.from_iso8601!("2024-10-16T15:40:00")
-Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
-
-startTime2 = NaiveDateTime.from_iso8601!("2024-10-17T08:20:00")
-endTime2 = NaiveDateTime.from_iso8601!("2024-10-17T12:40:00")
-Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user1.id})
-
-startTime2 = NaiveDateTime.from_iso8601!("2024-10-07T09:00:00")
-endTime2 = NaiveDateTime.from_iso8601!("2024-10-07T17:00:00")
-Backend.Repo.insert!(%Workingtime{start: startTime2, end: endTime2, user_id: user2.id})
-
-startTime3 = NaiveDateTime.from_iso8601!("2024-10-08T08:30:00")
-endTime3 = NaiveDateTime.from_iso8601!("2024-10-08T16:30:00")
-Backend.Repo.insert!(%Workingtime{start: startTime3, end: endTime3, user_id: user3.id})
-
-# INSERT CLOCK TIMES
-
-time1 = NaiveDateTime.from_iso8601!("2024-10-05T12:20:00")
-Backend.Repo.insert!(%Clock{status: true, time: time1, user_id: user1.id})
-
-time2 = NaiveDateTime.from_iso8601!("2024-10-05T14:20:00")
-Backend.Repo.insert!(%Clock{status: false, time: time2, user_id: user1.id})
-
-time3 = NaiveDateTime.from_iso8601!("2024-10-06T10:20:00")
-Backend.Repo.insert!(%Clock{status: true, time: time3, user_id: user1.id})
-
-time4 = NaiveDateTime.from_iso8601!("2024-10-06T20:20:00")
-Backend.Repo.insert!(%Clock{status: false, time: time4, user_id: user1.id})
-
-time5 = NaiveDateTime.from_iso8601!("2024-10-07T09:00:00")
-Backend.Repo.insert!(%Clock{status: true, time: time5, user_id: user2.id})
-
-time6 = NaiveDateTime.from_iso8601!("2024-10-07T15:00:00")
-Backend.Repo.insert!(%Clock{status: false, time: time6, user_id: user2.id})
-
-time7 = NaiveDateTime.from_iso8601!("2024-10-08T08:30:00")
-Backend.Repo.insert!(%Clock{status: true, time: time7, user_id: user3.id})
-
-time8 = NaiveDateTime.from_iso8601!("2024-10-08T15:30:00")
-Backend.Repo.insert!(%Clock{status: false, time: time8, user_id: user3.id})
+# Generate data for September, October, and November 2024
+SeedData.generate_working_times_and_clocks(user1, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_working_times_and_clocks(user2, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_working_times_and_clocks(user3, ~D[2024-09-01], ~D[2024-11-30])
