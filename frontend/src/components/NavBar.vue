@@ -90,7 +90,7 @@
               <li>
                 <button
                   @click="logout"
-                  class="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  class="block w-full text-left px-4 py-2 text-red-700 hover:bg-gray-100"
                 >
                   Logout
                 </button>

@@ -37,7 +37,7 @@
           <li>
             <button
               @click="handleLogout"
-              class="block w-full text-left px-4 py-2 text-white hover:text-lg transition-all"
+              class="block w-full text-left px-4 py-2 text-red-700 hover:text-lg transition-all"
             >
               Logout
             </button>
