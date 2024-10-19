@@ -27,7 +27,7 @@ services:
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
-      bash -c "mix deps.get && mix phx.digest && mix phx.server"
+      bash -c "mix ecto.migrate && mix deps.get && mix phx.digest && mix phx.server"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
