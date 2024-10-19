@@ -8,6 +8,11 @@
         :options="chartOptions"
         :data="chartData"
       />
+      <div class="text-center text-white mt-4">
+        <h2>
+          Total hours worked this month: {{ formatTotalHours(totalHours) }}
+        </h2>
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +54,7 @@ export default {
           data: [],
           backgroundColor: "rgba(123, 97, 255, 0.2)",
           borderColor: "#36A2EB",
-          label: "Worked hours per month",
+          label: "Worked hours per month (Cumulative)",
           fill: true,
           tension: 0.4,
         },
@@ -116,6 +121,7 @@ export default {
     const chartKey = ref(0);
     const startDate = ref("");
     const endDate = ref("");
+    const totalHours = ref(0); // Track total hours worked in the month
     const date = ref(new Date());
 
     startDate.value = new Date(
@@ -148,24 +154,42 @@ export default {
         ).getDate();
         const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-        const data = Array(daysInMonth).fill(0);
+        const dailyData = Array(daysInMonth).fill(0);
 
         workedTimePerDay.forEach((workDay) => {
           const [day, month, year] = workDay.date.split("/").map(Number);
           const dayOfMonth = new Date(
             Date.UTC(year, month - 1, day)
           ).getUTCDate();
-          data[dayOfMonth - 1] = workDay.hours;
+          dailyData[dayOfMonth - 1] = workDay.hours;
         });
 
+        // Compute cumulative data
+        const cumulativeData = dailyData.reduce((acc, curr, index) => {
+          if (index === 0) {
+            acc.push(curr);
+          } else {
+            acc.push(acc[index - 1] + curr);
+          }
+          return acc;
+        }, []);
+
+        // Update chart data and total hours
         chartData.value.labels = labels;
-        chartData.value.datasets[0].data = data;
+        chartData.value.datasets[0].data = cumulativeData;
+        totalHours.value = cumulativeData[cumulativeData.length - 1]; // Total hours at the end of the month
 
         chartKey.value += 1;
       } catch (error) {
         errorMessage.value = "Failed to fetch data";
         console.error(error);
       }
+    };
+
+    const formatTotalHours = (total) => {
+      const hours = Math.floor(total);
+      const minutes = Math.round((total - hours) * 60);
+      return `${hours}h ${minutes}m`;
     };
 
     onMounted(fetchData);
@@ -177,6 +201,8 @@ export default {
       chartKey,
       startDate,
       endDate,
+      totalHours, // Pass total hours to the template
+      formatTotalHours, // Pass the format function to the template
     };
   },
 };
