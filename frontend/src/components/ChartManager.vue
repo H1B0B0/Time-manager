@@ -1,5 +1,6 @@
 <template>
   <div class="p-4 rounded-lg w-full max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold text-center text-white mb-4">My Schedule</h1>
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
     <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
       <div class="flex flex-col lg:flex-row items-center justify-between mb-4">

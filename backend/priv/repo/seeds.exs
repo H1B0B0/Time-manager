@@ -31,7 +31,7 @@ user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gm
 
 # Module to generate working times and clock times
 defmodule SeedData do
-  def generate_working_times_and_clocks(user, start_date, end_date) do
+  def generate_working_times(user, start_date, end_date) do
     Enum.each(Date.range(start_date, end_date), fn date ->
       if Date.day_of_week(date) in 1..5 do
         start_hour = Enum.random(7..9)
@@ -42,9 +42,20 @@ defmodule SeedData do
         start_time = NaiveDateTime.new!(date, Time.new!(start_hour, start_minute, 0))
         end_time = NaiveDateTime.new!(date, Time.new!(end_hour, end_minute, 0))
         Backend.Repo.insert!(%Workingtime{start: start_time, end: end_time, user_id: user.id})
+      end
+    end)
+  end
 
-        clock_in_time = NaiveDateTime.new!(date, Time.new!(start_hour, start_minute, 0))
-        clock_out_time = NaiveDateTime.new!(date, Time.new!(end_hour, end_minute, 0))
+  def generate_clocks(user, start_date, end_date) do
+    Enum.each(Date.range(start_date, end_date), fn date ->
+      if Date.day_of_week(date) in 1..5 do
+        clock_in_hour = Enum.random(6..10)
+        clock_in_minute = Enum.random(0..59)
+        clock_out_hour = clock_in_hour + Enum.random(6..10)
+        clock_out_minute = Enum.random(0..59)
+
+        clock_in_time = NaiveDateTime.new!(date, Time.new!(clock_in_hour, clock_in_minute, 0))
+        clock_out_time = NaiveDateTime.new!(date, Time.new!(clock_out_hour, clock_out_minute, 0))
         Backend.Repo.insert!(%Clock{status: true, time: clock_in_time, user_id: user.id})
         Backend.Repo.insert!(%Clock{status: false, time: clock_out_time, user_id: user.id})
       end
@@ -53,6 +64,10 @@ defmodule SeedData do
 end
 
 # Generate data for September, October, and November 2024
-SeedData.generate_working_times_and_clocks(user1, ~D[2024-09-01], ~D[2024-11-30])
-SeedData.generate_working_times_and_clocks(user2, ~D[2024-09-01], ~D[2024-11-30])
-SeedData.generate_working_times_and_clocks(user3, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_working_times(user1, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_working_times(user2, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_working_times(user3, ~D[2024-09-01], ~D[2024-11-30])
+
+SeedData.generate_clocks(user1, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_clocks(user2, ~D[2024-09-01], ~D[2024-11-30])
+SeedData.generate_clocks(user3, ~D[2024-09-01], ~D[2024-11-30])

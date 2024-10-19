@@ -172,6 +172,16 @@ export default {
         );
         const workedTimePerDay = await hoursWorkedPerDay(dates);
 
+        workedTimePerDay.sort((a, b) => {
+          const [dayA, monthA, yearA] = a.date.split("/").map(Number);
+          const [dayB, monthB, yearB] = b.date.split("/").map(Number);
+
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+
+          return dateA - dateB;
+        });
+
         chartData.value.labels = workedTimePerDay.map((day) => day.date);
         chartData.value.datasets[0].data = workedTimePerDay.map(
           (day) => day.hours
