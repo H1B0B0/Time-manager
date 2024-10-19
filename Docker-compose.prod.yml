@@ -33,6 +33,8 @@ services:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
     volumes:
       - ./backend:/app
+      - backend:/app/_build
+      - backend:/app/deps
     depends_on:
       - database
 
@@ -109,3 +111,5 @@ volumes:
     name: t-poo-700-stg_9_pgadmin
   traefik:
     name: t-poo-700-stg_9_traefik
+  backend:
+    name: t-poo-700-stg_9_backend
