@@ -11,6 +11,7 @@ import News from "../components/News.vue";
 import WorkedHoursPerMonth from "@/components/WorkedHoursPerMonth.vue";
 import UserDashboard from "@/components/userDashboard.vue";
 import adminDashboard from "@/components/adminDashboard.vue";
+import WorkingTimeMangager from "@/components/WorkingTimeMangager.vue";
 
 const routes = [
   {
@@ -50,6 +51,12 @@ const routes = [
     path: "/admin/dashboard/:userID",
     name: "AdminDashboard",
     component: adminDashboard,
+    props: true,
+  },
+  {
+    path: "/workingTimeManager/:userID",
+    name: "WorkingTimeManager",
+    component: WorkingTimeMangager,
     props: true,
   },
   {

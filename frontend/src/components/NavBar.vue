@@ -18,7 +18,7 @@
               :to="
                 userStore.user.role === 'Manager'
                   ? `/admin/dashboard/${userStore.user.id}`
-                  : '/dashboard/1'
+                  : `/dashboard/${userStore.user.id}`
               "
             >
               Dashboard
