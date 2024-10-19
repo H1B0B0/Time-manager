@@ -1,41 +1,10 @@
 <template>
-  <nav class="p-4 w-full flex items-center">
+  <nav class="p-4 w-full flex items-center relative">
     <div class="container mx-auto flex items-center justify-between">
-      <div class="text-white text-lg font-bold">
+      <div class="text-white text-lg font-bold flex-shrink-0">
         <router-link to="/" class="text-white">Time Manager</router-link>
       </div>
-      <div
-        class="hidden lg:flex lg:justify-center lg:items-center lg:space-x-4"
-      >
-        <ul class="flex space-x-4">
-          <li
-            v-if="
-              userStore.user.username && (!isHomePage || !userStore.getUser)
-            "
-          >
-            <router-link
-              class="text-white hover:text-blue-200"
-              :to="
-                userStore.user.role === 'Manager'
-                  ? `/admin/dashboard/${userStore.user.id}`
-                  : '/dashboard/1'
-              "
-            >
-              Dashboard
-            </router-link>
-          </li>
-          <li v-if="!isHomePage">
-            <router-link to="/news" class="text-white hover:text-blue-200"
-              >News</router-link
-            >
-            <span
-              v-if="!isLatestNewsRead"
-              class="absolute top-30 right-15 inline-block w-2 h-2 bg-red-500 rounded-full"
-            ></span>
-          </li>
-        </ul>
-      </div>
-      <div class="hidden lg:flex ml-auto">
+      <div class="hidden lg:flex ml-auto flex-shrink-0">
         <ul class="flex space-x-4">
           <li
             v-if="!userStore.user.username"
@@ -115,6 +84,25 @@
           </ul>
         </div>
       </div>
+    </div>
+    <div
+      class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-4"
+    >
+      <router-link
+        class="text-white hover:text-blue-200"
+        :to="
+          userStore.user.username
+            ? userStore.user.role === 'Manager'
+              ? `/admin/dashboard/${userStore.user.id}`
+              : `/dashboard/${userStore.user.id}`
+            : '/login'
+        "
+      >
+        Dashboard
+      </router-link>
+      <router-link to="/news" class="text-white hover:text-blue-200">
+        News
+      </router-link>
     </div>
   </nav>
 </template>

@@ -12,7 +12,7 @@
       </div>
 
       <!-- Worked Hours Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full p-5">
         <div class="rounded-lg p-4 w-full">
           <WorkedHoursPerMonth />
         </div>

@@ -1,50 +1,52 @@
 <template>
-  <div
-    class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl items-center justify-center"
-  >
-    <h2 class="text-3xl font-bold mb-6 text-center text-white">
-      Update Account 🔄
-    </h2>
-    <form @submit.prevent="updateAccount" class="space-y-4">
-      <input
-        v-model="username"
-        placeholder="New username"
-        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        required
-      />
-      <input
-        v-model="email"
-        placeholder="New email"
-        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        required
-        type="email"
-      />
-      <input
-        v-model="oldPassword"
-        placeholder="Old password"
-        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        type="password"
-      />
-      <input
-        v-model="newPassword"
-        placeholder="New password"
-        class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        type="password"
-      />
-      <button
-        type="submit"
-        class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300"
-      >
-        Update account
-      </button>
-    </form>
-    <button
-      @click="confirmDeleteAccount"
-      type="button"
-      class="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300 mt-4"
+  <div class="items-center justify-center flex min-h-screen">
+    <div
+      class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl items-center justify-center"
     >
-      Delete account
-    </button>
+      <h2 class="text-3xl font-bold mb-6 text-center text-white">
+        Update Account 🔄
+      </h2>
+      <form @submit.prevent="updateAccount" class="space-y-4">
+        <input
+          v-model="username"
+          placeholder="New username"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          required
+        />
+        <input
+          v-model="email"
+          placeholder="New email"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          required
+          type="email"
+        />
+        <input
+          v-model="oldPassword"
+          placeholder="Old password"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          type="password"
+        />
+        <input
+          v-model="newPassword"
+          placeholder="New password"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          type="password"
+        />
+        <button
+          type="submit"
+          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300"
+        >
+          Update account
+        </button>
+      </form>
+      <button
+        @click="confirmDeleteAccount"
+        type="button"
+        class="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300 mt-4"
+      >
+        Delete account
+      </button>
+    </div>
   </div>
 </template>
 
