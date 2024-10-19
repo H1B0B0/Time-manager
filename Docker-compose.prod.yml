@@ -16,10 +16,6 @@ services:
     restart: always
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
-    # For Bruno
-    # Remove in production
-    ports:
-      - "4000:4000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`)"
