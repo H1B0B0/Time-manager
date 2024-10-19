@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/use-user-store";
 import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
@@ -38,6 +40,31 @@ export default defineComponent({
     ClockManager,
     WorkedHoursPerDayChart,
     WorkedHoursPerMonth,
+  },
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
+    const userStore = useUserStore();
+
+    onMounted(() => {
+      const userId = parseInt(route.params.userId, 10);
+      const loggedInUserId = userStore.user?.id;
+      const userRole = userStore.user?.role_id;
+
+      if (!loggedInUserId) {
+        // Redirect to login if user is not logged in
+        router.push("/login");
+      } else if (
+        userId !== loggedInUserId &&
+        userRole !== 2 &&
+        userRole !== 3
+      ) {
+        // Redirect to the logged-in user's dashboard
+        router.push(`/dashboard/${loggedInUserId}`);
+      }
+    });
+
+    return {};
   },
 });
 </script>

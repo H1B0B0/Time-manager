@@ -45,7 +45,14 @@
           <ul class="py-2">
             <li v-if="userStore.user.username && !isHomePage">
               <router-link
-                to="/dashboard/1"
+                :to="
+                  userStore.user.username
+                    ? userStore.user.role_id === 2 ||
+                      userStore.user.role_id === 3
+                      ? `/admin/dashboard/${userStore.user.id}`
+                      : `/dashboard/${userStore.user.id}`
+                    : '/login'
+                "
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                 >Dashboard</router-link
               >
@@ -92,7 +99,7 @@
         class="text-white hover:text-blue-200"
         :to="
           userStore.user.username
-            ? userStore.user.role === 'Manager'
+            ? userStore.user.role_id === 2 || userStore.user.role_id === 3
               ? `/admin/dashboard/${userStore.user.id}`
               : `/dashboard/${userStore.user.id}`
             : '/login'
@@ -112,6 +119,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 import DropdownProfile from "./DropdownProfile.vue";
+import { add } from "date-fns";
 
 const route = useRoute();
 const router = useRouter();
@@ -123,6 +131,10 @@ const isLatestNewsRead = ref(true);
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
+
+addEventListener("click", () => {
+  console.log("User", userStore.user);
+});
 
 const closeMenu = () => {
   menuOpen.value = false;
