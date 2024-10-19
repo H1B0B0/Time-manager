@@ -3,5 +3,5 @@ export interface UserType {
   username: string;
   email: string;
   passsword: string;
-  role: string;
+  role_id: number;
 }

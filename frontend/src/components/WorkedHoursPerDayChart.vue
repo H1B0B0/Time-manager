@@ -5,16 +5,18 @@
     <div
       class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full max-w-4xl"
     >
-      <Bar
-        :key="chartKey"
-        id="my-chart-id"
-        :options="chartOptions"
-        :data="chartData"
-        class="w-full"
-      />
+      <div class="chart-container w-full" style="height: 400px">
+        <Bar
+          :key="chartKey"
+          id="my-chart-id"
+          :options="chartOptions"
+          :data="chartData"
+          class="w-full h-full"
+        />
+      </div>
       <div
         id="date-range-picker"
-        class="flex items-center mt-10 justify-center"
+        class="flex items-center mt-10 justify-center sm:flex-row flex-col"
       >
         <div class="relative">
           <input
@@ -89,6 +91,7 @@ export default {
 
     const chartOptions = ref({
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           labels: {
@@ -168,6 +171,16 @@ export default {
           endDate.value
         );
         const workedTimePerDay = await hoursWorkedPerDay(dates);
+
+        workedTimePerDay.sort((a, b) => {
+          const [dayA, monthA, yearA] = a.date.split("/").map(Number);
+          const [dayB, monthB, yearB] = b.date.split("/").map(Number);
+
+          const dateA = new Date(yearA, monthA - 1, dayA);
+          const dateB = new Date(yearB, monthB - 1, dayB);
+
+          return dateA - dateB;
+        });
 
         chartData.value.labels = workedTimePerDay.map((day) => day.date);
         chartData.value.datasets[0].data = workedTimePerDay.map(

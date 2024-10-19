@@ -16,10 +16,6 @@ services:
     restart: always
     image: elixir:1.17
     container_name: t-poo-700-stg_9_backend
-    # For Bruno
-    # Remove in production
-    ports:
-      - "4000:4000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`${BACKEND_DNS}`)"
@@ -27,12 +23,14 @@ services:
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     command: >
-      bash -c "mix setup && mix phx.digest && mix phx.server"
+      bash -c "mix ecto.migrate && mix deps.get && mix phx.digest && mix phx.server"
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
     volumes:
       - ./backend:/app
+      - backend:/app/_build
+      - backend:/app/deps
     depends_on:
       - database
 
@@ -109,3 +107,5 @@ volumes:
     name: t-poo-700-stg_9_pgadmin
   traefik:
     name: t-poo-700-stg_9_traefik
+  backend:
+    name: t-poo-700-stg_9_backend

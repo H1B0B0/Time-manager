@@ -1,9 +1,10 @@
 <template>
   <div class="p-4 rounded-lg w-full max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold text-center text-white mb-4">My Schedule</h1>
     <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
     <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
-      <div class="flex flex-row items-center justify-between mb-4">
-        <div class="flex justify-center mb-4">
+      <div class="flex flex-col lg:flex-row items-center justify-between mb-4">
+        <div class="flex justify-center mb-4 lg:mb-0">
           <select
             v-model="view"
             @change="updateDateRange"
@@ -14,30 +15,28 @@
             <option value="month">Month</option>
           </select>
         </div>
-        <div class="flex mb-4 justify-end">
-          <div class="flex flex-wrap justify-end">
-            <input
-              v-if="view === 'day'"
-              type="date"
-              v-model="selectedDate"
-              @change="updateDateRange"
-              class="px-4 py-2 mx-2 mb-2 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
-            />
-            <input
-              v-if="view === 'week'"
-              type="week"
-              v-model="selectedWeek"
-              @change="updateDateRange"
-              class="px-4 py-2 mx-2 mb-2 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
-            />
-            <input
-              v-if="view === 'month'"
-              type="month"
-              v-model="selectedMonth"
-              @change="updateDateRange"
-              class="px-4 py-2 mx-2 mb-2 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
-            />
-          </div>
+        <div class="flex flex-wrap justify-center lg:justify-end">
+          <input
+            v-if="view === 'day'"
+            type="date"
+            v-model="selectedDate"
+            @change="updateDateRange"
+            class="px-4 py-2 mx-2 mb-2 lg:mb-0 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
+          />
+          <input
+            v-if="view === 'week'"
+            type="week"
+            v-model="selectedWeek"
+            @change="updateDateRange"
+            class="px-4 py-2 mx-2 mb-2 lg:mb-0 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
+          />
+          <input
+            v-if="view === 'month'"
+            type="month"
+            v-model="selectedMonth"
+            @change="updateDateRange"
+            class="px-4 py-2 mx-2 mb-2 lg:mb-0 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 backdrop-blur-2xl border text-black shadow-lg hover:bg-white"
+          />
         </div>
       </div>
       <div class="text-center text-white mb-4">
@@ -280,7 +279,7 @@ export default {
           const durationMinutes = endMinutes - startMinutes;
           const totalDuration = durationHours + durationMinutes / 60;
 
-          const dayOfWeek = startDate.getUTCDay();
+          const dayOfWeek = (startDate.getUTCDay() + 6) % 7; // Adjust to make Monday the first day of the week
           const dayOfMonth = startDate.getUTCDate() - 1;
 
           if (view.value === "day") {
@@ -297,13 +296,13 @@ export default {
           chartData.value.datasets[0].data = workHoursPerDay.slice(0, 1);
         } else if (view.value === "week") {
           chartData.value.labels = [
-            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
+            "Sunday",
           ];
           chartData.value.datasets[0].data = workHoursPerDay;
         } else if (view.value === "month") {

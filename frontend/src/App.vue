@@ -135,7 +135,7 @@ setTimeout(() => {
     </header>
 
     <main
-      class="flex-grow flex items-center justify-center bg-transparent z-10"
+      class="flex items-center justify-center bg-transparent z-10"
     >
       <spline-viewer
         class="absolute inset-0 w-full h-full"
@@ -143,7 +143,7 @@ setTimeout(() => {
         play="true"
         v-show="!performanceMode"
       />
-      <div class="z-20">
+      <div class="z-20 m-0 p-0">
         <RouterView />
       </div>
       <div

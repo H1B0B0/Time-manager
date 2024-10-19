@@ -16,6 +16,8 @@ onMounted(async () => {
   try {
     latestClock.value = await getLatestClock(userId.value);
     clockedIn.value = latestClock.value.status;
+    console.log("Latest Clock:", latestClock.value);
+    console.log("Clocked In:", clockedIn.value);
   } catch (error) {
     console.error(error);
   }
@@ -35,7 +37,7 @@ const handleClockCreation = async () => {
   isButtonDisabled.value = true;
   setTimeout(() => {
     isButtonDisabled.value = false;
-  }, 2000); // Désactive le bouton pendant 3 secondes
+  }, 2000);
 
   try {
     const newClock = await createClock(userId.value.toString(), {
@@ -45,15 +47,13 @@ const handleClockCreation = async () => {
     });
     latestClock.value = newClock;
     clockedIn.value = newClock.status;
-
-    // Ajouter des confettis lors du clock out
     if (!clockedIn.value) {
       setTimeout(() => {
         confetti({
           particleCount: 200,
           spread: 160,
           origin: { x: 0.5, y: 0.5 },
-          zIndex: 9999, // Augmenter le z-index
+          zIndex: 9999,
         });
       }, 100);
     }

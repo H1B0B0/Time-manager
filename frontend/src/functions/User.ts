@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import type { UserType } from "../types/UserType";
 import router from "../router";
+import { useUserStore } from "@/stores/use-user-store";
 
 const BASE_URL = "https://" + import.meta.env.VITE_BACKEND_DNS + "/api";
 
@@ -99,9 +100,11 @@ export const updateUser = async (
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
+    const userStore = useUserStore();
     await axios.delete(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
+    userStore.logout();
     router.push("/");
   } catch (error) {
     console.error(`Failed to delete user with id ${id}:`, error);
@@ -154,7 +157,6 @@ export const getAllUsers = async () => {
     if (!token) {
       throw new Error("No token found");
     }
-    console.log(token);
     const response = await axios.get(`${BASE_URL}/user`, {
       headers: {
         Authorization: `Bearer ${token}`,

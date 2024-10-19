@@ -21,31 +21,35 @@
         ></path>
       </svg>
     </button>
-    <div
-      v-if="isOpen"
-      class="absolute right-0 mt-4 w-48 z-50 border border-white rounded-xl backdrop-blur-sm"
-    >
-      <ul class="py-2">
-        <li>
-          <router-link to="/settings" class="block px-4 py-2 text-white"
-            >Edit</router-link
-          >
-        </li>
-        <li>
-          <button
-            @click="handleLogout"
-            class="block w-full text-left px-4 py-2 text-white"
-          >
-            Logout
-          </button>
-        </li>
-      </ul>
-    </div>
+    <transition name="dropdown">
+      <div
+        v-if="isOpen"
+        class="dropdown-menu absolute right-0 mt-4 w-48 z-50 border border-white rounded-xl backdrop-blur-sm"
+      >
+        <ul class="py-2">
+          <li>
+            <router-link
+              to="/settings"
+              class="block px-4 py-2 text-white hover:text-lg transition-all"
+              >Edit</router-link
+            >
+          </li>
+          <li>
+            <button
+              @click="handleLogout"
+              class="block w-full text-left px-4 py-2 text-red-700 hover:text-lg transition-all"
+            >
+              Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps<{
   username: string;
@@ -55,12 +59,44 @@ const emit = defineEmits(["logout"]);
 
 const isOpen = ref(false);
 
-const toggleDropdown = () => {
+const toggleDropdown = (event: MouseEvent) => {
+  event.stopPropagation();
   isOpen.value = !isOpen.value;
 };
 
-const handleLogout = () => {
-  emit("logout");
+const closeDropdown = () => {
   isOpen.value = false;
 };
+
+const handleClickOutside = (event: MouseEvent) => {
+  const dropdownElement = document.querySelector(".dropdown-menu");
+  if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
+    closeDropdown();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+
+const handleLogout = () => {
+  emit("logout");
+  closeDropdown();
+};
 </script>
+
+<style scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>

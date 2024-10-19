@@ -1,48 +1,53 @@
 <template>
-  <div class="mx-auto mt-10 p-6 bg-gray-900 rounded-lg shadow-xl">
-    <form @submit.prevent="updateAccount" class="space-y-4">
-      <input
-        v-model="username"
-        placeholder="New username"
-        class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
-        required
-      />
-      <input
-        v-model="email"
-        placeholder="New email"
-        class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
-        required
-        type="email"
-      />
-      <input
-        v-model="oldPassword"
-        placeholder="Old password"
-        class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
-        type="password"
-      />
-      <input
-        v-model="newPassword"
-        placeholder="New password"
-        class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
-        type="password"
-      />
-      <div class="flex justify-between">
+  <div class="items-center justify-center flex min-h-screen">
+    <div
+      class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl items-center justify-center"
+    >
+      <h2 class="text-3xl font-bold mb-6 text-center text-white">
+        Update Account 🔄
+      </h2>
+      <form @submit.prevent="updateAccount" class="space-y-4">
+        <input
+          v-model="username"
+          placeholder="New username"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          required
+        />
+        <input
+          v-model="email"
+          placeholder="New email"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          required
+          type="email"
+        />
+        <input
+          v-model="oldPassword"
+          placeholder="Old password"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          type="password"
+        />
+        <input
+          v-model="newPassword"
+          placeholder="New password"
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          type="password"
+        />
         <button
           type="submit"
-          class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full"
+          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300"
         >
           Update account
         </button>
-      </div>
-    </form>
+      </form>
+      <button
+        @click="confirmDeleteAccount"
+        type="button"
+        class="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300 mt-4"
+      >
+        Delete account
+      </button>
+    </div>
   </div>
-  <button
-    @click="confirmDeleteAccount"
-    type="button"
-    class="bg-red-500 text-white p-2 rounded hover:bg-red-600 w-full mt-4"
-  >
-    Delete account
-  </button>
 </template>
 
 <script setup>
@@ -50,7 +55,7 @@ import { ref } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 import { updateUser, deleteUser } from "@/functions/User";
 import { toast } from "vue3-toastify";
-import { passwordStrength } from 'check-password-strength'
+import { passwordStrength } from "check-password-strength";
 
 const userStore = useUserStore();
 const email = ref(userStore.user?.email ?? "");
@@ -77,17 +82,20 @@ const updateAccount = async () => {
         );
         return;
       }
-      if (passwordStrength(newPassword.value).id < 2 && newPassword.value.length < 8) {
+      if (
+        passwordStrength(newPassword.value).id < 2 &&
+        newPassword.value.length < 8
+      ) {
         const contains = passwordStrength(newPassword.value).contains;
-        if (!contains.includes('lowercase')) {
+        if (!contains.includes("lowercase")) {
           toast.error("Password must contain at least one lowercase letter.");
           return;
         }
-        if (!contains.includes('uppercase')) {
+        if (!contains.includes("uppercase")) {
           toast.error("Password must contain at least one uppercase letter.");
           return;
         }
-        if (!contains.includes('number')) {
+        if (!contains.includes("number")) {
           toast.error("Password must contain at least one number.");
           return;
         }
@@ -129,7 +137,6 @@ const confirmDeleteAccount = () => {
 const deleteAccount = async () => {
   try {
     await deleteUser(userStore.user.id);
-    userStore.setUser(null);
     toast.success("Successfully deleted account");
   } catch (error) {
     toast.error(`Error deleting account: ${error.message}`);

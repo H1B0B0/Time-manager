@@ -1,8 +1,6 @@
 <template>
-  <div class="p-4 min-h-screen w-full" ref="chartContainer">
-    <div
-      class="flex flex-col max-w-7xl mx-auto space-y-6 justify-center items-center w-full"
-    >
+  <div class="min-h-screen w-full">
+    <div class="flex flex-col justify-center items-center w-full">
       <!-- Clock Manager -->
       <div class="rounded-lg p-4 w-full flex justify-center items-center">
         <ClockManager />
@@ -14,7 +12,7 @@
       </div>
 
       <!-- Worked Hours Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full p-5">
         <div class="rounded-lg p-4 w-full">
           <WorkedHoursPerMonth />
         </div>
@@ -27,7 +25,9 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { defineComponent, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/use-user-store";
 import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
@@ -42,32 +42,36 @@ export default defineComponent({
     WorkedHoursPerMonth,
   },
   setup() {
-    const chartContainer = ref(null);
-
-    const resizeCharts = () => {
-      if (chartContainer.value) {
-        const charts =
-          chartContainer.value.querySelectorAll(".recharts-wrapper");
-        charts.forEach((chart) => {
-          const containerWidth = chart.parentElement.offsetWidth;
-          chart.style.width = `${containerWidth}px`;
-          chart.style.height = `${containerWidth * 0.5}px`; // Adjust the aspect ratio as needed
-        });
-      }
-    };
+    const router = useRouter();
+    const route = useRoute();
+    const userStore = useUserStore();
 
     onMounted(() => {
-      resizeCharts();
-      window.addEventListener("resize", resizeCharts);
+      const userId = parseInt(route.params.userId, 10);
+      const loggedInUserId = userStore.user?.id;
+      const userRole = userStore.user?.role_id;
+
+      if (!loggedInUserId) {
+        // Redirect to login if user is not logged in
+        router.push("/login");
+      } else if (
+        userId !== loggedInUserId &&
+        userRole !== 2 &&
+        userRole !== 3
+      ) {
+        // Redirect to the logged-in user's dashboard
+        router.push(`/dashboard/${loggedInUserId}`);
+      }
     });
 
-    onUnmounted(() => {
-      window.removeEventListener("resize", resizeCharts);
-    });
-
-    return {
-      chartContainer,
-    };
+    return {};
   },
 });
 </script>
+
+<style scoped>
+.recharts-wrapper {
+  width: 100% !important;
+  height: auto !important;
+}
+</style>

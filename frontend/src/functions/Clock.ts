@@ -26,7 +26,8 @@ export const getLatestClock = async (userId: number) => {
     const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
       headers: getAuthHeaders(),
     });
-    return response.data.data[response.data.data.length - 1];
+    const sortedData = response.data.data.sort((a: any, b: any) => a.id - b.id);
+    return sortedData[sortedData.length - 1];
   } catch (error) {
     console.error(error);
     throw error;
@@ -46,6 +47,7 @@ export const createClock = async (userId: string, data: ClockType) => {
       JSON.stringify({ clock: data }),
       config
     );
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error(error);

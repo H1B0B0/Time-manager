@@ -1,11 +1,11 @@
 <template>
   <div
-    class="mt-10 p-6 border backdrop-blur-2xl rounded-lg shadow-xl overflow-visible flex flex-col items-center w-full max-w-4xl align-middle mx-auto sm:mt-8 sm:p-4 md:mt-6 md:p-5 lg:m-10 lg:p-6 sm:m-4 md:m-6"
+    class="m-10 p-6 border backdrop-blur-2xl rounded-lg shadow-xl flex flex-col items-center"
   >
-    <h1 class="font-bold text-white text-2xl sticky top-0 p-3 rounded">
+    <h1 class="font-bold text-white text-2xl sticky p-3 rounded">
       The latest updates
     </h1>
-    <p class="border-b mb-6 p-3 text-white items-center text-center">
+    <p class="mb-6 p-3 text-white items-center text-center">
       <a
         href="https://www.instagram.com/gothamtimenews/"
         class="neon-text text-lg hover:scale-105 follow-us-text"
@@ -14,7 +14,7 @@
       </a>
       on Instagram to stay updated with the latest news.
     </p>
-    <div class="overflow-y-auto space-y-4 w-full">
+    <div class="space-y-4 w-full">
       <div
         v-for="(article, index) in articles"
         :key="index"
