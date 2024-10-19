@@ -157,7 +157,6 @@ export const getAllUsers = async () => {
     if (!token) {
       throw new Error("No token found");
     }
-    console.log(token);
     const response = await axios.get(`${BASE_URL}/user`, {
       headers: {
         Authorization: `Bearer ${token}`,

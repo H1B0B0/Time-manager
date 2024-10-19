@@ -45,16 +45,24 @@
           <ul class="py-2">
             <li v-if="userStore.user.username && !isHomePage">
               <router-link
+                :to="`/dashboard/${userStore.user.id}`"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >My Dashboard</router-link
+              >
+            </li>
+            <li v-if="userStore.user.role_id >= 2">
+              <router-link
                 :to="
-                  userStore.user.username
-                    ? userStore.user.role_id === 2 ||
-                      userStore.user.role_id === 3
-                      ? `/admin/dashboard/${userStore.user.id}`
-                      : `/dashboard/${userStore.user.id}`
-                    : '/login'
+                  userStore.user.role_id === 2
+                    ? `/admin/dashboard/${userStore.user.id}`
+                    : `/admin/dashboard/${userStore.user.id}`
                 "
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                >Dashboard</router-link
+                >{{
+                  userStore.user.role_id === 2
+                    ? "Manager Dashboard"
+                    : "Admin Dashboard"
+                }}</router-link
               >
             </li>
             <li v-if="!isHomePage">
@@ -97,18 +105,25 @@
     >
       <router-link
         class="text-white hover:text-blue-200"
-        :to="
-          userStore.user.username
-            ? userStore.user.role_id === 2 || userStore.user.role_id === 3
-              ? `/admin/dashboard/${userStore.user.id}`
-              : `/dashboard/${userStore.user.id}`
-            : '/login'
-        "
+        :to="`/dashboard/${userStore.user.id}`"
       >
-        Dashboard
+        My Dashboard
       </router-link>
       <router-link to="/news" class="text-white hover:text-blue-200">
         News
+      </router-link>
+      <router-link
+        v-if="userStore.user.role_id >= 2"
+        :to="
+          userStore.user.role_id === 2
+            ? `/admin/dashboard/${userStore.user.id}`
+            : `/admin/dashboard/${userStore.user.id}`
+        "
+        class="text-white hover:text-blue-200"
+      >
+        {{
+          userStore.user.role_id === 2 ? "Manager Dashboard" : "Admin Dashboard"
+        }}
       </router-link>
     </div>
   </nav>
@@ -119,7 +134,6 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 import DropdownProfile from "./DropdownProfile.vue";
-import { add } from "date-fns";
 
 const route = useRoute();
 const router = useRouter();
@@ -131,10 +145,6 @@ const isLatestNewsRead = ref(true);
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
-
-addEventListener("click", () => {
-  console.log("User", userStore.user);
-});
 
 const closeMenu = () => {
   menuOpen.value = false;

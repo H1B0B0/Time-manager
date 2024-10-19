@@ -44,25 +44,35 @@
             >
               {{ user.id }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.username }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.email }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.role }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               <button
-                v-on:click="viewUserInfo(user.id)"
+                v-on:click="viewUserInfo(user.id, user.role_id)"
                 type="button"
                 class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
               >
                 View
               </button>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               <button
                 type="button"
                 class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -113,16 +123,24 @@
             >
               {{ user.id }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.username }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.email }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               {{ user.role }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               <button
                 type="button"
                 class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -140,15 +158,33 @@
 <script>
 import { getAllUsers } from "@/functions/User";
 import router from "@/router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/use-user-store";
 
 export default {
   name: "AdminDashboard",
   setup() {
     const users = ref([]);
+    const userStore = useUserStore();
 
-    const viewUserInfo = (id) => {
-      router.push({ path: `/dashboard/${id}` });
+    onMounted(async () => {
+      try {
+        const user = await GetUserByToken();
+        if (user.role_id < 2) {
+          router.push({ path: `/dashboard/${user.id}` });
+        }
+      } catch (error) {
+        router.push({ path: `/` });
+      }
+    });
+
+    const viewUserInfo = (id, roleId) => {
+      const loggedInUserId = userStore.user.id;
+      if (roleId < 2) {
+        router.push({ path: `/dashboard/${loggedInUserId}` });
+      } else {
+        router.push({ path: `/dashboard/${id}` });
+      }
     };
 
     getAllUsers().then((response) => {
