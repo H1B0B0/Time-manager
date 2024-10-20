@@ -18,7 +18,7 @@ defmodule Backend.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    Repo.all(User) |> Repo.preload(:role)
   end
 
   @doc """
@@ -36,12 +36,12 @@ defmodule Backend.Accounts do
 
   """
   def get_user!(id) do
-    Repo.get!(User, id)
+    Repo.get!(User, id) |> Repo.preload(:role)
   end
 
   # Returns nil instead of raising an error
   def get_user(id) do
-    Repo.get(User, id)
+    Repo.get(User, id) |> Repo.preload(:role)
   end
 
   # Get the user by username and email
@@ -50,14 +50,14 @@ defmodule Backend.Accounts do
       where: u.username == ^username and u.email == ^email,
       select: u
 
-    Repo.one(query)
+    Repo.one(query) |> Repo.preload(:role)
   end
 
   def get_all_users() do
     query = from u in User,
       select: u
 
-    Repo.all(query)
+    Repo.all(query) |> Repo.preload(:role)
   end
 
   def get_users_by_team(team_id) do
@@ -75,7 +75,7 @@ defmodule Backend.Accounts do
       where: u.email == ^email,
       select: u
 
-    Repo.one(query)
+    Repo.one(query) |> Repo.preload(:role)
   end
 
   # Get the user by username
@@ -84,7 +84,7 @@ defmodule Backend.Accounts do
       where: u.username == ^username,
       select: u
 
-    Repo.one(query)
+    Repo.one(query) |> Repo.preload(:role)
   end
 
   @doc """
@@ -110,6 +110,10 @@ defmodule Backend.Accounts do
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, user} -> {:ok, Repo.preload(user, :role)}
+      error -> error
+    end
   end
 
   @doc """
@@ -135,6 +139,10 @@ defmodule Backend.Accounts do
     user
     |> User.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, user} -> {:ok, Repo.preload(user, :role)}
+      error -> error
+    end
   end
 
   @doc """
