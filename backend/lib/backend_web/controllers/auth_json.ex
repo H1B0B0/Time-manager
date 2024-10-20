@@ -2,13 +2,6 @@ defmodule BackendWeb.AuthJSON do
   alias Backend.Accounts.User
 
   @doc """
-  Renders a single user with token.
-  """
-  def show(%{user: user, token: token}) do
-    %{data: data(user), token: token}
-  end
-
-  @doc """
   Renders a single user.
   """
   def show(%{user: user}) do
