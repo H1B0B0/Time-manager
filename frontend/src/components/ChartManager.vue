@@ -70,6 +70,7 @@ import {
 } from "chart.js";
 import { ref, watch, onMounted } from "vue";
 import { getWorkingTimes } from "../functions/WorkingTime";
+import router from "@/router";
 
 ChartJS.register(
   Title,
@@ -257,7 +258,7 @@ export default {
     const fetchData = async () => {
       try {
         const response = await getWorkingTimes(
-          1,
+          router.currentRoute.value.params.userID,
           startDate.value.toISOString(),
           endDate.value.toISOString()
         );

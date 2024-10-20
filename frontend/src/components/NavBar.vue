@@ -4,34 +4,7 @@
       <div class="text-white text-lg font-bold flex-shrink-0">
         <router-link to="/" class="text-white">Time Manager</router-link>
       </div>
-      <div
-        class="hidden lg:flex lg:flex-grow lg:justify-center lg:items-center lg:space-x-4"
-      >
-        <ul class="flex space-x-4">
-          <li
-            v-if="
-              userStore.user.username && (!isHomePage || !userStore.getUser)
-            "
-          >
-            <router-link
-              class="text-white hover:text-blue-200"
-              :to="
-                userStore.user.role === 'Manager'
-                  ? `/admin/dashboard/${userStore.user.id}`
-                  : `/dashboard/${userStore.user.id}`
-              "
-            >
-              Dashboard
-            </router-link>
-          </li>
-          <li v-if="!isHomePage">
-            <router-link to="/news" class="text-white hover:text-blue-200"
-              >News</router-link
-            >
-          </li>
-        </ul>
-      </div>
-      <div class="hidden lg:flex ml-auto">
+      <div class="hidden lg:flex ml-auto flex-shrink-0">
         <ul class="flex space-x-4">
           <li
             v-if="!userStore.user.username"
