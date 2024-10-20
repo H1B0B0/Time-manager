@@ -86,7 +86,9 @@
                 Create
               </button>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
+            <td
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center"
+            >
               <button
                 v-on:click="modifyUserSchedule(user.id)"
                 type="button"
@@ -103,7 +105,7 @@
 </template>
 
 <script>
-import { getAllUsers } from "@/functions/User";
+import { getAllUsers, GetUserByToken } from "@/functions/User";
 import router from "@/router";
 import { ref, onMounted } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
@@ -121,6 +123,7 @@ export default {
           router.push({ path: `/dashboard/${user.id}` });
         }
       } catch (error) {
+        console.error("Error getting user by token:", error);
         router.push({ path: `/` });
       }
     });
@@ -150,7 +153,7 @@ export default {
       users,
       viewUserInfo,
       modifyUserSchedule,
-      createUserSchedule, 
+      createUserSchedule,
     };
   },
 };
