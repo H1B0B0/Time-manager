@@ -187,6 +187,7 @@
       </div>
     </div>
   </div>
+  <PwaPopup />
 </template>
 
 <script>
@@ -208,6 +209,7 @@ import {
   Legend,
 } from "chart.js";
 import anime from "animejs/lib/anime.es.js";
+import PwaPopup from "./PwaPopup.vue";
 
 Chart.register(
   LineElement,
