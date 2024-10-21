@@ -20,6 +20,7 @@ defmodule BackendWeb.Router do
     get "/users/:id/", UserController, :show
     put "/users/:id", UserController, :update
     delete "/users/:id", UserController, :delete
+    get "/users/team/:team_id", UserController, :getUserByTeam
 
     delete "/workingtime/:id", WorkingtimeController, :delete
     put "/workingtime/:userID", WorkingtimeController, :update

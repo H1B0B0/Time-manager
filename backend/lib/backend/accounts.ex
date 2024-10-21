@@ -60,6 +60,15 @@ defmodule Backend.Accounts do
     Repo.all(query)
   end
 
+  def get_users_by_team(team_id) do
+    query = from u in User,
+      join: t in assoc(u, :team),
+      where: t.id == ^team_id,
+      select: u
+
+    Repo.all(query)
+  end
+
   # Get the user by email
   def get_user_by_email(email) do
     query = from u in User,

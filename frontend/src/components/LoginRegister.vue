@@ -119,7 +119,7 @@ const Handlelogin = async () => {
     userStore.setUser(response.data);
     console.log(response.data);
     toast.success("Successfully logged in");
-    if (response.data.role_id === 1 || response.data.role_id === 3) {
+    if (response.data.role_id == 2) {
       router.push(`/admin/dashboard/${response.data.id}`);
     } else {
       router.push(`/dashboard/${response.data.id}`);

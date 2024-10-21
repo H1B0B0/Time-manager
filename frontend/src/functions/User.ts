@@ -168,3 +168,46 @@ export const getAllUsers = async () => {
     throw error;
   }
 };
+
+export const getUserByTeam = async (teamId: number) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/users/team/${teamId}`, {
+      headers: getAuthHeaders(),
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export const addUserToTeam = async (teamId: number, userId: number) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/teams/${teamId}/users/${userId}`, {}, {
+      headers: getAuthHeaders(),
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export const removeUserFromTeam = async (userId: number) => { 
+  const token = Cookies.get("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+  
+  try {
+      const response = await axios.delete(`${BASE_URL}/user/${userId}/team`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+      return response.data.data;
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+}

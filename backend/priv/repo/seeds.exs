@@ -1,5 +1,5 @@
-alias Backend.Accounts.Role
-alias Backend.Accounts.User
+alias Backend.Accounts.{Role, User}
+alias Backend.Teams.Team
 alias Backend.WorkingTime.Workingtime
 alias Backend.Time.Clock
 
@@ -11,9 +11,13 @@ Backend.Repo.delete_all(User)
 # Delete roles next
 Backend.Repo.delete_all(Role)
 
+# Delete teams
+Backend.Repo.delete_all(Team)
+
 # Reset sequences
 Backend.Repo.query("ALTER SEQUENCE roles_id_seq RESTART")
 Backend.Repo.query("ALTER SEQUENCE users_id_seq RESTART")
+Backend.Repo.query("ALTER SEQUENCE teams_id_seq RESTART")
 Backend.Repo.query("ALTER SEQUENCE workingtime_id_seq RESTART")
 Backend.Repo.query("ALTER SEQUENCE clocks_id_seq RESTART")
 
@@ -28,6 +32,17 @@ role3 = Backend.Repo.insert!(%Role{category: "General Manager"})
 user1 = Backend.Repo.insert!(%User{username: "johnDoe", email: "johnDoe@gmail.com", role_id: role1.id, password: Pbkdf2.hash_pwd_salt("password1")})
 user2 = Backend.Repo.insert!(%User{username: "janeDoe", email: "janeDoe@gmail.com", role_id: role2.id, password: Pbkdf2.hash_pwd_salt("password2")})
 user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gmail.com", role_id: role3.id, password: Pbkdf2.hash_pwd_salt("password3")})
+
+# INSERT TEAMS
+
+team1 = Backend.Repo.insert!(%Team{name: "Team 1", owner_id: user2.id})
+team2 = Backend.Repo.insert!(%Team{name: "Team 2", owner_id: user3.id})
+
+# UPDATE USERS WITH TEAM IDS
+
+Backend.Repo.update!(Ecto.Changeset.change(user1, team_id: team1.id))
+Backend.Repo.update!(Ecto.Changeset.change(user2, team_id: team1.id))
+Backend.Repo.update!(Ecto.Changeset.change(user3, team_id: team2.id))
 
 # Module to generate working times and clock times
 defmodule SeedData do

@@ -1,0 +1,15 @@
+meta {
+  name: Get user by team id
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:4000/api/users/team/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5NDU4NjEyLCJpYXQiOjE3Mjk0MTU0MTIsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIzMDAxczl0aGN2YzNubGVjNTQwMDA3YjEiLCJuYmYiOjE3Mjk0MTU0MTIsInVzZXJfaWQiOjJ9.sfqRGSzDx81YpHbMiXB1JlpI8QvNl3QTSn6gG2uokUo
+}

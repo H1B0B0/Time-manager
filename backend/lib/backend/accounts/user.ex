@@ -8,7 +8,7 @@ defmodule Backend.Accounts.User do
     field :password, :string
 
     belongs_to :role, Backend.Accounts.Role
-    belongs_to :team, Backend.Team
+    belongs_to :team, Backend.Teams.Team
 
     timestamps(type: :utc_datetime)
   end
@@ -22,6 +22,5 @@ defmodule Backend.Accounts.User do
     |> unique_constraint(:email, message: "Has already been taken", name: "unique_email")
     |> foreign_key_constraint(:role_id)
     |> foreign_key_constraint(:team_id)
-
   end
 end

@@ -4,7 +4,7 @@ defmodule Backend.Teams.Team do
 
   schema "teams" do
     field :name, :string
-    belongs_to :owner, Backend.User, foreign_key: :owner_id
+    belongs_to :owner, Backend.Accounts.User, foreign_key: :owner_id
 
     timestamps(type: :utc_datetime)
   end
@@ -14,5 +14,6 @@ defmodule Backend.Teams.Team do
     team
     |> cast(attrs, [:name, :owner_id])
     |> validate_required([:name, :owner_id])
+    |> foreign_key_constraint(:owner_id)
   end
 end
