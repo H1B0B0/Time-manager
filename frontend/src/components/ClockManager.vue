@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/use-user-store";
 import { getLatestClock, createClock } from "@/functions/Clock";
 import type { ClockType } from "@/types/ClockType";
 import confetti from "canvas-confetti";
+import { toast } from "vue3-toastify";
 
 const route = useRoute();
 
@@ -11,6 +13,7 @@ const userId = ref(parseInt(route.params.userID as string));
 const latestClock = ref({} as ClockType);
 const clockedIn = ref(false);
 const isButtonDisabled = ref(false);
+const userStore = useUserStore();
 
 onMounted(async () => {
   try {
@@ -40,22 +43,27 @@ const handleClockCreation = async () => {
   }, 2000);
 
   try {
-    const newClock = await createClock(userId.value.toString(), {
-      user_id: userId.value.toString(),
-      status: !clockedIn.value,
-      time: new Date(),
-    });
-    latestClock.value = newClock;
-    clockedIn.value = newClock.status;
-    if (!clockedIn.value) {
-      setTimeout(() => {
-        confetti({
-          particleCount: 200,
-          spread: 160,
-          origin: { x: 0.5, y: 0.5 },
-          zIndex: 9999,
-        });
-      }, 100);
+    if (userId.value.toString() != userStore.user.id?.toString()) {
+      toast.error("Unauthorized to perform this action");
+      throw new Error("Unauthorized");
+    } else {
+      const newClock = await createClock(userId.value.toString(), {
+        user_id: userId.value.toString(),
+        status: !clockedIn.value,
+        time: new Date(),
+      });
+      latestClock.value = newClock;
+      clockedIn.value = newClock.status;
+      if (!clockedIn.value) {
+        setTimeout(() => {
+          confetti({
+            particleCount: 200,
+            spread: 160,
+            origin: { x: 0.5, y: 0.5 },
+            zIndex: 9999,
+          });
+        }, 100);
+      }
     }
   } catch (error) {
     console.error("Error creating clock:", error);

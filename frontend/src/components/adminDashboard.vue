@@ -1,28 +1,18 @@
 <template>
   <div class="text-white p-6">
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
+      <div class="mb-4 lg:mb-0">
+        <h2 class="text-xl font-bold">
+          Manager:
+          <span v-if="manager" class="text-green-500">You</span
+          ><span v-else class="text-red-500">No Manager</span>
+        </h2>
+      </div>
       <h1 class="text-2xl font-bold">{{ teamName }}</h1>
-      <button
-        @click="showEditTeamModal = true"
-        class="flex items-center text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-      >
-        <svg
-          class="w-6 h-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M11 4H7.2C6.0799 4 5.51984 4 5.09202 4.21799C4.71569 4.40974 4.40973 4.7157 4.21799 5.09202C4 5.51985 4 6.0799 4 7.2V16.8C4 17.9201 4 18.4802 4.21799 18.908C4.40973 19.2843 4.71569 19.5903 5.09202 19.782C5.51984 20 6.0799 20 7.2 20H16.8C17.9201 20 18.4802 20 18.908 19.782C19.2843 19.5903 19.5903 19.2843 19.782 18.908C20 18.4802 20 17.9201 20 16.8V12.5M15.5 5.5L18.3284 8.32843M10.7627 10.2373L17.411 3.58902C18.192 2.80797 19.4584 2.80797 20.2394 3.58902C21.0205 4.37007 21.0205 5.6364 20.2394 6.41745L13.3774 13.2794C12.6158 14.0411 12.235 14.4219 11.8012 14.7247C11.4162 14.9936 11.0009 15.2162 10.564 15.3882C10.0717 15.582 9.54378 15.6885 8.48793 15.9016L8 16L8.04745 15.6678C8.21536 14.4925 8.29932 13.9048 8.49029 13.3561C8.65975 12.8692 8.89125 12.4063 9.17906 11.9786C9.50341 11.4966 9.92319 11.0768 10.7627 10.2373Z"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
     </div>
-    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl">
+    <div
+      class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+    >
       <table class="min-w-full divide-y divide-gray-700">
         <thead>
           <tr>
@@ -65,7 +55,7 @@
         </thead>
         <tbody class="divide-y divide-gray-700">
           <tr
-            v-for="user in usersTeam"
+            v-for="user in filteredUsers"
             :key="user.id"
             class="hover:bg-gray-600"
           >
@@ -79,11 +69,11 @@
               {{ user.email }}
             </td>
             <td class="px-6 py-4 text-sm text-gray-300 text-center">
-              {{ user.role }}
+              {{ user.role_id === 2 ? "Manager" : "Employee" }}
             </td>
             <td class="px-6 py-4 text-sm text-gray-300 text-center">
               <button
-                @click="viewUserInfo(user.id, user.role_id)"
+                @click="viewUserInfo(user.id)"
                 class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
               >
                 View
@@ -211,7 +201,7 @@ import {
 } from "@/functions/User";
 import { getOneTeam, updateTeam } from "@/functions/Team";
 import router from "@/router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
 
 export default {
@@ -223,6 +213,7 @@ export default {
     const showEditTeamModal = ref(false);
     const selectedUserToAdd = ref(null);
     const selectedUserToRemove = ref(null);
+    const manager = ref(null);
     const userStore = useUserStore();
 
     onMounted(async () => {
@@ -238,6 +229,9 @@ export default {
           const response = await getUserByTeam(user.team_id);
           usersTeam.value = response;
 
+          // Find the manager
+          manager.value = response.find((u) => u.role_id === 2);
+
           const allUsers = await getAllUsers();
           availableUsers.value = allUsers.filter(
             (u) => !response.find((r) => r.id === u.id)
@@ -249,6 +243,10 @@ export default {
         console.error(error);
         router.push({ path: `/` });
       }
+    });
+
+    const filteredUsers = computed(() => {
+      return usersTeam.value.filter((user) => user.role_id !== 2);
     });
 
     const updateTeamInfo = async () => {
@@ -296,13 +294,8 @@ export default {
       }
     };
 
-    const viewUserInfo = (id, roleId) => {
-      const loggedInUserId = userStore.user.id;
-      if (roleId < 2) {
-        router.push({ path: `/dashboard/${loggedInUserId}` });
-      } else {
-        router.push({ path: `/dashboard/${id}` });
-      }
+    const viewUserInfo = (id) => {
+      router.push({ path: `/dashboard/${id}` });
     };
 
     const modifyUserSchedule = (id) => {
@@ -320,6 +313,8 @@ export default {
       showEditTeamModal,
       selectedUserToAdd,
       selectedUserToRemove,
+      manager,
+      filteredUsers,
       updateTeamInfo,
       addUserToTeam,
       removeUserFromTeam,

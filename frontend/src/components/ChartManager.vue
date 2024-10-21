@@ -11,6 +11,12 @@
           :special-hours="specialHours"
           :event-class="getEventClass"
           @view-change="handleViewChange"
+          @event-delete="handleEventDelete"
+          @event-drag-create="handleEventCreate"
+          :draggable="false"
+          :editable-events="editableEvents"
+          :snap-to-time="15"
+          :drag-to-create-threshold="15"
           eventsCountOnYearView="dot"
         />
       </div>
@@ -21,9 +27,15 @@
 <script>
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
-import { ref, onMounted } from "vue";
-import { getWorkingTimes } from "../functions/WorkingTime";
+import { ref, onMounted, computed } from "vue";
+import {
+  getWorkingTimes,
+  createWorkingTime,
+  deleteWorkingTime,
+} from "../functions/WorkingTime";
+import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
+import { formatISO } from "date-fns";
 
 export default {
   name: "ScheduleCalendar",
@@ -34,6 +46,7 @@ export default {
     const view = ref("week");
     const startDate = ref(new Date("2000-01-01T00:00:00Z"));
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
+    const userRole = ref(null);
 
     const specialHours = ref({
       1: {
@@ -96,36 +109,41 @@ export default {
           const lunchEnd = new Date(start);
           lunchEnd.setHours(13, 0, 0, 0);
 
+          const eventBase = {
+            id: element.id, // Ajoutez l'ID ici
+            title: "Work",
+          };
+
           if (start < lunchStart && end > lunchEnd) {
             return [
               {
+                ...eventBase,
                 start: start,
                 end: lunchStart,
-                title: "Work",
               },
               {
+                ...eventBase,
                 start: lunchEnd,
                 end: end,
-                title: "Work",
               },
             ];
           } else if (start < lunchStart && end > lunchStart) {
             return {
+              ...eventBase,
               start: start,
               end: lunchStart,
-              title: "Work",
             };
           } else if (start < lunchEnd && end > lunchEnd) {
             return {
+              ...eventBase,
               start: lunchEnd,
               end: end,
-              title: "Work",
             };
           } else {
             return {
+              ...eventBase,
               start: start,
               end: end,
-              title: "Work",
             };
           }
         });
@@ -140,8 +158,64 @@ export default {
       fetchData();
     };
 
-    onMounted(() => {
-      fetchData();
+    const handleEventDelete = async (event, deleteEvent) => {
+      try {
+        await deleteWorkingTime(event.id); // Utilisez l'ID ici
+        fetchData();
+      } catch (error) {
+        errorMessage.value = "Failed to delete working time";
+        console.error(error);
+        deleteEvent();
+      }
+    };
+
+    const handleEventCreate = async (event, deleteEvent) => {
+      console.log(event);
+      if (userRole.value >= 2) {
+        const newEvent = {
+          workingtime: {
+            start: formatISO(event.start),
+            end: formatISO(event.end),
+            user_id: parseInt(router.currentRoute.value.params.userID, 10),
+          },
+        };
+
+        console.log(newEvent);
+
+        try {
+          await createWorkingTime(newEvent);
+          fetchData();
+        } catch (error) {
+          errorMessage.value = "Failed to create working time";
+          console.error(error);
+          deleteEvent();
+        }
+      } else {
+        errorMessage.value =
+          "You do not have permission to create working times.";
+        deleteEvent();
+      }
+    };
+
+    onMounted(async () => {
+      try {
+        const user = await GetUserByToken();
+        userRole.value = user.role_id;
+        fetchData();
+      } catch (error) {
+        router.push("/login");
+        console.error("Failed to get user:", error);
+      }
+    });
+
+    const editableEvents = computed(() => {
+      return {
+        title: false,
+        drag: false,
+        resize: true,
+        delete: true,
+        create: userRole.value >= 2,
+      };
     });
 
     return {
@@ -151,6 +225,10 @@ export default {
       specialHours,
       getEventClass,
       handleViewChange,
+      handleEventCreate,
+      editableEvents,
+      userRole,
+      handleEventDelete,
     };
   },
 };
