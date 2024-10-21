@@ -167,6 +167,15 @@ export default {
   color: white;
 }
 
+.vuecal__cell-events-count {
+  width: 0.5rem;
+  min-width: 0;
+  height: 0.5rem;
+  padding: 0;
+  background-color: #0bf5f1;
+  color: transparent;
+}
+
 .vuecal__cell {
   border-radius: 0.5rem;
   padding-left: 0.15rem;
