@@ -31,7 +31,12 @@
     "vue-cal": "^4.10.0",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.3",
-    "vue3-toastify": "^0.2.3"
+    "vue3-toastify": "^0.2.3",
+    "workbox-cacheable-response": "^7.1.0",
+    "workbox-expiration": "^7.1.0",
+    "workbox-precaching": "^7.1.0",
+    "workbox-routing": "^7.1.0",
+    "workbox-strategies": "^7.1.0"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
