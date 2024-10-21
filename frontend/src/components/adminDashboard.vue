@@ -41,16 +41,6 @@
             >
               Info
             </th>
-            <th
-              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-            >
-              Create Schedule
-            </th>
-            <th
-              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-            >
-              Modify Schedule
-            </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-700">
@@ -77,22 +67,6 @@
                 class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
               >
                 View
-              </button>
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">
-              <button
-                @click="createUserSchedule(user.id)"
-                class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
-              >
-                Create
-              </button>
-            </td>
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">
-              <button
-                @click="modifyUserSchedule(user.id)"
-                class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
-              >
-                Modify
               </button>
             </td>
           </tr>
