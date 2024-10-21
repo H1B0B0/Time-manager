@@ -40,31 +40,26 @@ export default {
         from: 12 * 60,
         to: 13 * 60,
         class: "lunch-break",
-        label: "Lunch Break",
       },
       2: {
         from: 12 * 60,
         to: 13 * 60,
         class: "lunch-break",
-        label: "Lunch Break",
       },
       3: {
         from: 12 * 60,
         to: 13 * 60,
         class: "lunch-break",
-        label: "Lunch Break",
       },
       4: {
         from: 12 * 60,
         to: 13 * 60,
         class: "lunch-break",
-        label: "Lunch Break",
       },
       5: {
         from: 12 * 60,
         to: 13 * 60,
         class: "lunch-break",
-        label: "Lunch Break",
       },
       6: {
         from: 0,
