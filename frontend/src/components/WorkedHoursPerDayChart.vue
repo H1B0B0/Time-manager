@@ -82,8 +82,8 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "#36A2EB",
-          borderColor: "#36A2EB",
+          backgroundColor: "#0bf5f1",
+          borderColor: "#0bf5f1",
           label: "Worked hours",
         },
       ],
