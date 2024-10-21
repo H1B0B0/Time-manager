@@ -13,6 +13,8 @@
           @view-change="handleViewChange"
           @event-delete="handleEventDelete"
           @event-drag-create="handleEventCreate"
+          @event-change="handleEventResize"
+          @event-drop="handleEventDrop"
           :draggable="false"
           :editable-events="editableEvents"
           :snap-to-time="15"
@@ -32,6 +34,7 @@ import {
   getWorkingTimes,
   createWorkingTime,
   deleteWorkingTime,
+  updateWorkingTime,
 } from "../functions/WorkingTime";
 import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
@@ -101,58 +104,19 @@ export default {
           endDate.value.toISOString()
         );
 
-        events.value = response.data.flatMap((element) => {
-          const start = new Date(element.start);
-          const end = new Date(element.end);
-          const lunchStart = new Date(start);
-          lunchStart.setHours(12, 0, 0, 0);
-          const lunchEnd = new Date(start);
-          lunchEnd.setHours(13, 0, 0, 0);
-
-          const eventBase = {
-            id: element.id, // Ajoutez l'ID ici
+        events.value = response.data.map((element) => {
+          return {
+            id: element.id,
             title: "Work",
+            start: new Date(element.start),
+            end: new Date(element.end),
           };
-
-          if (start < lunchStart && end > lunchEnd) {
-            return [
-              {
-                ...eventBase,
-                start: start,
-                end: lunchStart,
-              },
-              {
-                ...eventBase,
-                start: lunchEnd,
-                end: end,
-              },
-            ];
-          } else if (start < lunchStart && end > lunchStart) {
-            return {
-              ...eventBase,
-              start: start,
-              end: lunchStart,
-            };
-          } else if (start < lunchEnd && end > lunchEnd) {
-            return {
-              ...eventBase,
-              start: lunchEnd,
-              end: end,
-            };
-          } else {
-            return {
-              ...eventBase,
-              start: start,
-              end: end,
-            };
-          }
         });
       } catch (error) {
         errorMessage.value = "Failed to fetch data";
         console.error(error);
       }
     };
-
     const handleViewChange = (newView) => {
       view.value = newView;
       fetchData();
@@ -160,7 +124,7 @@ export default {
 
     const handleEventDelete = async (event, deleteEvent) => {
       try {
-        await deleteWorkingTime(event.id); // Utilisez l'ID ici
+        await deleteWorkingTime(event.id);
         fetchData();
       } catch (error) {
         errorMessage.value = "Failed to delete working time";
@@ -197,7 +161,44 @@ export default {
       }
     };
 
+    const handleEventResize = async (event) => {
+      if (event.originalEvent === null) {
+        return;
+      }
+
+      try {
+        await updateWorkingTime(router.currentRoute.value.params.userID, {
+          start: formatISO(event.event.start),
+          end: formatISO(event.event.end),
+          id: event.originalEvent.id,
+        });
+        fetchData();
+      } catch (error) {
+        errorMessage.value = "Failed to update working time";
+        console.error(error);
+      }
+    };
+
+    const handleEventDrop = async (event) => {
+      if (event.originalEvent === null) {
+        return;
+      }
+
+      try {
+        await updateWorkingTime(router.currentRoute.value.params.userID, {
+          start: formatISO(event.event.start),
+          end: formatISO(event.event.end),
+          id: event.originalEvent.id,
+        });
+        fetchData();
+      } catch (error) {
+        errorMessage.value = "Failed to update working time";
+        console.error(error);
+      }
+    };
+
     onMounted(async () => {
+      console.log("onMounted called");
       try {
         const user = await GetUserByToken();
         userRole.value = user.role_id;
@@ -209,11 +210,20 @@ export default {
     });
 
     const editableEvents = computed(() => {
+      if (!userRole.value) {
+        return {
+          title: false,
+          drag: true,
+          resize: true,
+          delete: userRole.value >= 2,
+          create: userRole.value >= 2,
+        };
+      }
       return {
         title: false,
-        drag: false,
-        resize: true,
-        delete: true,
+        drag: userRole.value >= 2,
+        resize: userRole.value >= 2,
+        delete: userRole.value >= 2,
         create: userRole.value >= 2,
       };
     });
@@ -229,6 +239,7 @@ export default {
       editableEvents,
       userRole,
       handleEventDelete,
+      handleEventResize,
     };
   },
 };
