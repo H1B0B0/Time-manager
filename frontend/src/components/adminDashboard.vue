@@ -26,21 +26,61 @@
       <table class="min-w-full divide-y divide-gray-700">
         <thead>
           <tr>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Id</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Username</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Info</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Create Schedule</th>
-            <th class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Modify Schedule</th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Id
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Username
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Email
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Role
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Info
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Create Schedule
+            </th>
+            <th
+              class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+            >
+              Modify Schedule
+            </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-700">
-          <tr v-for="user in usersTeam" :key="user.id" class="hover:bg-gray-600">
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">{{ user.id }}</td>
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">{{ user.username }}</td>
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">{{ user.email }}</td>
-            <td class="px-6 py-4 text-sm text-gray-300 text-center">{{ user.role }}</td>
+          <tr
+            v-for="user in usersTeam"
+            :key="user.id"
+            class="hover:bg-gray-600"
+          >
+            <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              {{ user.id }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              {{ user.username }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              {{ user.email }}
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              {{ user.role }}
+            </td>
             <td class="px-6 py-4 text-sm text-gray-300 text-center">
               <button
                 @click="viewUserInfo(user.id, user.role_id)"
@@ -71,12 +111,19 @@
     </div>
 
     <!-- Modal for editing team info -->
-    <div v-if="showEditTeamModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div
+      v-if="showEditTeamModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
       <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
         <h2 class="text-xl font-bold mb-4">Edit Team Info</h2>
         <form @submit.prevent="updateTeamInfo">
           <div class="mb-4">
-            <label for="teamName" class="block text-sm font-medium text-gray-300">Team Name</label>
+            <label
+              for="teamName"
+              class="block text-sm font-medium text-gray-300"
+              >Team Name</label
+            >
             <input
               v-model="teamName"
               id="teamName"
@@ -86,9 +133,21 @@
             />
           </div>
           <div class="mb-4">
-            <label for="addUser" class="block text-sm font-medium text-gray-300">Add User</label>
-            <select v-model="selectedUserToAdd" id="addUser" class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400">
-              <option v-for="user in availableUsers" :key="user.id" :value="user.id">{{ user.username }}</option>
+            <label for="addUser" class="block text-sm font-medium text-gray-300"
+              >Add User</label
+            >
+            <select
+              v-model="selectedUserToAdd"
+              id="addUser"
+              class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+            >
+              <option
+                v-for="user in availableUsers"
+                :key="user.id"
+                :value="user.id"
+              >
+                {{ user.username }}
+              </option>
             </select>
             <button
               type="button"
@@ -99,9 +158,19 @@
             </button>
           </div>
           <div class="mb-4">
-            <label for="removeUser" class="block text-sm font-medium text-gray-300">Remove User</label>
-            <select v-model="selectedUserToRemove" id="removeUser" class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400">
-              <option v-for="user in usersTeam" :key="user.id" :value="user.id">{{ user.username }}</option>
+            <label
+              for="removeUser"
+              class="block text-sm font-medium text-gray-300"
+              >Remove User</label
+            >
+            <select
+              v-model="selectedUserToRemove"
+              id="removeUser"
+              class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+            >
+              <option v-for="user in usersTeam" :key="user.id" :value="user.id">
+                {{ user.username }}
+              </option>
             </select>
             <button
               type="button"
@@ -133,7 +202,13 @@
 </template>
 
 <script>
-import { getAllUsers, getUserByTeam, addUserToTeam, removeUserFromTeam } from "@/functions/User";
+import {
+  getAllUsers,
+  getUserByTeam,
+  addUserToTeam,
+  removeUserFromTeam,
+  GetUserByToken,
+} from "@/functions/User";
 import { getOneTeam, updateTeam } from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted } from "vue";
@@ -152,12 +227,24 @@ export default {
 
     onMounted(async () => {
       try {
-        const user = userStore.user;
-        const response = await getUserByTeam(user.team_id);
-        usersTeam.value = response;
-        const teamResponse = await getOneTeam(user.team_id);
-        teamName.value = teamResponse.name;
-        availableUsers.value = await getAllUsers();
+        const user = await GetUserByToken();
+        if (user.role_id < 2) {
+          router.push({ path: `/dashboard/${user.id}` });
+        }
+        try {
+          const teamResponse = await getOneTeam(user.team_id);
+          teamName.value = teamResponse.name;
+
+          const response = await getUserByTeam(user.team_id);
+          usersTeam.value = response;
+
+          const allUsers = await getAllUsers();
+          availableUsers.value = allUsers.filter(
+            (u) => !response.find((r) => r.id === u.id)
+          );
+        } catch (error) {
+          console.error(error);
+        }
       } catch (error) {
         console.error(error);
         router.push({ path: `/` });
@@ -183,7 +270,9 @@ export default {
         await addUserToTeam(user.team_id, selectedUserToAdd.value);
         const response = await getUserByTeam(user.team_id);
         usersTeam.value = response;
-        availableUsers.value = availableUsers.value.filter(u => u.id !== selectedUserToAdd.value);
+        availableUsers.value = availableUsers.value.filter(
+          (u) => u.id !== selectedUserToAdd.value
+        );
         selectedUserToAdd.value = null;
       } catch (error) {
         console.error(error);
@@ -192,14 +281,15 @@ export default {
 
     const removeUserFromTeam = async () => {
       try {
-
         const user = userStore.user;
- 
+
         await removeUserFromTeam(selectedUserToRemove.value);
 
         const response = await getUserByTeam(user.team_id);
         usersTeam.value = response;
-        availableUsers.value.push(availableUsers.value.find(u => u.id === selectedUserToRemove.value));
+        availableUsers.value.push(
+          availableUsers.value.find((u) => u.id === selectedUserToRemove.value)
+        );
         selectedUserToRemove.value = null;
       } catch (error) {
         console.error(error);
