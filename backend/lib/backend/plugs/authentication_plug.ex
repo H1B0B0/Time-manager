@@ -8,9 +8,11 @@ defmodule Backend.Plugs.AuthenticationPlug do
   def init(default), do: default
 
   def call(conn, _opts) do
-    authorization_token = conn.req_cookies["TIME_MANAGER_JWT"]
-    
-    if authorization_token do
+    authorization_header = get_req_header(conn, "authorization") |> List.first()
+
+    if authorization_header do
+      authorization_token = String.replace_prefix(authorization_header, "Bearer ", "")
+
       case Auth.get_user_from_token(authorization_token) do
         {:ok, %User{id: user_id}} when is_integer(user_id) ->
           user = Accounts.get_user(user_id)
@@ -20,9 +22,9 @@ defmodule Backend.Plugs.AuthenticationPlug do
             |> put_status(:unauthorized)
             |> json(%{error: "User not found"})
             |> halt()
-            else
-              assign(conn, :auth_user, user)  # Assign the user to the connection and return it
-            end
+          else
+            assign(conn, :auth_user, user)  # Assign the user to the connection and return it
+          end
 
         {:error, reason} ->
           conn

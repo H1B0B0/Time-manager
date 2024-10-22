@@ -23,9 +23,8 @@ defmodule BackendWeb.AuthController do
         case Auth.sign_in(user.id, password) do
           {:ok, %{token: token}} ->
             conn
-            |> put_resp_cookie("TIME_MANAGER_JWT", token, http_only: true, secure: true, max_age: 43200)
             |> put_status(:ok)
-            |> json(%{"success" => "Successfully logged in"})
+            |> render(:show, user: user, token: token)
 
           {:error, reason} ->
             conn
