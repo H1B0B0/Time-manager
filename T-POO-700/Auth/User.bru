@@ -6,15 +6,10 @@ meta {
 
 post {
   url: http://localhost:4000/api/auth/user
-  body: json
-  auth: bearer
+  body: none
+  auth: none
 }
 
-auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MjM4OTM5LCJpYXQiOjE3MjkxOTU3MzksImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZsY244amw5ZTZvYXBsc2MwMDA3MDUiLCJuYmYiOjE3MjkxOTU3MzksInVzZXJfaWQiOjR9.0q7dYXZudQ-TSCpU-ezfQuR-t429ANyALZerXpkQlEQ
-}
-
-body:json {
-  {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MjM4OTM5LCJpYXQiOjE3MjkxOTU3MzksImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZsY244amw5ZTZvYXBsc2MwMDA3MDUiLCJuYmYiOjE3MjkxOTU3MzksInVzZXJfaWQiOjR9.0q7dYXZudQ-TSCpU-ezfQuR-t429ANyALZerXpkQlEQ"
-  }
+headers {
+  Cookie: TIME_MANAGER_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5NDk3NDM4LCJpYXQiOjE3Mjk0NTQyMzgsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIzMDA0MnRzcmc0ZmFjOGswMmswMDAxbTciLCJuYmYiOjE3Mjk0NTQyMzgsInVzZXJfaWQiOjR9.VAabdA-Z1EsY5qnlwCTtsoTch99m29t8PkvEkalPM9g;
 }

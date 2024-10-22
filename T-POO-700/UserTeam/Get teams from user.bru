@@ -1,0 +1,29 @@
+meta {
+  name: Get teams from user
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:4000/api/user/4/teams
+  body: none
+  auth: bearer
+}
+
+headers {
+  Cookie: TIME_MANAGER_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5NTU4MDE1LCJpYXQiOjE3Mjk1MTQ4MTUsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIzMDA3aDN1N2N1bTZkaXNqcG8wMDAxYzIiLCJuYmYiOjE3Mjk1MTQ4MTUsInVzZXJfaWQiOjR9.InCMaM3IfMGVyWH4jNgsxdHhZ0HIgJEljcFVawlaxl8;
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5MjM0MDMzLCJpYXQiOjE3MjkxOTA4MzMsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIydnZsM3BscXQ5bGswdTZ1MzgwMDAwaTEiLCJuYmYiOjE3MjkxOTA4MzMsInVzZXJfaWQiOjR9.IlrHyGxoHCJW4_Q0ZJ_bOJqa1uma3hwcQv74vZvRiw8
+}
+
+body:json {
+  {
+    "user": {
+      "username": "testuser",
+      "email": "testusedddsdr@example.com",
+      "password": "hello"
+    }
+  }
+}
