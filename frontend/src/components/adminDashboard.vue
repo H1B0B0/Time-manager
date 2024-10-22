@@ -1,81 +1,5 @@
 <template>
   <div class="text-white p-6">
-    <div v-if="!isAdmin">
-      <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
-        <div class="mb-4 lg:mb-0">
-          <h2 class="text-xl font-bold">
-            Role:
-            <span v-if="isAdmin" class="text-green-500">Manager</span>
-            <span v-else class="text-purple-500">General Manager</span>
-          </h2>
-        </div>
-        <h1 class="text-2xl font-bold">{{ teamName }}</h1>
-      </div>
-      <div
-        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
-      >
-        <table class="min-w-full divide-y divide-gray-700">
-          <thead>
-            <tr>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
-                Id
-              </th>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
-                Username
-              </th>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
-                Email
-              </th>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
-                Role
-              </th>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-              >
-                Info
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-700">
-            <tr
-              v-for="user in filteredUsers"
-              :key="user.id"
-              class="hover:bg-gray-600"
-            >
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ user.id }}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ user.username }}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ user.email }}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ user.role_id === 2 ? "Manager" : "Employee" }}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                <button
-                  @click="viewUserInfo(user.id)"
-                  class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
-                >
-                  View
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
     <div v-if="isAdmin">
       <h2 class="text-xl font-bold mb-4">All Teams</h2>
       <div
@@ -151,7 +75,7 @@
             </thead>
             <tbody class="divide-y divide-gray-700">
               <tr
-                v-for="user in filteredUsers"
+                v-for="user in usersTeam"
                 :key="user.id"
                 class="hover:bg-gray-600"
               >
@@ -165,7 +89,13 @@
                   {{ user.email }}
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ user.role_id === 2 ? "Manager" : "Employee" }}
+                  {{
+                    user.role_id === 3
+                      ? "General Manager"
+                      : user.role_id === 2
+                      ? "Manager"
+                      : "Employee"
+                  }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -262,7 +192,7 @@
               class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
               required
             >
-              <option value="" disabled selected>Chose a User</option>
+              <option value="" disabled selected>Choose a User</option>
               <option
                 v-for="user in availableUsers"
                 :key="user.id"
@@ -329,6 +259,13 @@ export default {
         }
         const teamsResponse = await getAllTeams();
         allTeams.value = teamsResponse;
+
+        const allUsersResponse = await getAllUsers();
+        console.log(allUsersResponse);
+        if (Array.isArray(allUsersResponse.data)) {
+          availableUsers.value = allUsersResponse.data;
+          console.log(availableUsers.value);
+        }
       } catch (error) {
         console.error(error);
         router.push({ path: `/` });
@@ -344,8 +281,8 @@ export default {
         usersTeam.value = response;
 
         const allUsersResponse = await getAllUsers();
-        if (Array.isArray(allUsersResponse)) {
-          availableUsers.value = allUsersResponse.filter(
+        if (Array.isArray(allUsersResponse.data)) {
+          availableUsers.value = allUsersResponse.data.filter(
             (u) => !response.find((r) => r.id === u.id)
           );
         }
@@ -375,13 +312,13 @@ export default {
 
     const addUserToTeamAction = async () => {
       try {
-        await addUserToTeamAPI(selectedTeam.value, selectedUserToAdd.value);
+        await addUserToTeamAPI(selectedUserToAdd.value, selectedTeam.value);
         const response = await getUserByTeam(selectedTeam.value);
         usersTeam.value = response;
 
         const allUsersResponse = await getAllUsers();
-        if (Array.isArray(allUsersResponse)) {
-          availableUsers.value = allUsersResponse.filter(
+        if (Array.isArray(allUsersResponse.data)) {
+          availableUsers.value = allUsersResponse.data.filter(
             (u) => !response.find((r) => r.id === u.id)
           );
         }
@@ -395,14 +332,14 @@ export default {
 
     const removeUserFromTeamAction = async (userId) => {
       try {
-        await removeUserFromTeamAPI(userId);
+        await removeUserFromTeamAPI(userId, selectedTeam.value);
 
         const response = await getUserByTeam(selectedTeam.value);
         usersTeam.value = response;
 
         const allUsersResponse = await getAllUsers();
-        if (Array.isArray(allUsersResponse)) {
-          availableUsers.value = allUsersResponse.filter(
+        if (Array.isArray(allUsersResponse.data)) {
+          availableUsers.value = allUsersResponse.data.filter(
             (u) => !response.find((r) => r.id === u.id)
           );
         }
