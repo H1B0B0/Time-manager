@@ -117,7 +117,7 @@ const Handlelogin = async () => {
     error.value = "";
     const response = await login(email.value, password.value);
     userStore.setUser(response.user);
-    if (response.user.role_id == 2) {
+    if (response.user.role_id >= 2) {
       router.push(`/admin/dashboard/${response.user.id}`);
     } else {
       router.push(`/dashboard/${response.user.id}`);
