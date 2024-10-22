@@ -21,8 +21,7 @@ defmodule BackendWeb.UserJSON do
       username: user.username,
       email: user.email,
       role_id: user.role_id,
-      role: user.role.category,
-      team_id: user.team_id
+      role: user.role.category
     }
   end
 end

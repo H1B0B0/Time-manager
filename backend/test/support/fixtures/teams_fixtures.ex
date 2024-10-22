@@ -22,4 +22,18 @@ defmodule Backend.TeamsFixtures do
 
     team
   end
+
+  @doc """
+  Generate a team_user.
+  """
+  def team_user_fixture(attrs \\ %{}) do
+    {:ok, team_user} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> Backend.Teams.create_team_user()
+
+    team_user
+  end
 end

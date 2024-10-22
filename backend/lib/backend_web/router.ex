@@ -9,14 +9,6 @@ defmodule BackendWeb.Router do
     plug Backend.Plugs.AuthenticationPlug
   end
 
-  pipeline :at_least_manager do
-    plug Backend.Plugs.AtLeastManager
-  end
-
-  pipeline :at_least_general_manager do
-    plug Backend.Plugs.AtLeastGeneralManager
-  end
-
   scope "/api", BackendWeb do
     pipe_through [:api, :auth]
 
@@ -24,8 +16,10 @@ defmodule BackendWeb.Router do
     post "/clocks/:user_id", ClockController, :create
 
     get "/users", UserController, :index
-    get "/users/:user_id/", UserController, :show
+    get "/users/:user_id", UserController, :show
     put "/users/:user_id", UserController, :update
+    get "/all-users", UserController, :getAllUsers
+    delete "/users/:user_id", UserController, :delete
 
     delete "/workingtime/:working_time_id", WorkingtimeController, :delete
     put "/workingtime/:user_id", WorkingtimeController, :update
@@ -40,26 +34,16 @@ defmodule BackendWeb.Router do
 
     post "/user/:user_id/role/:role_id", UserRoleController, :update
 
+    post "/user/:user_id/team/:team_id", TeamUserController, :create
+    delete "/user/:user_id/team/:team_id", TeamUserController, :delete
+    get "/user/:user_id/teams", TeamUserController, :show
+    get "/team/:team_id/users", TeamUserController, :show
+
     get "/teams", TeamController, :index
     get "/teams/:team_id", TeamController, :show
     post "/teams", TeamController, :create
     put "/teams/:team_id", TeamController, :update
     delete "/teams/:team_id", TeamController, :delete
-  end
-
-  scope "/api", BackendWeb do
-    pipe_through [:api, :auth, :at_least_manager]
-
-    get "/user", UserController, :getAllUsers
-  end
-
-  scope "/api", BackendWeb do
-    pipe_through [:api, :auth, :at_least_general_manager]
-
-    post "/user/:user_id/team/:team_id", UserTeamController, :update
-    delete "/user/:user_id/team", UserTeamController, :delete
-
-    delete "/users/:user_id", UserController, :delete
   end
 
   scope "/api", BackendWeb do
