@@ -362,8 +362,12 @@ export default {
       try {
         await updateTeam(selectedTeam.value, { name: teamName.value });
         showEditTeamModal.value = false;
+
         const teamResponse = await getOneTeam(selectedTeam.value);
         teamName.value = teamResponse.name;
+
+        const teamsResponse = await getAllTeams();
+        allTeams.value = teamsResponse;
       } catch (error) {
         console.error(error);
       }
@@ -392,6 +396,7 @@ export default {
     const removeUserFromTeamAction = async (userId) => {
       try {
         await removeUserFromTeamAPI(userId);
+
         const response = await getUserByTeam(selectedTeam.value);
         usersTeam.value = response;
 

@@ -155,7 +155,7 @@ export const getAllUsers = async () => {
     if (!token) {
       throw new Error("No token found");
     }
-    const response = await axios.get(`${BASE_URL}/user`, {
+    const response = await axios.get(`${BASE_URL}/all-users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -169,7 +169,7 @@ export const getAllUsers = async () => {
 
 export const getUserByTeam = async (teamId: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/users/team/${teamId}`, {
+    const response = await axios.get(`${BASE_URL}/team/${teamId}/users`, {
       headers: getAuthHeaders(),
     });
     return response.data.data;
