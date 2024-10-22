@@ -1,19 +1,60 @@
 {
-  "name": "ChartManager",
-  "short_name": "ChartManager",
-  "start_url": ".",
-  "display": "standalone",
+  "name": "Time Manager",
+  "short_name": "Time Manager",
+  "description": "Time Manager is a simple time tracking app.",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "description": "ChartManager For Epitech",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "img/icons/icon-192x192.png",
+      "src": "/img/icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "img/icons/icon-512x512.png",
+      "src": "/img/icons/android-chrome-512x512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "workbox": {
+    "globPatterns": ["**/*.{js,css,html,ico,png,svg}"],
+    "runtimeCaching": [
+      {
+        "urlPattern": "/^https://fonts.googleapis.com/.*/i",
+        "handler": "CacheFirst",
+        "options": {
+          "cacheName": "google-fonts-cache",
+          "expiration": {
+            "maxEntries": 10000,
+            "maxAgeSeconds": 31536000
+          },
+          "cacheableResponse": {
+            "statuses": [0, 200]
+          }
+        }
+      }
+    ],
+    "navigateFallback": "index.html",
+    "cleanupOutdatedCaches": true
+  },
+  "devOptions": {
+    "enabled": true
+  },
+  "screenshots": [
+    {
+      "src": "/img/icons/dashboards.png",
+      "sizes": "3024x1890",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/img/icons/dashboards.png",
+      "sizes": "3024x1890",
       "type": "image/png"
     }
   ]
