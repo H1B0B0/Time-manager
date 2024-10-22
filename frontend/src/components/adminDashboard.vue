@@ -215,7 +215,7 @@
           v-if="showCreateUserModal"
           class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
         >
-          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <div class="p-6 rounded-lg shadow-lg backdrop-blur-2xl border w-6/12">
             <h2 class="text-xl font-bold mb-4">Create a New User</h2>
             <form @submit.prevent="createUser">
               <div class="mb-4">
@@ -248,6 +248,34 @@
               </div>
               <div class="mb-4">
                 <label
+                  for="newPassword"
+                  class="block text-sm font-medium text-gray-300"
+                  >Password</label
+                >
+                <input
+                  v-model="newPassword"
+                  id="newPassword"
+                  type="password"
+                  class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="confirmPassword"
+                  class="block text-sm font-medium text-gray-300"
+                  >Confirm Password</label
+                >
+                <input
+                  v-model="confirmPassword"
+                  id="confirmPassword"
+                  type="password"
+                  class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label
                   for="newRole"
                   class="block text-sm font-medium text-gray-300"
                   >Role</label
@@ -259,12 +287,12 @@
                   required
                 >
                   <option value="" disabled selected>Choose a Role</option>
-                  <option value="3">General Manager</option>
                   <option value="2">Manager</option>
                   <option value="1">Employee</option>
                 </select>
               </div>
-              <div class="flex justify-end space-x-4">
+
+              <div class="flex flex-col w-full space-y-4">
                 <button
                   type="button"
                   @click="showCreateUserModal = false"
@@ -445,7 +473,8 @@ import {
   removeUserFromTeam as removeUserFromTeamAPI,
   GetUserByToken,
   createUser as createUserAPI,
-  deleteUser as deleteUserAPI,
+  deleteUserByAdmin,
+  UpdateRole,
 } from "@/functions/User";
 import {
   getOneTeam,
@@ -456,6 +485,8 @@ import {
 } from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
+import { toast } from "vue3-toastify";
+import confetti from "canvas-confetti";
 
 export default {
   name: "AdminDashboard",
@@ -479,6 +510,8 @@ export default {
     const newUsername = ref("");
     const newEmail = ref("");
     const newRole = ref("");
+    const newPassword = ref("");
+    const confirmPassword = ref("");
 
     onMounted(async () => {
       try {
@@ -490,7 +523,7 @@ export default {
         }
         const teamsResponse = await getAllTeams();
         allTeams.value = teamsResponse;
-    
+
         const allUsersResponse = await getAllUsers();
         if (Array.isArray(allUsersResponse.data)) {
           users.value = allUsersResponse.data.filter((u) => u.role_id !== 3);
@@ -508,16 +541,44 @@ export default {
 
     const createUser = async () => {
       try {
-        await createUserAPI({
+        if (newPassword.value !== confirmPassword.value) {
+          toast.error("Passwords do not match");
+          return;
+        }
+        const newUser = await createUserAPI({
           username: newUsername.value,
           email: newEmail.value,
-          role_id: newRole.value,
+          password: newPassword.value,
         });
-        await fetchUsers();
-        showCreateUserModal.value = false;
-        newUsername.value = "";
-        newEmail.value = "";
-        newRole.value = "";
+
+        const response = await UpdateRole(newUser, newUser.id, newRole.value);
+        if (response) {
+          const userWithRole = {
+            ...newUser,
+            role_id: parseInt(newRole.value, 10),
+          };
+          console.log(userWithRole);
+          users.value.push(userWithRole);
+          showCreateUserModal.value = false;
+          newUsername.value = "";
+          newEmail.value = "";
+          newRole.value = "";
+          newPassword.value = "";
+          confirmPassword.value = "";
+          confetti();
+        } else {
+          toast.error("Error creating user");
+        }
+      } catch (error) {
+        toast.error("Error creating user");
+        console.error(error);
+      }
+    };
+
+    const UpdateUserRole = async (userId, role) => {
+      try {
+        const response = await UpdateRole(userId, role);
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -529,8 +590,8 @@ export default {
 
     const deleteUser = async (userId) => {
       try {
-        await deleteUserAPI(userId);
-        await fetchUsers();
+        await deleteUserByAdmin(userId);
+        users.value = users.value.filter((u) => u.id !== userId);
       } catch (error) {
         console.error(error);
       }
@@ -677,6 +738,13 @@ export default {
       editUser,
       deleteUser,
       users,
+      users,
+      showCreateUserModal,
+      newUsername,
+      newEmail,
+      newRole,
+      newPassword,
+      confirmPassword,
     };
   },
 };

@@ -112,6 +112,39 @@ export const deleteUser = async (id: number): Promise<void> => {
   }
 };
 
+export const deleteUserByAdmin = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`${BASE_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
+  } catch (error) {
+    console.error(`Failed to delete user with id ${id}:`, error);
+    throw new Error(`Failed to delete user with id ${id}`);
+  }
+};
+
+export const UpdateRole = async (user: UserType, id: number, role: string) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/user/${id}/role/${role}`,
+      {
+        user: {
+          username: user.username,
+          email: user.email,
+          password: user.password,
+        },
+      },
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const login = async (email: string, password: string) => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/login`, {

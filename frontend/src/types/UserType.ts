@@ -2,6 +2,6 @@ export interface UserType {
   id?: number;
   username: string;
   email: string;
-  passsword: string;
+  password: string;
   role_id: number;
 }

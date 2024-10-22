@@ -47,7 +47,7 @@
             <li v-if="userStore.user.username && !isHomePage">
               <router-link
                 :to="`/dashboard/${userStore.user.id}`"
-                class="block px-4 py-2 hover:bg-gray-100"
+                class="block px-4 py-2 hover:text-lg"
                 >My Dashboard</router-link
               >
             </li>
@@ -58,7 +58,7 @@
                     ? `/admin/dashboard/${userStore.user.id}`
                     : `/admin/dashboard/${userStore.user.id}`
                 "
-                class="block px-4 py-2 hover:bg-gray-100"
+                class="block px-4 py-2 hover:text-lg"
                 >{{
                   userStore.user.role_id === 2
                     ? "Manager Dashboard"
@@ -67,12 +67,12 @@
               >
             </li>
             <li v-if="!isHomePage">
-              <router-link to="/news" class="block px-4 py-2 hover:bg-gray-100"
+              <router-link to="/news" class="block px-4 py-2 hover:text-lg"
                 >News</router-link
               >
             </li>
             <li v-if="!userStore.user.username">
-              <router-link to="/login" class="block px-4 py-2 hover:bg-gray-100"
+              <router-link to="/login" class="block px-4 py-2 hover:"
                 >Sign in →</router-link
               >
             </li>
@@ -80,7 +80,7 @@
               <li>
                 <router-link
                   :to="`/settings/${userStore.user.id}`"
-                  class="block px-4 py-2 hover:bg-gray-100"
+                  class="block px-4 py-2 hover:text-lg"
                 >
                   Edit
                 </router-link>
@@ -88,7 +88,7 @@
               <li>
                 <button
                   @click="logout"
-                  class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                  class="block w-full text-left px-4 py-2 text-red-500 hover:text-lg"
                 >
                   Logout
                 </button>
