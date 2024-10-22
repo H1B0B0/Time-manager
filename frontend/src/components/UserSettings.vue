@@ -98,9 +98,6 @@ onMounted(async () => {
     const user = await GetUserByToken();
     if (user) {
       userStore.setUser(user.value);
-      console.log("User:", user);
-      console.log("User ID:", user.id);
-      console.log("User role:", user.role_id);
       loggedInUserId.value = user.id;
       loggedInUserRole.value = user.role_id;
     } else {
