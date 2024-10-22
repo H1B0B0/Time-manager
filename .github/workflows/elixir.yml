@@ -1,6 +1,5 @@
 name: Elixir CI
 
-runs-on: self-hosted
 on:
   push:
     tags:
@@ -15,6 +14,7 @@ permissions:
 
 jobs:
   build:
+    runs-on: self-hosted
     services:
       db:
         image: postgres:17
@@ -24,7 +24,6 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
     name: Build and test
-    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -60,7 +59,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
