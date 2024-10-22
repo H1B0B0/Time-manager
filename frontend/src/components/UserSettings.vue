@@ -51,17 +51,46 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
-import { updateUser, deleteUser } from "@/functions/User";
+import { getUserById, updateUser, deleteUser } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import { passwordStrength } from "check-password-strength";
 
 const userStore = useUserStore();
-const email = ref(userStore.user?.email ?? "");
-const username = ref(userStore.user?.username ?? "");
+const route = useRoute();
+const router = useRouter();
+const email = ref("");
+const username = ref("");
 const oldPassword = ref("");
 const newPassword = ref("");
+
+onMounted(async () => {
+  if (!userStore.user) {
+    toast.error("User not found. Please log in again.");
+    return;
+  }
+
+  const userIdFromRoute = route.params.userID;
+  const loggedInUserId = userStore.user.id;
+  const loggedInUserRole = userStore.user.role_id;
+
+  if (userIdFromRoute !== loggedInUserId && loggedInUserRole !== 3) {
+    toast.error("You do not have permission to edit this user.");
+    router.push("/dashboard");
+    return;
+  }
+
+  try {
+    const user = await getUserById(userIdFromRoute);
+    username.value = user.username;
+    email.value = user.email;
+  } catch (error) {
+    toast.error("Error fetching user data.");
+    console.error(error);
+  }
+});
 
 const updateAccount = async () => {
   if (!userStore.user?.id) {
@@ -104,10 +133,14 @@ const updateAccount = async () => {
       updatedData.password = newPassword.value;
     }
 
-    const response = await updateUser(userStore.user.id, updatedData);
+    const userIdFromRoute = route.params.userID;
+
+    const response = await updateUser(userIdFromRoute, updatedData);
 
     if (response && response.id) {
-      userStore.setUser(response);
+      if (userIdFromRoute === userStore.user.id) {
+        userStore.setUser(response);
+      }
       toast.success("Account successfully updated");
       if (updatedData.newPassword) {
         toast.info("Password has been changed");

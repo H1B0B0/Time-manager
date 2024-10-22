@@ -29,7 +29,7 @@
         <ul class="py-2">
           <li>
             <router-link
-              to="/settings"
+              :to="`/settings/${user_id}`"
               class="block px-4 py-2 text-white hover:text-lg transition-all"
               >Edit</router-link
             >
@@ -53,6 +53,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps<{
   username: string;
+  user_id: number;
 }>();
 
 const emit = defineEmits(["logout"]);

@@ -25,7 +25,7 @@ const routes = [
     component: LoginRegister,
   },
   {
-    path: "/settings",
+    path: "/settings/:userID",
     name: "Settings",
     component: UserSettings,
   },

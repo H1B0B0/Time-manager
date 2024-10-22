@@ -15,6 +15,7 @@
           <li v-else>
             <DropdownProfile
               :username="userStore.user.username"
+              :user_id="userStore.user.id ?? 0"
               @logout="logout"
             />
           </li>
@@ -39,14 +40,14 @@
         </button>
         <div
           v-if="menuOpen"
-          class="absolute right-0 mt-12 w-48 bg-white rounded-lg shadow-lg z-50 transition-transform transform origin-top-right scale-95"
+          class="absolute right-0 mt-12 w-48 text-white backdrop-blur-2xl border rounded-lg shadow-lg z-50 transition-transform transform origin-top-right scale-95 m-4"
           @click.outside="closeMenu"
         >
           <ul class="py-2">
             <li v-if="userStore.user.username && !isHomePage">
               <router-link
                 :to="`/dashboard/${userStore.user.id}`"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                class="block px-4 py-2 hover:bg-gray-100"
                 >My Dashboard</router-link
               >
             </li>
@@ -57,7 +58,7 @@
                     ? `/admin/dashboard/${userStore.user.id}`
                     : `/admin/dashboard/${userStore.user.id}`
                 "
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                class="block px-4 py-2 hover:bg-gray-100"
                 >{{
                   userStore.user.role_id === 2
                     ? "Manager Dashboard"
@@ -66,31 +67,28 @@
               >
             </li>
             <li v-if="!isHomePage">
-              <router-link
-                to="/news"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+              <router-link to="/news" class="block px-4 py-2 hover:bg-gray-100"
                 >News</router-link
               >
             </li>
             <li v-if="!userStore.user.username">
-              <router-link
-                to="/login"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+              <router-link to="/login" class="block px-4 py-2 hover:bg-gray-100"
                 >Sign in →</router-link
               >
             </li>
             <template v-else>
               <li>
                 <router-link
-                  to="/settings"
-                  class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                  >Edit</router-link
+                  :to="`/settings/${userStore.user.id}`"
+                  class="block px-4 py-2 hover:bg-gray-100"
                 >
+                  Edit
+                </router-link>
               </li>
               <li>
                 <button
                   @click="logout"
-                  class="block w-full text-left px-4 py-2 text-red-700 hover:bg-gray-100"
+                  class="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
                 >
                   Logout
                 </button>

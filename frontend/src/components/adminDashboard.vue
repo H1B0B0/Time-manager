@@ -122,6 +122,167 @@
           </tbody>
         </table>
       </div>
+      <div class="text-white p-6">
+        <h2 class="text-xl font-bold mb-4">User Management</h2>
+        <div class="flex justify-between mb-4">
+          <button
+            @click="showCreateUserModal = true"
+            class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
+          >
+            Create User
+          </button>
+        </div>
+        <div
+          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+        >
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead>
+              <tr>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  User Id
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Username
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Email
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Role
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+              <tr
+                v-for="user in users"
+                :key="user.id"
+                class="hover:bg-slate-400 cursor-pointer rounded-lg"
+              >
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ user.id }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ user.username }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ user.email }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{
+                    user.role_id === 3
+                      ? "General Manager"
+                      : user.role_id === 2
+                      ? "Manager"
+                      : "Employee"
+                  }}
+                </td>
+                <td
+                  class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
+                >
+                  <button
+                    @click="editUser(user.id)"
+                    class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    @click="deleteUser(user.id)"
+                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Create User Modal -->
+        <div
+          v-if="showCreateUserModal"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-xl font-bold mb-4">Create a New User</h2>
+            <form @submit.prevent="createUser">
+              <div class="mb-4">
+                <label
+                  for="newUsername"
+                  class="block text-sm font-medium text-gray-300"
+                  >Username</label
+                >
+                <input
+                  v-model="newUsername"
+                  id="newUsername"
+                  type="text"
+                  class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="newEmail"
+                  class="block text-sm font-medium text-gray-300"
+                  >Email</label
+                >
+                <input
+                  v-model="newEmail"
+                  id="newEmail"
+                  type="email"
+                  class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="newRole"
+                  class="block text-sm font-medium text-gray-300"
+                  >Role</label
+                >
+                <select
+                  v-model="newRole"
+                  id="newRole"
+                  class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+                  required
+                >
+                  <option value="" disabled selected>Choose a Role</option>
+                  <option value="3">General Manager</option>
+                  <option value="2">Manager</option>
+                  <option value="1">Employee</option>
+                </select>
+              </div>
+              <div class="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  @click="showCreateUserModal = false"
+                  class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div
@@ -283,6 +444,8 @@ import {
   addUserToTeam as addUserToTeamAPI,
   removeUserFromTeam as removeUserFromTeamAPI,
   GetUserByToken,
+  createUser as createUserAPI,
+  deleteUser as deleteUserAPI,
 } from "@/functions/User";
 import {
   getOneTeam,
@@ -311,6 +474,11 @@ export default {
     const allTeams = ref([]);
     const selectedTeam = ref(null);
     const userRole = ref(null);
+    const users = ref([]);
+    const showCreateUserModal = ref(false);
+    const newUsername = ref("");
+    const newEmail = ref("");
+    const newRole = ref("");
 
     onMounted(async () => {
       try {
@@ -322,21 +490,51 @@ export default {
         }
         const teamsResponse = await getAllTeams();
         allTeams.value = teamsResponse;
-
+    
         const allUsersResponse = await getAllUsers();
-        console.log(allUsersResponse);
         if (Array.isArray(allUsersResponse.data)) {
+          users.value = allUsersResponse.data.filter((u) => u.role_id !== 3);
+          console.log(users.value);
           availableUsers.value = allUsersResponse.data;
           availableOwners.value = allUsersResponse.data.filter(
             (u) => u.role_id === 2 || u.role_id === 3
           );
-          console.log(availableUsers.value);
         }
       } catch (error) {
         console.error(error);
         router.push({ path: `/` });
       }
     });
+
+    const createUser = async () => {
+      try {
+        await createUserAPI({
+          username: newUsername.value,
+          email: newEmail.value,
+          role_id: newRole.value,
+        });
+        await fetchUsers();
+        showCreateUserModal.value = false;
+        newUsername.value = "";
+        newEmail.value = "";
+        newRole.value = "";
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const editUser = (userId) => {
+      router.push({ path: `/settings/${userId}` });
+    };
+
+    const deleteUser = async (userId) => {
+      try {
+        await deleteUserAPI(userId);
+        await fetchUsers();
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     const selectTeam = async (teamId) => {
       try {
@@ -421,7 +619,6 @@ export default {
           owner_id: selectedTeamOwner.value,
         });
 
-        // Ajouter le propriétaire à l'équipe
         await addUserToTeamAPI(selectedTeamOwner.value, newTeam.id);
 
         const teamsResponse = await getAllTeams();
@@ -476,6 +673,10 @@ export default {
       selectedTeam,
       selectTeam,
       userRole,
+      createUser,
+      editUser,
+      deleteUser,
+      users,
     };
   },
 };
