@@ -117,8 +117,6 @@ const Handlelogin = async () => {
     error.value = "";
     const response = await login(email.value, password.value);
     userStore.setUser(response.data);
-    console.log(response.data);
-    toast.success("Successfully logged in");
     if (response.data.role_id == 2) {
       router.push(`/admin/dashboard/${response.data.id}`);
     } else {

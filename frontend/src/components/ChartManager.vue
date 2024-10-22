@@ -240,6 +240,7 @@ export default {
       userRole,
       handleEventDelete,
       handleEventResize,
+      handleEventDrop,
     };
   },
 };

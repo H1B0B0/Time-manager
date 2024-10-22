@@ -3,9 +3,9 @@
     <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
       <div class="mb-4 lg:mb-0">
         <h2 class="text-xl font-bold">
-          Manager:
-          <span v-if="manager" class="text-green-500">You</span
-          ><span v-else class="text-red-500">No Manager</span>
+          Role:
+          <span v-if="manager" class="text-green-500">Manager</span
+          ><span v-else class="text-purple-500">General Manager</span>
         </h2>
       </div>
       <h1 class="text-2xl font-bold">{{ teamName }}</h1>
@@ -72,6 +72,45 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div v-if="isAdmin" class="mt-8">
+      <h2 class="text-xl font-bold mb-4">All Teams</h2>
+      <div
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+      >
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead>
+            <tr>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Team Id
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Team Name
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <tr
+              v-for="team in allTeams"
+              :key="team.id"
+              class="hover:bg-slate-400 cursor-pointer rounded-lg over"
+              @click="selectTeam(team.id)"
+            >
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ team.id }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ team.name }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Modal for editing team info -->
@@ -173,7 +212,7 @@ import {
   removeUserFromTeam,
   GetUserByToken,
 } from "@/functions/User";
-import { getOneTeam, updateTeam } from "@/functions/Team";
+import { getOneTeam, updateTeam, getAllTeams } from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "@/stores/use-user-store";
@@ -189,27 +228,22 @@ export default {
     const selectedUserToRemove = ref(null);
     const manager = ref(null);
     const userStore = useUserStore();
+    const isAdmin = ref(false);
+    const allTeams = ref([]);
+    const selectedTeam = ref(null);
 
     onMounted(async () => {
       try {
         const user = await GetUserByToken();
+        isAdmin.value = user.role_id == 3;
         if (user.role_id < 2) {
           router.push({ path: `/dashboard/${user.id}` });
         }
         try {
-          const teamResponse = await getOneTeam(user.team_id);
-          teamName.value = teamResponse.name;
+          const teamsResponse = await getAllTeams();
+          allTeams.value = teamsResponse;
 
-          const response = await getUserByTeam(user.team_id);
-          usersTeam.value = response;
-
-          // Find the manager
-          manager.value = response.find((u) => u.role_id === 2);
-
-          const allUsers = await getAllUsers();
-          availableUsers.value = allUsers.filter(
-            (u) => !response.find((r) => r.id === u.id)
-          );
+          console.log("All Teams:", allTeams.value);
         } catch (error) {
           console.error(error);
         }
@@ -219,7 +253,35 @@ export default {
       }
     });
 
+    const selectTeam = async (teamId) => {
+      try {
+        const teamResponse = await getOneTeam(teamId);
+        teamName.value = teamResponse.name;
+
+        const response = await getUserByTeam(teamId);
+        usersTeam.value = response.filter((u) => u.id !== userStore.user.id);
+
+        manager.value = response.find((u) => u.role_id === 2);
+
+        const allUsersResponse = await getAllUsers();
+        if (Array.isArray(allUsersResponse)) {
+          availableUsers.value = allUsersResponse.filter(
+            (u) => !response.find((r) => r.id === u.id)
+          );
+        } else {
+          console.error("Expected an array but got:", allUsersResponse);
+        }
+
+        selectedTeam.value = teamId;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const filteredUsers = computed(() => {
+      if (isAdmin.value) {
+        return usersTeam.value;
+      }
       return usersTeam.value.filter((user) => user.role_id !== 2);
     });
 
@@ -239,9 +301,9 @@ export default {
     const addUserToTeam = async () => {
       try {
         const user = userStore.user;
-        await addUserToTeam(user.team_id, selectedUserToAdd.value);
-        const response = await getUserByTeam(user.team_id);
-        usersTeam.value = response;
+        await addUserToTeam(selectedTeam.value, selectedUserToAdd.value);
+        const response = await getUserByTeam(selectedTeam.value);
+        usersTeam.value = response.filter((u) => u.id !== user.id);
         availableUsers.value = availableUsers.value.filter(
           (u) => u.id !== selectedUserToAdd.value
         );
@@ -257,8 +319,8 @@ export default {
 
         await removeUserFromTeam(selectedUserToRemove.value);
 
-        const response = await getUserByTeam(user.team_id);
-        usersTeam.value = response;
+        const response = await getUserByTeam(selectedTeam.value);
+        usersTeam.value = response.filter((u) => u.id !== user.id);
         availableUsers.value.push(
           availableUsers.value.find((u) => u.id === selectedUserToRemove.value)
         );
@@ -295,6 +357,10 @@ export default {
       viewUserInfo,
       modifyUserSchedule,
       createUserSchedule,
+      isAdmin,
+      allTeams,
+      selectedTeam,
+      selectTeam,
     };
   },
 };
