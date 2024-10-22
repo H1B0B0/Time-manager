@@ -38,11 +38,6 @@ user3 = Backend.Repo.insert!(%User{username: "aliceSmith", email: "aliceSmith@gm
 team1 = Backend.Repo.insert!(%Team{name: "Team 1", owner_id: user2.id})
 team2 = Backend.Repo.insert!(%Team{name: "Team 2", owner_id: user3.id})
 
-# UPDATE USERS WITH TEAM IDS
-
-Backend.Repo.update!(Ecto.Changeset.change(user1, team_id: team1.id))
-Backend.Repo.update!(Ecto.Changeset.change(user2, team_id: team1.id))
-Backend.Repo.update!(Ecto.Changeset.change(user3, team_id: team2.id))
 
 # Module to generate working times and clock times
 defmodule SeedData do
