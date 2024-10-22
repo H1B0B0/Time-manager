@@ -32,6 +32,20 @@
           class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           type="password"
         />
+        <div v-if="loggedInUserRole === 3">
+          <label for="role" class="block text-sm font-medium text-gray-300"
+            >Role</label
+          >
+          <select
+            v-model="newRole"
+            id="role"
+            class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+          >
+            <option value="" disabled selected>Choose a Role</option>
+            <option value="2">Manager</option>
+            <option value="1">Employee</option>
+          </select>
+        </div>
         <button
           type="submit"
           class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300"
@@ -54,7 +68,12 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
-import { getUserById, updateUser, deleteUser } from "@/functions/User";
+import {
+  getUserById,
+  updateUser,
+  deleteUser,
+  UpdateRole,
+} from "@/functions/User";
 import { toast } from "vue3-toastify";
 import { passwordStrength } from "check-password-strength";
 
@@ -65,6 +84,9 @@ const email = ref("");
 const username = ref("");
 const oldPassword = ref("");
 const newPassword = ref("");
+const newRole = ref("");
+const loggedInUserRole = ref(null);
+const originalRole = ref(null);
 
 onMounted(async () => {
   if (!userStore.user) {
@@ -74,9 +96,9 @@ onMounted(async () => {
 
   const userIdFromRoute = route.params.userID;
   const loggedInUserId = userStore.user.id;
-  const loggedInUserRole = userStore.user.role_id;
+  loggedInUserRole.value = userStore.user.role_id;
 
-  if (userIdFromRoute !== loggedInUserId && loggedInUserRole !== 3) {
+  if (userIdFromRoute !== loggedInUserId && loggedInUserRole.value !== 3) {
     toast.error("You do not have permission to edit this user.");
     router.push("/dashboard");
     return;
@@ -86,6 +108,8 @@ onMounted(async () => {
     const user = await getUserById(userIdFromRoute);
     username.value = user.username;
     email.value = user.email;
+    newRole.value = user.role_id;
+    originalRole.value = user.role_id;
   } catch (error) {
     toast.error("Error fetching user data.");
     console.error(error);
@@ -134,6 +158,19 @@ const updateAccount = async () => {
     }
 
     const userIdFromRoute = route.params.userID;
+
+    // Vérifiez si le rôle a changé
+    if (loggedInUserRole.value === 3 && newRole.value !== originalRole.value) {
+      await UpdateRole(
+        {
+          username: username.value,
+          email: email.value,
+          password: newPassword.value,
+        },
+        userIdFromRoute,
+        newRole.value
+      );
+    }
 
     const response = await updateUser(userIdFromRoute, updatedData);
 
