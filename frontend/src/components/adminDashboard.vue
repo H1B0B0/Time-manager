@@ -2,6 +2,14 @@
   <div class="text-white p-6">
     <div v-if="isAdmin">
       <h2 class="text-xl font-bold mb-4">All Teams</h2>
+      <div class="flex justify-between mb-4">
+        <button
+          @click="showCreateTeamModal = true"
+          class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
+        >
+          Create Team
+        </button>
+      </div>
       <div
         class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
       >
@@ -18,120 +26,101 @@
               >
                 Team Name
               </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-700">
-            <tr
-              v-for="team in allTeams"
-              :key="team.id"
-              class="hover:bg-slate-400 cursor-pointer rounded-lg over"
-              @click="selectTeam(team.id)"
-            >
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ team.id }}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ team.name }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div v-if="selectedTeam" class="mt-8">
-        <h2 class="text-xl font-bold mb-4">Team : {{ teamName }}</h2>
-        <div
-          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
-        >
-          <table class="min-w-full divide-y divide-gray-700">
-            <thead>
-              <tr>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Id
-                </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Username
-                </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Email
-                </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Role
-                </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
-                >
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-700">
+            <template v-for="team in allTeams" :key="team.id">
               <tr
-                v-for="user in usersTeam"
-                :key="user.id"
-                class="hover:bg-gray-600"
+                @click="selectTeam(team.id)"
+                class="hover:bg-slate-400 cursor-pointer rounded-lg over"
               >
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ user.id }}
+                  {{ team.id }}
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ user.username }}
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ user.email }}
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{
-                    user.role_id === 3
-                      ? "General Manager"
-                      : user.role_id === 2
-                      ? "Manager"
-                      : "Employee"
-                  }}
+                  {{ team.name }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
                 >
                   <button
-                    @click="viewUserInfo(user.id)"
-                    class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1"
+                    @click.stop="showEditTeamModal = true"
+                    class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
                   >
-                    View
+                    Edit
                   </button>
                   <button
-                    @click="removeUserFromTeamAction(user.id)"
-                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
+                    @click.stop="deleteTeam(team.id)"
+                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
                   >
-                    Remove
+                    Delete
                   </button>
                 </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mt-4 space-x-2">
-          <button
-            @click="showEditTeamModal = true"
-            class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
-          >
-            Edit
-          </button>
-          <button
-            @click="showAddUserModal = true"
-            class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
-          >
-            Add a User
-          </button>
-        </div>
+              <tr v-if="selectedTeam === team.id">
+                <td colspan="3">
+                  <div class="">
+                    <div class="flex justify-end">
+                      <button
+                        @click="showAddUserModal = true"
+                        class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 m-4 w-full"
+                      >
+                        Add User
+                      </button>
+                    </div>
+                    <div class="markdown-content h-64 overflow-y-auto">
+                      <div
+                        v-for="user in usersTeam"
+                        :key="user.id"
+                        class="mb-4 p-4 border rounded-lg shadow-lg bg-gray-800 flex-col"
+                      >
+                        <img
+                          :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${user.username}`"
+                          class="rounded-full h-8 w-8 mr-4"
+                        />
+                        <h3 class="text-lg font-semibold text-purple-400">
+                          {{ user.username }}
+                        </h3>
+                        <p class="text-sm text-gray-300">
+                          Email: {{ user.email }}
+                        </p>
+                        <p class="text-sm text-gray-300">
+                          Role:
+                          {{
+                            user.role_id === 3
+                              ? "General Manager"
+                              : user.role_id === 2
+                              ? "Manager"
+                              : "Employee"
+                          }}
+                        </p>
+                        <div class="flex justify-end space-x-2 ml-auto">
+                          <button
+                            @click="viewUserInfo(user.id)"
+                            class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1"
+                          >
+                            View
+                          </button>
+                          <button
+                            @click="removeUserFromTeamAction(user.id)"
+                            class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -220,6 +209,70 @@
         </form>
       </div>
     </div>
+
+    <div
+      v-if="showCreateTeamModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Create a New Team</h2>
+        <form @submit.prevent="createTeam">
+          <div class="mb-4">
+            <label
+              for="newTeamName"
+              class="block text-sm font-medium text-gray-300"
+              >Team Name</label
+            >
+            <input
+              v-model="newTeamName"
+              id="newTeamName"
+              type="text"
+              class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              for="teamOwner"
+              class="block text-sm font-medium text-gray-300"
+              >Select Team Owner</label
+            >
+            <select
+              v-model="selectedTeamOwner"
+              id="teamOwner"
+              class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
+              required
+            >
+              <option value="" disabled selected>Choose an Owner</option>
+              <option
+                v-for="user in availableOwners"
+                :key="user.id"
+                :value="user.id"
+              >
+                {{ user.username }} ({{
+                  user.role_id === 3 ? "General Manager" : "Manager"
+                }})
+              </option>
+            </select>
+          </div>
+          <div class="flex justify-end space-x-4">
+            <button
+              type="button"
+              @click="showCreateTeamModal = false"
+              class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -231,7 +284,13 @@ import {
   removeUserFromTeam as removeUserFromTeamAPI,
   GetUserByToken,
 } from "@/functions/User";
-import { getOneTeam, updateTeam, getAllTeams } from "@/functions/Team";
+import {
+  getOneTeam,
+  updateTeam,
+  getAllTeams,
+  createTeam as createTeamAPI,
+  deleteTeam as deleteTeamAPI,
+} from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
 
@@ -240,10 +299,14 @@ export default {
   setup() {
     const usersTeam = ref([]);
     const availableUsers = ref([]);
+    const availableOwners = ref([]);
     const teamName = ref("");
     const showEditTeamModal = ref(false);
     const showAddUserModal = ref(false);
+    const showCreateTeamModal = ref(false);
     const selectedUserToAdd = ref(null);
+    const selectedTeamOwner = ref(null);
+    const newTeamName = ref("");
     const isAdmin = ref(false);
     const allTeams = ref([]);
     const selectedTeam = ref(null);
@@ -264,6 +327,9 @@ export default {
         console.log(allUsersResponse);
         if (Array.isArray(allUsersResponse.data)) {
           availableUsers.value = allUsersResponse.data;
+          availableOwners.value = allUsersResponse.data.filter(
+            (u) => u.role_id === 2 || u.role_id === 3
+          );
           console.log(availableUsers.value);
         }
       } catch (error) {
@@ -348,6 +414,41 @@ export default {
       }
     };
 
+    const createTeam = async () => {
+      try {
+        const newTeam = await createTeamAPI({
+          name: newTeamName.value,
+          owner_id: selectedTeamOwner.value,
+        });
+
+        // Ajouter le propriétaire à l'équipe
+        await addUserToTeamAPI(selectedTeamOwner.value, newTeam.id);
+
+        const teamsResponse = await getAllTeams();
+        allTeams.value = teamsResponse;
+        showCreateTeamModal.value = false;
+        newTeamName.value = "";
+        selectedTeamOwner.value = null;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const deleteTeam = async (teamId) => {
+      try {
+        await deleteTeamAPI(teamId);
+        const teamsResponse = await getAllTeams();
+        allTeams.value = teamsResponse;
+        if (selectedTeam === teamId) {
+          selectedTeam.value = null;
+          teamName.value = "";
+          usersTeam.value = [];
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const viewUserInfo = (id) => {
       router.push({ path: `/dashboard/${id}` });
     };
@@ -355,14 +456,20 @@ export default {
     return {
       usersTeam,
       availableUsers,
+      availableOwners,
       teamName,
       showEditTeamModal,
       showAddUserModal,
+      showCreateTeamModal,
       selectedUserToAdd,
+      selectedTeamOwner,
+      newTeamName,
       filteredUsers,
       updateTeamInfo,
       addUserToTeamAction,
       removeUserFromTeamAction,
+      createTeam,
+      deleteTeam,
       viewUserInfo,
       isAdmin,
       allTeams,
@@ -373,3 +480,21 @@ export default {
   },
 };
 </script>
+
+<style>
+.markdown-content h3 {
+  color: #8b5cf6; /* Tailwind violet-500 */
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown-content p {
+  color: #d1d5db; /* Tailwind cool-gray-300 */
+  margin-bottom: 1rem;
+}
+
+.markdown-content .flex {
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+</style>
