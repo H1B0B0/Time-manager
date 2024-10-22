@@ -116,11 +116,11 @@ const Handlelogin = async () => {
   try {
     error.value = "";
     const response = await login(email.value, password.value);
-    userStore.setUser(response.data);
-    if (response.data.role_id == 2) {
-      router.push(`/admin/dashboard/${response.data.id}`);
+    userStore.setUser(response.user);
+    if (response.user.role_id == 2) {
+      router.push(`/admin/dashboard/${response.user.id}`);
     } else {
-      router.push(`/dashboard/${response.data.id}`);
+      router.push(`/dashboard/${response.user.id}`);
     }
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {

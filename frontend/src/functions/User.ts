@@ -135,16 +135,14 @@ export const GetUserByToken = async () => {
     }
     const response = await axios.post(
       `${BASE_URL}/auth/user`,
-      {
-        token: token,
-      },
+      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    return response.data.data;
+    return response.data.user;
   } catch (error) {
     console.error(error);
     throw error;
@@ -179,35 +177,39 @@ export const getUserByTeam = async (teamId: number) => {
     console.error(error);
     throw error;
   }
-}
+};
 
 export const addUserToTeam = async (teamId: number, userId: number) => {
   try {
-    const response = await axios.post(`${BASE_URL}/teams/${teamId}/users/${userId}`, {}, {
-      headers: getAuthHeaders(),
+    const response = await axios.post(
+      `${BASE_URL}/teams/${teamId}/users/${userId}`,
+      {},
+      {
+        headers: getAuthHeaders(),
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const removeUserFromTeam = async (userId: number) => {
+  const token = Cookies.get("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+
+  try {
+    const response = await axios.delete(`${BASE_URL}/user/${userId}/team`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.data.data;
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
-
-export const removeUserFromTeam = async (userId: number) => { 
-  const token = Cookies.get("token");
-  if (!token) {
-    throw new Error("No token found");
-  }
-  
-  try {
-      const response = await axios.delete(`${BASE_URL}/user/${userId}/team`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-      return response.data.data;
-  } catch (error) {
-      console.error(error);
-      throw error;
-  }
-}
+};

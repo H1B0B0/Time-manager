@@ -11,6 +11,7 @@ export const useUserStore = defineStore("storeUser", {
   },
   actions: {
     setUser(user: UserType) {
+      console.log("Setting user:", user);
       this.user = user;
     },
     async fetchUser() {
@@ -29,7 +30,7 @@ export const useUserStore = defineStore("storeUser", {
       if (Cookies.get("token")) {
         Cookies.remove("token");
       }
-    }
+    },
   },
   getters: {
     getUser(): UserType {
