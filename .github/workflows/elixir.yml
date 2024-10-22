@@ -1,5 +1,6 @@
 name: Elixir CI
 
+runs-on: self-hosted
 on:
   push:
     tags:
