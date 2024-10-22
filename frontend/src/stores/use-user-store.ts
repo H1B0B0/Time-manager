@@ -11,7 +11,6 @@ export const useUserStore = defineStore("storeUser", {
   },
   actions: {
     setUser(user: UserType) {
-      console.log("Setting user:", user);
       this.user = user;
     },
     async fetchUser() {

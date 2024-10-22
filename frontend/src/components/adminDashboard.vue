@@ -1,13 +1,11 @@
 <template>
   <div class="text-white p-6">
-    <!-- Composant pour les Managers -->
     <div v-if="!isAdmin">
-      <!-- Votre code existant pour les managers -->
       <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
         <div class="mb-4 lg:mb-0">
           <h2 class="text-xl font-bold">
             Role:
-            <span v-if="manager" class="text-green-500">Manager</span>
+            <span v-if="isAdmin" class="text-green-500">Manager</span>
             <span v-else class="text-purple-500">General Manager</span>
           </h2>
         </div>
@@ -78,10 +76,8 @@
       </div>
     </div>
 
-    <!-- Composant pour les Administrateurs -->
     <div v-if="isAdmin">
-      <h2 class="text-xl font-bold mb-4">Toutes les Équipes</h2>
-      <!-- Tableau des équipes -->
+      <h2 class="text-xl font-bold mb-4">All Teams</h2>
       <div
         class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
       >
@@ -118,10 +114,8 @@
         </table>
       </div>
 
-      <!-- Informations de l'Équipe Sélectionnée -->
       <div v-if="selectedTeam" class="mt-8">
-        <h2 class="text-xl font-bold mb-4">Équipe : {{ teamName }}</h2>
-        <!-- Tableau des utilisateurs de l'équipe -->
+        <h2 class="text-xl font-bold mb-4">Team : {{ teamName }}</h2>
         <div
           class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
         >
@@ -194,40 +188,35 @@
           </table>
         </div>
 
-        <!-- Options pour modifier l'équipe et les utilisateurs -->
         <div class="mt-4 space-x-2">
           <button
             @click="showEditTeamModal = true"
             class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
           >
-            Modifier l'Équipe
+            Edit
           </button>
           <button
             @click="showAddUserModal = true"
             class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
           >
-            Ajouter un Utilisateur
+            Add a User
           </button>
-          <!-- Vous pouvez ajouter plus de boutons ici pour d'autres actions -->
         </div>
       </div>
     </div>
 
-    <!-- Modal pour modifier les informations de l'équipe -->
     <div
       v-if="showEditTeamModal"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">
-          Modifier les Informations de l'Équipe
-        </h2>
+        <h2 class="text-xl font-bold mb-4">Modify Team Information</h2>
         <form @submit.prevent="updateTeamInfo">
           <div class="mb-4">
             <label
               for="teamName"
               class="block text-sm font-medium text-gray-300"
-              >Nom de l'Équipe</label
+              >Name of the Team</label
             >
             <input
               v-model="teamName"
@@ -243,32 +232,29 @@
               @click="showEditTeamModal = false"
               class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
             >
-              Annuler
+              Cancel
             </button>
             <button
               type="submit"
               class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
             >
-              Enregistrer
+              Save
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Modal pour ajouter un utilisateur à l'équipe -->
     <div
       v-if="showAddUserModal"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
     >
       <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">
-          Ajouter un Utilisateur à l'Équipe
-        </h2>
+        <h2 class="text-xl font-bold mb-4">Add a User to the Team</h2>
         <form @submit.prevent="addUserToTeamAction">
           <div class="mb-4">
             <label for="addUser" class="block text-sm font-medium text-gray-300"
-              >Sélectionner un Utilisateur</label
+              >Select a User</label
             >
             <select
               v-model="selectedUserToAdd"
@@ -276,7 +262,7 @@
               class="w-full p-2 border rounded text-white bg-gray-600 border-gray-400"
               required
             >
-              <option value="" disabled selected>Choisir un utilisateur</option>
+              <option value="" disabled selected>Chose a User</option>
               <option
                 v-for="user in availableUsers"
                 :key="user.id"
@@ -292,13 +278,13 @@
               @click="showAddUserModal = false"
               class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
             >
-              Annuler
+              Cancel
             </button>
             <button
               type="submit"
               class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2"
             >
-              Ajouter
+              Add
             </button>
           </div>
         </form>
@@ -318,7 +304,6 @@ import {
 import { getOneTeam, updateTeam, getAllTeams } from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
-import { useUserStore } from "@/stores/use-user-store";
 
 export default {
   name: "AdminDashboard",
@@ -329,7 +314,6 @@ export default {
     const showEditTeamModal = ref(false);
     const showAddUserModal = ref(false);
     const selectedUserToAdd = ref(null);
-    const userStore = useUserStore();
     const isAdmin = ref(false);
     const allTeams = ref([]);
     const selectedTeam = ref(null);
@@ -378,7 +362,6 @@ export default {
       try {
         await updateTeam(selectedTeam.value, { name: teamName.value });
         showEditTeamModal.value = false;
-        // Rafraîchir les informations de l'équipe
         const teamResponse = await getOneTeam(selectedTeam.value);
         teamName.value = teamResponse.name;
       } catch (error) {
@@ -389,7 +372,6 @@ export default {
     const addUserToTeamAction = async () => {
       try {
         await addUserToTeamAPI(selectedTeam.value, selectedUserToAdd.value);
-        // Rafraîchir les listes d'utilisateurs
         const response = await getUserByTeam(selectedTeam.value);
         usersTeam.value = response;
 
@@ -410,7 +392,6 @@ export default {
     const removeUserFromTeamAction = async (userId) => {
       try {
         await removeUserFromTeamAPI(userId);
-        // Rafraîchir les listes d'utilisateurs
         const response = await getUserByTeam(selectedTeam.value);
         usersTeam.value = response;
 
