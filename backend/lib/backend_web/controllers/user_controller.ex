@@ -20,18 +20,6 @@ defmodule BackendWeb.UserController do
     end
   end
 
-  def getUserByTeam(conn, %{"team_id" => team_id}) do
-    users = Accounts.get_users_by_team(team_id)
-    case users do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> json(%{errors: ["User not found"]})
-      _ ->
-        render(conn, :index, users: users)
-    end
-  end
-
   def index(conn, %{"email" => email, "username" => username}) do
     user = Accounts.get_user_by_username_and_email(username, email)
     case user do
