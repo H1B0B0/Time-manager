@@ -32,7 +32,9 @@
           class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           type="password"
         />
-        <div v-if="loggedInUserRole === 3">
+        <div
+          v-if="loggedInUserRole === 3 && loggedInUserId !== userIdFromRoute"
+        >
           <label for="role" class="block text-sm font-medium text-gray-300"
             >Role</label
           >
@@ -73,6 +75,7 @@ import {
   updateUser,
   deleteUser,
   UpdateRole,
+  GetUserByToken,
 } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import { passwordStrength } from "check-password-strength";
@@ -87,20 +90,26 @@ const newPassword = ref("");
 const newRole = ref("");
 const loggedInUserRole = ref(null);
 const originalRole = ref(null);
+const loggedInUserId = ref("");
+const userIdFromRoute = Number(route.params.userID);
 
 onMounted(async () => {
-  if (!userStore.user) {
-    toast.error("User not found. Please log in again.");
-    return;
-  }
-
-  const userIdFromRoute = route.params.userID;
-  const loggedInUserId = userStore.user.id;
-  loggedInUserRole.value = userStore.user.role_id;
-
-  if (userIdFromRoute !== loggedInUserId && loggedInUserRole.value !== 3) {
-    toast.error("You do not have permission to edit this user.");
-    router.push("/dashboard");
+  try {
+    const user = await GetUserByToken();
+    if (user) {
+      userStore.setUser(user.value);
+      console.log("User:", user);
+      console.log("User ID:", user.id);
+      console.log("User role:", user.role_id);
+      loggedInUserId.value = user.id;
+      loggedInUserRole.value = user.role_id;
+    } else {
+      router.push("/login");
+      return;
+    }
+  } catch (error) {
+    console.log("User not logged in");
+    router.push("/login");
     return;
   }
 
@@ -159,7 +168,6 @@ const updateAccount = async () => {
 
     const userIdFromRoute = route.params.userID;
 
-    // Vérifiez si le rôle a changé
     if (loggedInUserRole.value === 3 && newRole.value !== originalRole.value) {
       await UpdateRole(
         {

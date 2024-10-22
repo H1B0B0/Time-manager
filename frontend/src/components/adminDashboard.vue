@@ -171,7 +171,7 @@
             <template v-for="team in allTeams" :key="team.id">
               <tr
                 @click="selectTeam(team.id)"
-                class="hover:bg-slate-400 cursor-pointer rounded-lg over"
+                class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               >
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
                   {{ team.id }}
@@ -207,7 +207,7 @@
                         Add User
                       </button>
                     </div>
-                    <div class="markdown-content h-64 overflow-y-auto">
+                    <div class="markdown-content h-64 overflow-y-auto p-5">
                       <div
                         v-for="user in usersTeam"
                         :key="user.id"
@@ -303,7 +303,7 @@
               <tr
                 v-for="user in users"
                 :key="user.id"
-                class="hover:bg-slate-400 cursor-pointer rounded-lg"
+                class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               >
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
                   {{ user.id }}
