@@ -74,3 +74,15 @@ export const getAllTeams = async () => {
     throw error;
   }
 };
+
+export const getTeamByUser = async (userId: number) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/user/${userId}/teams`, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

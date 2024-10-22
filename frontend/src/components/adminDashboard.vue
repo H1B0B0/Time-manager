@@ -1,5 +1,139 @@
 <template>
   <div class="text-white p-6">
+    <div v-if="!isAdmin">
+      <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
+        <div class="mb-4 lg:mb-0">
+          <h2 class="text-xl font-bold">
+            Role:
+            <span v-if="!isAdmin" class="text-green-500">Manager</span>
+            <span v-else class="text-purple-500">General Manager</span>
+          </h2>
+        </div>
+        <h1 class="text-2xl font-bold">{{ teamName }}</h1>
+      </div>
+      <div class="mb-4" v-if="managerTeams.length > 0">
+        <h2 class="text-xl font-bold mb-4">My Teams</h2>
+        <div
+          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+        >
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead>
+              <tr>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Team Id
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Team Name
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700">
+              <tr
+                v-for="team in managerTeams"
+                :key="team.id"
+                @click="selectTeam(team.id)"
+                class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+              >
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ team.id }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ team.name }}
+                </td>
+                <td
+                  class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
+                >
+                  <button
+                    @click.stop="showEditTeamModal = true"
+                    class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    @click.stop="deleteTeam(team.id)"
+                    class="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+      >
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead>
+            <tr>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Id
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Username
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Email
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Role
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Info
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <tr
+              v-for="user in filteredUsers"
+              :key="user.id"
+              class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+            >
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ user.id }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ user.username }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ user.email }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ user.role_id === 2 ? "Manager" : "Employee" }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <button
+                  @click="viewUserInfo(user.id)"
+                  class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
+                >
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <div v-if="isAdmin">
       <h2 class="text-xl font-bold mb-4">All Teams</h2>
       <div class="flex justify-between mb-4">
@@ -482,6 +616,7 @@ import {
   getAllTeams,
   createTeam as createTeamAPI,
   deleteTeam as deleteTeamAPI,
+  getTeamByUser,
 } from "@/functions/Team";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
@@ -495,6 +630,7 @@ export default {
     const availableUsers = ref([]);
     const availableOwners = ref([]);
     const teamName = ref("");
+    const managerTeams = ref([]);
     const showEditTeamModal = ref(false);
     const showAddUserModal = ref(false);
     const showCreateTeamModal = ref(false);
@@ -521,17 +657,43 @@ export default {
         if (user.role_id < 2) {
           router.push({ path: `/dashboard/${user.id}` });
         }
-        const teamsResponse = await getAllTeams();
-        allTeams.value = teamsResponse;
+        if (isAdmin.value) {
+          const teamsResponse = await getAllTeams();
+          allTeams.value = teamsResponse;
 
-        const allUsersResponse = await getAllUsers();
-        if (Array.isArray(allUsersResponse.data)) {
-          users.value = allUsersResponse.data.filter((u) => u.role_id !== 3);
-          console.log(users.value);
-          availableUsers.value = allUsersResponse.data;
-          availableOwners.value = allUsersResponse.data.filter(
-            (u) => u.role_id === 2 || u.role_id === 3
-          );
+          const allUsersResponse = await getAllUsers();
+          if (Array.isArray(allUsersResponse.data)) {
+            users.value = allUsersResponse.data.filter((u) => u.role_id !== 3);
+            console.log(users.value);
+            availableUsers.value = allUsersResponse.data;
+            availableOwners.value = allUsersResponse.data.filter(
+              (u) => u.role_id === 2 || u.role_id === 3
+            );
+          }
+        } else {
+          console.log("user", user);
+          const teamResponse = await getTeamByUser(user.id);
+          if (Array.isArray(teamResponse)) {
+            managerTeams.value = teamResponse.filter(
+              (team) => team.owner_id === user.id
+            );
+            if (managerTeams.value.length > 0) {
+              const team = managerTeams.value[0];
+              teamName.value = team.name;
+              console.log("teamResponse", teamResponse);
+
+              const response = await getUserByTeam(team.id);
+              console.log("response", response);
+              usersTeam.value = response;
+            }
+          } else {
+            teamName.value = teamResponse.name;
+            console.log("teamResponse", teamResponse);
+
+            const response = await getUserByTeam(teamResponse.id);
+            console.log("response", response);
+            usersTeam.value = response;
+          }
         }
       } catch (error) {
         console.error(error);
@@ -743,6 +905,7 @@ export default {
       newUsername,
       newEmail,
       newRole,
+      managerTeams,
       newPassword,
       confirmPassword,
     };
