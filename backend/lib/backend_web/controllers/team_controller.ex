@@ -21,6 +21,17 @@ defmodule BackendWeb.TeamController do
   end
 
   def create(conn, %{"team" => team_params}) do
+
+    # If the owner is not a manager, return an error
+    if team_params["owner_id"] do
+      owner = Accounts.get_user(team_params["owner_id"])
+      if owner.role_id != RolesEnum.role_manager do
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{errors: ["Owner must be a manager"]})
+      end
+    end
+
     case Teams.create_team(team_params) do
       {:ok, team} ->
         conn
