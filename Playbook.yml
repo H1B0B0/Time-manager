@@ -88,6 +88,8 @@
         rsync_opts:
           - "--exclude=.git/"
           - "--exclude=node_modules/"
+          - "--exclude=.env"
+          - "--exclude=frontend/.env"
 
     - name: Create .env
       become: yes

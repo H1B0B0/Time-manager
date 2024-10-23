@@ -2,6 +2,7 @@
 import { RouterView } from "vue-router";
 import NavBar from "./components/NavBar.vue";
 import { ref, onMounted } from "vue";
+import { toast } from "vue3-toastify";
 
 import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js"; // Spline Viewer
 
@@ -14,6 +15,8 @@ const splineViewerUrl = ref(defaultSplineViewerUrl);
 const isTristantMode = ref(false);
 const performanceMode = ref(false);
 const isMobile = ref(false);
+const isOffline = ref(!navigator.onLine);
+const wasOffline = ref(false); // Track if the user was offline
 
 const updateSplineViewerUrl = () => {
   isTristantMode.value = localStorage.getItem("tristantMode") === "true";
@@ -21,7 +24,6 @@ const updateSplineViewerUrl = () => {
     ? tristantModeSplineViewerUrl
     : defaultSplineViewerUrl;
 
-  // Ajouter ou supprimer la classe tristant-mode au body
   if (isTristantMode.value) {
     document.body.classList.add("tristant-mode");
   } else {
@@ -37,13 +39,56 @@ const isMobileDevice = () => {
   return /Mobi|Android/i.test(navigator.userAgent);
 };
 
+const showInstallPrompt = ref(false);
+let deferredPrompt: any = null;
+
+const installApp = () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult: any) => {
+      if (choiceResult.outcome === "accepted") {
+        toast.success("App installed successfully!");
+      } else {
+        console.log("User dismissed the install prompt");
+      }
+      deferredPrompt = null;
+      showInstallPrompt.value = false;
+    });
+  }
+};
+
+const dismiss = () => {
+  showInstallPrompt.value = false;
+};
+
+const handleOfflineStatus = () => {
+  const currentlyOffline = !navigator.onLine;
+  if (currentlyOffline && !isOffline.value) {
+    toast.error("You are offline!");
+    wasOffline.value = true;
+  } else if (!currentlyOffline && isOffline.value && wasOffline.value) {
+    toast.success("You are back online!");
+    wasOffline.value = false;
+  }
+  isOffline.value = currentlyOffline;
+};
+
 onMounted(() => {
   updateSplineViewerUrl();
+  handleOfflineStatus();
 
   if (isMobileDevice()) {
     performanceMode.value = true;
     isMobile.value = true;
   }
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    console.log("beforeinstallprompt event triggered");
+    e.preventDefault();
+    deferredPrompt = e;
+    showInstallPrompt.value = true;
+    console.log("showInstallPrompt:", showInstallPrompt.value);
+  });
 
   window.addEventListener("keydown", async (event) => {
     if (event.ctrlKey && event.key === "m") {
@@ -63,6 +108,9 @@ onMounted(() => {
       location.reload();
     }
   });
+
+  window.addEventListener("online", handleOfflineStatus);
+  window.addEventListener("offline", handleOfflineStatus);
 });
 
 setTimeout(() => {
@@ -134,9 +182,7 @@ setTimeout(() => {
       <NavBar />
     </header>
 
-    <main
-      class="flex items-center justify-center bg-transparent z-10"
-    >
+    <main class="flex items-center justify-center bg-transparent z-10">
       <spline-viewer
         class="absolute inset-0 w-full h-full"
         :url="splineViewerUrl"
@@ -174,6 +220,57 @@ setTimeout(() => {
       >Performance Mode</span
     >
   </label>
+  <div v-if="isOffline" class="offline-banner">You are offline!</div>
+  <div
+    v-if="showInstallPrompt"
+    class="fixed bottom-5 left-1/2 transform -translate-x-1/2 border backdrop-blur-2xl rounded-lg shadow-lg p-4 z-50 text-white max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl"
+    role="dialog"
+    aria-labelledby="pwa-popup-title"
+    aria-describedby="pwa-popup-description"
+  >
+    <div class="flex flex-col sm:flex-row items-center">
+      <div class="mr-0 sm:mr-4 mb-4 sm:mb-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="w-6 h-6"
+        >
+          <path
+            d="M12 22C12 22 2 18 2 13V9C2 4 7 2 12 2s10 2 10 7v4c0 5-10 9-10 9z"
+          ></path>
+          <path d="M18 19a3 3 0 0 1-3-3h6a3 3 0 0 1-3 3z"></path>
+        </svg>
+      </div>
+      <div class="flex-grow text-center sm:text-left">
+        <h3 id="pwa-popup-title" class="text-lg font-semibold">Install App</h3>
+        <p id="pwa-popup-description" class="text-sm">
+          Install this app on your home screen for quick and easy access when
+          you’re on the go.
+        </p>
+      </div>
+      <div class="flex justify-center items-center space-x-4 mt-4 sm:mt-0">
+        <button
+          @click="installApp"
+          class="bg-indigo-500 text-white rounded px-4 py-2 hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+          aria-label="Install App"
+        >
+          Install
+        </button>
+        <button
+          @click="dismiss"
+          class="bg-gray-300 text-gray-700 rounded px-4 py-2 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+          aria-label="Dismiss"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -277,5 +374,18 @@ body.tristant-mode {
   100% {
     transform: translate(0, 0);
   }
+}
+
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 0, 0, 0.8); /* Semi-transparent red */
+  color: white;
+  text-align: center;
+  padding: 5px; /* Smaller padding */
+  font-size: 0.875rem; /* Smaller font size */
+  z-index: 1000;
 }
 </style>

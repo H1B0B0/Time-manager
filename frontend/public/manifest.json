@@ -4,8 +4,8 @@
   "description": "Time Manager is a simple time tracking app.",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "start_url": "https://open.kurama-chat.xyz/",
-  "scope": "https://open.kurama-chat.xyz/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "prefer_related_applications": false,
@@ -53,7 +53,7 @@
         }
       },
       {
-        "urlPattern": "^https://open.kurama-chat.xyz/api/.*",
+        "urlPattern": "^https://kurama-chat.xyz/api/.*",
         "handler": "NetworkFirst",
         "options": {
           "cacheName": "api-cache",
