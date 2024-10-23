@@ -69,6 +69,15 @@
         state: directory
         mode: "0755"
 
+    - name: Give permission to user ec2-user to /app folder
+      become: yes
+      become_user: root
+      file:
+        path: /app
+        owner: ec2-user
+        group: ec2-user
+        mode: "0755"
+
     - name: Synchronize project files to /app folder
       become: yes
       become_user: root
@@ -107,7 +116,6 @@
 
     - name: Run npm install in /app/frontend
       become: yes
-      become_user: root
       command: npm install
       args:
         chdir: /app/frontend

@@ -26,6 +26,7 @@
     "moment": "^2.30.1",
     "pinia": "^2.1.7",
     "register-service-worker": "^1.7.2",
+    "rollup": "^2.56.3",
     "unplugin-vue-markdown": "^0.26.2",
     "vue": "^3.4.29",
     "vue-cal": "^4.10.0",
