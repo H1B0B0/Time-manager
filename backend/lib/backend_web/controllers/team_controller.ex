@@ -49,6 +49,16 @@ defmodule BackendWeb.TeamController do
   def update(conn, %{"team_id" => id, "team" => team_params}) do
     team = Teams.get_team(id)
 
+    # If the new owner is not a manager, return an error
+    if team_params["owner_id"] do
+      owner = Accounts.get_user(team_params["owner_id"])
+      if owner.role_id != RolesEnum.role_manager do
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{errors: ["Owner must be a manager"]})
+      end
+    end
+
     case team do
       nil ->
         conn
