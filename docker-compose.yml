@@ -3,8 +3,6 @@ services:
     restart: always
     image: postgres:17
     container_name: t-poo-700-stg_9_database
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -54,7 +52,7 @@ services:
       - "5173:5173"
     depends_on:
       - traefik
-      
+
   traefik:
     restart: always
     image: traefik:v2.0.2
