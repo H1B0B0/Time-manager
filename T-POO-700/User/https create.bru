@@ -1,0 +1,21 @@
+meta {
+  name: https create
+  type: http
+  seq: 8
+}
+
+post {
+  url: https://backend.kurama-chat.xyz/api/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user": {
+      "username": "ben",
+      "email": "benjamin@bretler.ch",
+      "password": "ben"
+    }
+  }
+}

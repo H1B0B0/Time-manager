@@ -5,5 +5,17 @@
   "ignore": [
     "node_modules",
     ".git"
-  ]
+  ],
+  "clientCertificates": {
+    "enabled": true,
+    "certs": [
+      {
+        "domain": "kurama-chat.xyz",
+        "type": "cert",
+        "certFilePath": "../../../../Downloads/Kurama Chat Certificate.cert",
+        "keyFilePath": "../../../../Downloads/kurama-chat key.key",
+        "passphrase": ""
+      }
+    ]
+  }
 }

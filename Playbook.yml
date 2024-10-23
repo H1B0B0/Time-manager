@@ -120,6 +120,10 @@
       args:
         chdir: /app/frontend
 
+    - name: remove seeds
+      become: yes
+      command: rm -rf /app/backend/priv/repo/seeds.exs
+
     - name: Deploy Docker Compose stack
       become: yes
       become_user: root
