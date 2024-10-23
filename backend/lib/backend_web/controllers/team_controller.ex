@@ -2,6 +2,8 @@ defmodule BackendWeb.TeamController do
   use BackendWeb, :controller
   alias Backend.Teams
   alias Backend.Teams.Team
+  alias Backend.Accounts
+  alias Backend.Enums.RolesEnum
 
   def index(conn, _params) do
     teams = Teams.list_teams()
