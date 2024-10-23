@@ -4,8 +4,8 @@
   "description": "Time Manager is a simple time tracking app.",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "https://open.kurama-chat.xyz/",
+  "scope": "https://open.kurama-chat.xyz/",
   "display": "standalone",
   "orientation": "portrait",
   "prefer_related_applications": false,
@@ -25,13 +25,42 @@
     "globPatterns": ["**/*.{js,css,html,ico,png,svg}"],
     "runtimeCaching": [
       {
-        "urlPattern": "/^https://fonts.googleapis.com/.*/i",
+        "urlPattern": "^https://fonts.googleapis.com/.*",
         "handler": "CacheFirst",
         "options": {
           "cacheName": "google-fonts-cache",
           "expiration": {
             "maxEntries": 10000,
             "maxAgeSeconds": 31536000
+          },
+          "cacheableResponse": {
+            "statuses": [0, 200]
+          }
+        }
+      },
+      {
+        "urlPattern": "^https://fonts.gstatic.com/.*",
+        "handler": "CacheFirst",
+        "options": {
+          "cacheName": "google-fonts-webfonts",
+          "expiration": {
+            "maxEntries": 10000,
+            "maxAgeSeconds": 31536000
+          },
+          "cacheableResponse": {
+            "statuses": [0, 200]
+          }
+        }
+      },
+      {
+        "urlPattern": "^https://open.kurama-chat.xyz/api/.*",
+        "handler": "NetworkFirst",
+        "options": {
+          "cacheName": "api-cache",
+          "networkTimeoutSeconds": 10,
+          "expiration": {
+            "maxEntries": 50,
+            "maxAgeSeconds": 86400
           },
           "cacheableResponse": {
             "statuses": [0, 200]
