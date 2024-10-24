@@ -1,22 +1,23 @@
 <template>
-  <div class="min-h-screen w-full">
-    <div class="flex flex-col justify-center items-center w-full">
+  <div class="">
+    <div class="flex flex-col justify-center items-center space-y-6">
       <!-- Clock Manager -->
-      <div class="rounded-lg p-4 w-full flex justify-center items-center">
+      <div class="flex justify-center items-center">
         <ClockManager />
       </div>
 
       <!-- Chart Manager -->
-      <div class="rounded-lg p-4 w-full">
+      <div class="md:pl-20 md:pr-20 w-full">
         <ChartManager />
       </div>
-
       <!-- Worked Hours Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full p-5">
-        <div class="rounded-lg p-4 w-full">
+      <div
+        class="grid grid-cols-1 gap-6 lg:grid-cols-2 w-full md:pl-20 md:pr-20"
+      >
+        <div class="p-4">
           <WorkedHoursPerMonth />
         </div>
-        <div class="rounded-lg p-4 w-full">
+        <div class="p-4">
           <WorkedHoursPerDayChart />
         </div>
       </div>
@@ -75,10 +76,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.recharts-wrapper {
-  width: 100% !important;
-  height: auto !important;
-}
-</style>

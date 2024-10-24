@@ -1,27 +1,26 @@
 <template>
-  <div class="p-4 rounded-lg w-full max-w-7xl mx-auto">
-    <h1 class="text-2xl font-bold text-center text-white mb-4">My Schedule</h1>
-    <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
-    <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
-      <div class="relative w-full h-[600px]">
-        <vue-cal
-          :events="events"
-          :time="true"
-          :view="view"
-          :special-hours="specialHours"
-          :event-class="getEventClass"
-          @view-change="handleViewChange"
-          @event-delete="handleEventDelete"
-          @event-drag-create="handleEventCreate"
-          @event-change="handleEventResize"
-          @event-drop="handleEventDrop"
-          :draggable="false"
-          :editable-events="editableEvents"
-          :snap-to-time="15"
-          :drag-to-create-threshold="15"
-          eventsCountOnYearView="dot"
-        />
-      </div>
+  <h1 class="text-2xl font-bold text-center text-white mb-4">My Schedule</h1>
+  <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
+  <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
+    <div class="relative w-full h-[600px]">
+      <vue-cal
+        :events="events"
+        :time="true"
+        :view="view"
+        :active-view="view"
+        :special-hours="specialHours"
+        :event-class="getEventClass"
+        @view-change="handleViewChange"
+        @event-delete="handleEventDelete"
+        @event-drag-create="handleEventCreate"
+        @event-change="handleEventResize"
+        @event-drop="handleEventDrop"
+        :draggable="false"
+        :editable-events="editableEvents"
+        :snap-to-time="15"
+        :drag-to-create-threshold="15"
+        eventsCountOnYearView="dot"
+      />
     </div>
   </div>
 </template>
@@ -39,15 +38,15 @@ import {
 import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
 import { formatISO } from "date-fns";
-import { toast } from "vue3-toastify";
 
 export default {
   name: "ScheduleCalendar",
   components: { VueCal },
   setup() {
+    const isMobile = () => window.innerWidth <= 768;
+    const view = ref(isMobile() ? "day" : "week");
     const events = ref([]);
     const errorMessage = ref("");
-    const view = ref("week");
     const startDate = ref(new Date("2000-01-01T00:00:00Z"));
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
     const userRole = ref(null);
@@ -119,6 +118,7 @@ export default {
         console.error(error);
       }
     };
+
     const handleViewChange = (newView) => {
       view.value = newView;
       fetchData();
@@ -208,6 +208,9 @@ export default {
         try {
           const user = await GetUserByToken();
           userRole.value = user.role_id;
+          if (isMobile()) {
+            view.value = "day";
+          }
           fetchData();
         } catch (error) {
           router.push("/login");
