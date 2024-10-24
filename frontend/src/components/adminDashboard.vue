@@ -32,6 +32,11 @@
                 <th
                   class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
+                  Worked Hours
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
                   Actions
                 </th>
               </tr>
@@ -48,6 +53,9 @@
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
                   {{ team.name }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ formatHours(totalWorkedHours) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -96,6 +104,7 @@
               >
                 Role
               </th>
+
               <th
                 class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
@@ -120,6 +129,9 @@
               </td>
               <td class="px-6 py-4 text-sm text-gray-300 text-center">
                 {{ user.role_id === 2 ? "Manager" : "Employee" }}
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                {{ getWorkedHours(user.id) }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-300 text-center">
                 <button
@@ -163,6 +175,11 @@
               <th
                 class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
+                Total Worked Hours
+              </th>
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
                 Actions
               </th>
             </tr>
@@ -178,6 +195,9 @@
                 </td>
                 <td class="px-6 py-4 text-sm text-gray-300 text-center">
                   {{ team.name }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ formatHours(totalWorkedHours) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -197,7 +217,7 @@
                 </td>
               </tr>
               <tr v-if="selectedTeam === team.id">
-                <td colspan="3">
+                <td colspan="4">
                   <div class="">
                     <div class="flex justify-end">
                       <button
@@ -211,7 +231,7 @@
                       <div
                         v-for="user in usersTeam"
                         :key="user.id"
-                        class="mb-4 p-4 border rounded-lg shadow-lg bg-gray-800 flex-col"
+                        class="mb-4 p-4 border rounded-lg shadow-lg bg-gray-800 flex flex-col"
                       >
                         <img
                           :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${user.username}`"
@@ -295,6 +315,11 @@
                 <th
                   class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
+                  Worked Hours
+                </th>
+                <th
+                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                >
                   Actions
                 </th>
               </tr>
@@ -322,6 +347,9 @@
                       ? "Manager"
                       : "Employee"
                   }}
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                  {{ getWorkedHours(user.id) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -618,6 +646,7 @@ import {
   deleteTeam as deleteTeamAPI,
   getTeamByUser,
 } from "@/functions/Team";
+import { getWorkingTimesForTeamCurrentMonth } from "@/functions/WorkingTime";
 import router from "@/router";
 import { ref, onMounted, computed } from "vue";
 import { toast } from "vue3-toastify";
@@ -648,6 +677,8 @@ export default {
     const newRole = ref("");
     const newPassword = ref("");
     const confirmPassword = ref("");
+    const workedHours = ref([]);
+    const totalWorkedHours = ref(0);
 
     onMounted(async () => {
       try {
@@ -670,8 +701,25 @@ export default {
               (u) => u.role_id === 2 || u.role_id === 3
             );
           }
+          const teamResponse = await getAllTeams();
+          if (Array.isArray(teamResponse)) {
+            managerTeams.value = teamResponse.filter(
+              (team) => team.owner_id === user.id
+            );
+            if (managerTeams.value.length > 0) {
+              const team = managerTeams.value[0];
+              teamName.value = team.name;
+
+              const response = await getUserByTeam(team.id);
+              usersTeam.value = response;
+            }
+          } else {
+            teamName.value = teamResponse.name;
+
+            const response = await getUserByTeam(teamResponse.id);
+            usersTeam.value = response;
+          }
         } else {
-          console.log("user", user);
           const teamResponse = await getTeamByUser(user.id);
           if (Array.isArray(teamResponse)) {
             managerTeams.value = teamResponse.filter(
@@ -695,11 +743,50 @@ export default {
             usersTeam.value = response;
           }
         }
+        await getWorkedHoursForTeam();
       } catch (error) {
         console.error(error);
         router.push({ path: `/` });
       }
     });
+
+    const getWorkedHoursForTeam = async () => {
+      try {
+        const userIds = usersTeam.value.map((user) => user.id);
+        const workingTimes = await getWorkingTimesForTeamCurrentMonth(userIds);
+
+        workedHours.value = userIds.map((userId, index) => {
+          const userTimes = workingTimes[index].data;
+
+          const totalHours = userTimes.reduce((acc, time) => {
+            const start = new Date(time.start);
+            const end = new Date(time.end);
+            const hours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+            return acc + hours;
+          }, 0);
+
+          return { userId, hours: totalHours };
+        });
+
+        totalWorkedHours.value = workedHours.value.reduce(
+          (acc, user) => acc + user.hours,
+          0
+        );
+      } catch (error) {
+        console.error("Error fetching worked hours for team:", error);
+      }
+    };
+
+    const getWorkedHours = (userId) => {
+      const user = workedHours.value.find((user) => user.userId === userId);
+      return user ? formatHours(user.hours) : "0h 0m";
+    };
+
+    const formatHours = (decimalHours) => {
+      const hours = Math.floor(decimalHours);
+      const minutes = Math.round((decimalHours - hours) * 60);
+      return `${hours}h ${minutes}m`;
+    };
 
     const createUser = async () => {
       try {
@@ -908,6 +995,10 @@ export default {
       managerTeams,
       newPassword,
       confirmPassword,
+      workedHours,
+      totalWorkedHours,
+      getWorkedHours,
+      formatHours,
     };
   },
 };

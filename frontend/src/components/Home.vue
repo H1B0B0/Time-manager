@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen text-white flex flex-col">
-    <div class="mb-40">
-      <div class="relative isolate overflow-hidden pt-14">
-        <div class="mx-auto max-w-2xl py-24 sm:py-32 lg:py-40">
+  <div class="min-h-screen text-white flex flex-col w-full">
+    <div class="mb-40 w-full">
+      <div class="relative isolate overflow-hidden pt-14 w-full">
+        <div class="mx-auto w-full py-24 sm:py-32 lg:py-40">
           <div class="hidden sm:mb-8 sm:flex sm:justify-center">
             <div
               class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20"
@@ -46,7 +46,7 @@
       class="flex flex-wrap gap-8 justify-center align-middle mb-20 px-4 sm:px-0"
     >
       <div
-        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl flex flex-col items-center w-full md:w-5/12 opacity-0 translate-x-0"
         id="chart1"
       >
         <h2 class="text-xl mb-4">Project Time Utilization</h2>
@@ -132,7 +132,7 @@
           />
         </div>
         <div
-          class="hidden md:absolute md:bottom-16 md:left-[50rem] md:block md:transform-gpu md:blur-3xl"
+          class="hidden md:absolute md:bottom-16 md:left-[50rem] md:block md:blur-3xl"
           aria-hidden="true"
         >
           <div
@@ -228,6 +228,8 @@ export default {
     const router = useRouter();
     const userStore = useUserStore();
 
+    const isMobile = () => window.innerWidth <= 768;
+
     onMounted(async () => {
       try {
         const user = await GetUserByToken();
@@ -238,25 +240,78 @@ export default {
       } catch (error) {
         console.log("User not logged in");
       }
+
+      // Initialize charts
+      const charts = [
+        { element: document.getElementById("chart1"), index: 0 },
+        { element: document.getElementById("chart2"), index: 2 },
+        { element: document.getElementById("chart3"), index: 1 },
+        { element: document.getElementById("chart4"), index: 3 },
+      ];
+
+      charts.forEach(({ element }, index) => {
+        const direction = index % 2 === 0 ? "left" : "right";
+        const animationIn = anime({
+          targets: element,
+          opacity: [0, 1],
+          translateX: isMobile()
+            ? [0, 0]
+            : direction === "left"
+            ? [-100, 0]
+            : [100, 0],
+          duration: 1500,
+          autoplay: false,
+        });
+
+        const animationOut = anime({
+          targets: element,
+          opacity: [1, 0],
+          translateX: isMobile()
+            ? [0, 0]
+            : [0, direction === "left" ? -100 : 100],
+          duration: 2000,
+          autoplay: false,
+        });
+
+        animateOnScroll(element, animationIn, animationOut);
+      });
+
+      // Animation for the #avis section
+      const avisElement = document.getElementById("avis");
+      const avisIn = anime({
+        targets: avisElement,
+        opacity: [0, 1],
+        translateY: isMobile() ? [0, 0] : [100, 0], // Animate from bottom to top
+        duration: 1000,
+        autoplay: false,
+      });
+
+      const avisOut = anime({
+        targets: avisElement,
+        opacity: [1, 0],
+        translateY: isMobile() ? [0, 0] : [0, 100],
+        duration: 2000,
+        autoplay: false,
+      });
+
+      // Apply scroll-triggered animation to avis section
+      animateOnScroll(avisElement, avisIn, avisOut);
     });
 
     const animateOnScroll = (element, animationIn, animationOut) => {
-      let threshold = 0.3;
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              threshold = 0.3;
               animationIn.play();
               animationOut.pause();
             } else {
-              threshold = 0;
               animationOut.play();
               animationIn.pause();
             }
           });
         },
-        { threshold: threshold }
+        { threshold: 0.3 }
       );
       observer.observe(element);
     };
@@ -534,54 +589,6 @@ export default {
           },
         },
       });
-
-      // Animations for the charts
-      const charts = [
-        { element: document.getElementById("chart1"), index: 0 },
-        { element: document.getElementById("chart2"), index: 2 },
-        { element: document.getElementById("chart3"), index: 1 },
-        { element: document.getElementById("chart4"), index: 3 },
-      ];
-
-      charts.forEach(({ element }, index) => {
-        const direction = index % 2 === 0 ? "left" : "right";
-        const animationIn = anime({
-          targets: element,
-          opacity: [0, 1],
-          translateX: direction === "left" ? [-100, 0] : [100, 0],
-          duration: 1500,
-          autoplay: false,
-        });
-
-        const animationOut = anime({
-          targets: element,
-          opacity: [1, 0],
-          duration: 2000,
-          autoplay: false,
-        });
-
-        animateOnScroll(element, animationIn, animationOut);
-      });
-
-      // Animation for the #avis section
-      const avisElement = document.getElementById("avis");
-      const avisIn = anime({
-        targets: avisElement,
-        opacity: [0, 1],
-        translateY: [100, 0], // Animate from bottom to top
-        duration: 1000,
-        autoplay: false,
-      });
-
-      const avisOut = anime({
-        targets: avisElement,
-        opacity: [1, 0],
-        duration: 2000,
-        autoplay: false,
-      });
-
-      // Apply scroll-triggered animation to avis section
-      animateOnScroll(avisElement, avisIn, avisOut);
     });
   },
 };

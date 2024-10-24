@@ -176,7 +176,7 @@ setTimeout(() => {
 <template>
   <div
     :class="{ 'tristant-mode': isTristantMode }"
-    class="min-h-screen flex flex-col relative bg-black"
+    class="min-h-screen flex flex-col relative bg-black w-full"
   >
     <header class="w-full z-20 bg-transparent">
       <NavBar />

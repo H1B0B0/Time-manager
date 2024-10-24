@@ -89,3 +89,38 @@ export const getWorkingTimes = async (
   cacheData(cacheKey, data);
   return data;
 };
+
+export const getWorkingTimesForTeamCurrentMonth = async (
+  userIds: string[]
+): Promise<any[]> => {
+  const cacheKey = `workingtimes_team_current_month`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const end = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+    23,
+    59,
+    59
+  ).toISOString();
+
+  try {
+    const promises = userIds.map((userId) =>
+      getWorkingTimes(userId, start, end)
+    );
+
+    const responses = await Promise.all(promises);
+    console.log(responses);
+    const data = responses.flat();
+    cacheData(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
