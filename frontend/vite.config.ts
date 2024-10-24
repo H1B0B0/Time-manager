@@ -15,73 +15,69 @@ export default defineConfig({
     }),
     mdPlugin({ mode: [Mode.HTML] }),
     VitePWA({
+      devOptions: {
+        enabled: true,
+      },
       registerType: "autoUpdate",
-      injectRegister: "auto",
-      includeAssets: ["favicon.ico", "robots.txt", "apple-touch-icon.png"],
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
         name: "Time Manager",
         short_name: "Time Manager",
-        description: "Time Manager is a simple time tracking app.",
+        description: "A simple time management app",
         theme_color: "#ffffff",
-        background_color: "#ffffff",
-        start_url: "/",
-        scope: "/",
-        display: "standalone",
-        orientation: "portrait",
         icons: [
           {
-            src: "/img/icons/android-chrome-192x192.png",
+            src: "img/icons/Time-management-192-192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/img/icons/android-chrome-512x512.png",
+            src: "img/icons/Time-management-512x512.png",
             sizes: "512x512",
             type: "image/png",
           },
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // Increase limit to 5 MiB
+        globPatterns: [
+          "**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,ts,md}",
+        ],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
+            urlPattern: ({ request }) =>
+              request.destination === "style" ||
+              request.destination === "script" ||
+              request.destination === "worker",
+            handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "google-fonts-stylesheets",
+              cacheName: "static-resources",
               expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
               },
             },
           },
           {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            urlPattern: ({ request }) => request.destination === "image",
             handler: "CacheFirst",
             options: {
-              cacheName: "google-fonts-webfonts",
+              cacheName: "images",
               expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
               },
             },
           },
           {
-            urlPattern: /^https:\/\/backend\.traefik\.me\/api\/.*/i,
+            urlPattern: /^https:\/\/kurama-chat\.xyz\/api\/.*/,
             handler: "NetworkFirst",
             options: {
               cacheName: "api-cache",
               networkTimeoutSeconds: 10,
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24, // 1 day
+                maxAgeSeconds: 86400, // 1 day
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -89,18 +85,44 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: ({ request }) =>
-              request.destination === "document" ||
-              request.destination === "script" ||
-              request.destination === "style" ||
-              request.destination === "image" ||
-              request.destination === "font",
-            handler: "CacheFirst",
+            urlPattern: /^https:\/\/kurama-chat\.xyz\/.*/,
+            handler: "NetworkFirst",
             options: {
-              cacheName: "static-resources",
+              cacheName: "frontend-cache",
+              networkTimeoutSeconds: 10,
               expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 1 month
+                maxEntries: 50,
+                maxAgeSeconds: 86400, // 1 day
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/frontend\.traefik\.me\/api\/.*/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 86400, // 1 day
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/frontend\.traefik\.me\/.*/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "frontend-cache",
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 86400, // 1 day
               },
               cacheableResponse: {
                 statuses: [0, 200],

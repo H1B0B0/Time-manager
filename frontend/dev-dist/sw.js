@@ -67,9 +67,8 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-afe5e289'], (function (workbox) { 'use strict';
+define(['./workbox-b5defb16'], (function (workbox) { 'use strict';
 
-  workbox.enable();
   self.skipWaiting();
   workbox.clientsClaim();
 
@@ -79,37 +78,69 @@ define(['./workbox-afe5e289'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
-    "url": "registerSW.js",
-    "revision": "3ca0b8505b4bec776b69afdba2768812"
-  }, {
     "url": "index.html",
-    "revision": "0.tlvo0uqpjao"
+    "revision": "0.kji2rc7kb18"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
     allowlist: [/^\/$/]
   }));
-  workbox.registerRoute(/^https:\/\/api\.*/i, new workbox.CacheFirst({
-    "cacheName": "api-cache",
+  workbox.registerRoute(({
+    request
+  }) => request.destination === "style" || request.destination === "script" || request.destination === "worker", new workbox.StaleWhileRevalidate({
+    "cacheName": "static-resources",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 50,
+      maxAgeSeconds: 2592000
+    })]
+  }), 'GET');
+  workbox.registerRoute(({
+    request
+  }) => request.destination === "image", new workbox.CacheFirst({
+    "cacheName": "images",
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 100,
-      maxAgeSeconds: 604800
+      maxAgeSeconds: 5184000
+    })]
+  }), 'GET');
+  workbox.registerRoute(/^https:\/\/kurama-chat\.xyz\/api\/.*/, new workbox.NetworkFirst({
+    "cacheName": "api-cache",
+    "networkTimeoutSeconds": 10,
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 50,
+      maxAgeSeconds: 86400
     }), new workbox.CacheableResponsePlugin({
       statuses: [0, 200]
     })]
   }), 'GET');
-  workbox.registerRoute(/^https:\/\/fonts\.*/i, new workbox.CacheFirst({
-    "cacheName": "fonts-cache",
+  workbox.registerRoute(/^https:\/\/kurama-chat\.xyz\/.*/, new workbox.NetworkFirst({
+    "cacheName": "frontend-cache",
+    "networkTimeoutSeconds": 10,
     plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 10,
-      maxAgeSeconds: 31536000
+      maxEntries: 50,
+      maxAgeSeconds: 86400
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
     })]
   }), 'GET');
-  workbox.registerRoute(/^https:\/\/.*\.(?:png|jpg|jpeg|svg|gif)$/, new workbox.CacheFirst({
-    "cacheName": "images-cache",
+  workbox.registerRoute(/^https:\/\/frontend\.traefik\.me\/api\/.*/, new workbox.NetworkFirst({
+    "cacheName": "api-cache",
+    "networkTimeoutSeconds": 10,
     plugins: [new workbox.ExpirationPlugin({
-      maxEntries: 100,
-      maxAgeSeconds: 2592000
+      maxEntries: 50,
+      maxAgeSeconds: 86400
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
+    })]
+  }), 'GET');
+  workbox.registerRoute(/^https:\/\/frontend\.traefik\.me\/.*/, new workbox.NetworkFirst({
+    "cacheName": "frontend-cache",
+    "networkTimeoutSeconds": 10,
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 50,
+      maxAgeSeconds: 86400
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
     })]
   }), 'GET');
 

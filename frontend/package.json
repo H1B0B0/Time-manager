@@ -7,7 +7,8 @@
     "build-only": "vite build",
     "dev": "vite",
     "preview": "vite preview --port 5173 --host",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@splinetool/react-spline": "^4.0.0",
@@ -45,6 +46,7 @@
     "@types/canvas-confetti": "^1.6.4",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.14.5",
+    "@vite-pwa/assets-generator": "^0.2.6",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/cli-plugin-pwa": "~5.0.0",
     "@vue/tsconfig": "^0.5.1",

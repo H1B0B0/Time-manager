@@ -95,7 +95,7 @@ const userIdFromRoute = Number(route.params.userID);
 const Offline = ref(!navigator.onLine);
 
 onMounted(async () => {
-  if (!Offline.value) {
+  if (Offline.value) {
     toast.error("You are offline. Some features may not be available.");
   } else {
     try {
