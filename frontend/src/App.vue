@@ -247,7 +247,9 @@ setTimeout(() => {
         </svg>
       </div>
       <div class="flex-grow text-center sm:text-left">
-        <h3 id="pwa-popup-title" class="text-lg font-semibold">Install App</h3>
+        <h3 id="pwa-popup-title" class="text-lg font-semibold mr-2">
+          Install App
+        </h3>
         <p id="pwa-popup-description" class="text-sm">
           Install this app on your home screen for quick and easy access when
           you’re on the go.
