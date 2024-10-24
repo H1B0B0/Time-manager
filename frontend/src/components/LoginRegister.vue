@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
 import { createUser, login, GetUserByToken } from "@/functions/User";
@@ -113,6 +113,10 @@ const isCreating = ref(false);
 const error = ref("");
 
 const Handlelogin = async () => {
+  if (!email.value || !password.value) {
+    toast.error("Please fill in all fields");
+    return;
+  }
   try {
     error.value = "";
     const response = await login(email.value, password.value);
@@ -204,7 +208,18 @@ const cancelCreating = () => {
   isCreating.value = false;
 };
 
+const handleKeyDown = (event) => {
+  if (event.key === "Enter") {
+    if (!isCreating.value) {
+      Handlelogin();
+    } else {
+      register();
+    }
+  }
+};
+
 onMounted(async () => {
+  document.addEventListener("keydown", handleKeyDown);
   try {
     const user = await GetUserByToken();
     if (user) {
@@ -214,5 +229,9 @@ onMounted(async () => {
   } catch (error) {
     console.log("User not logged in");
   }
+});
+
+onUnmounted(() => {
+  document.removeEventListener("keydown", handleKeyDown);
 });
 </script>

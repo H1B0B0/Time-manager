@@ -39,6 +39,7 @@ import {
 import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
 import { formatISO } from "date-fns";
+import { toast } from "vue3-toastify";
 
 export default {
   name: "ScheduleCalendar",
@@ -50,6 +51,7 @@ export default {
     const startDate = ref(new Date("2000-01-01T00:00:00Z"));
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
     const userRole = ref(null);
+    const isOffline = ref(!navigator.onLine);
 
     const specialHours = ref({
       1: {
@@ -198,14 +200,19 @@ export default {
     };
 
     onMounted(async () => {
-      console.log("onMounted called");
-      try {
-        const user = await GetUserByToken();
-        userRole.value = user.role_id;
+      if (isOffline.value) {
+        errorMessage.value =
+          "You are offline. Some features may not be available.";
         fetchData();
-      } catch (error) {
-        router.push("/login");
-        console.error("Failed to get user:", error);
+      } else {
+        try {
+          const user = await GetUserByToken();
+          userRole.value = user.role_id;
+          fetchData();
+        } catch (error) {
+          router.push("/login");
+          console.error("Failed to get user:", error);
+        }
       }
     });
 

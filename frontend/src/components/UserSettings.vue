@@ -92,22 +92,27 @@ const loggedInUserRole = ref(null);
 const originalRole = ref(null);
 const loggedInUserId = ref("");
 const userIdFromRoute = Number(route.params.userID);
+const Offline = ref(!navigator.onLine);
 
 onMounted(async () => {
-  try {
-    const user = await GetUserByToken();
-    if (user) {
-      userStore.setUser(user.value);
-      loggedInUserId.value = user.id;
-      loggedInUserRole.value = user.role_id;
-    } else {
+  if (!Offline.value) {
+    toast.error("You are offline. Some features may not be available.");
+  } else {
+    try {
+      const user = await GetUserByToken();
+      if (user) {
+        userStore.setUser(user.value);
+        loggedInUserId.value = user.id;
+        loggedInUserRole.value = user.role_id;
+      } else {
+        router.push("/login");
+        return;
+      }
+    } catch (error) {
+      console.log("User not logged in");
       router.push("/login");
       return;
     }
-  } catch (error) {
-    console.log("User not logged in");
-    router.push("/login");
-    return;
   }
 
   try {

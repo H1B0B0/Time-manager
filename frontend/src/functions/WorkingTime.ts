@@ -8,6 +8,15 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const cacheData = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const getCachedData = (key: string) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+};
+
 export const deleteWorkingTime = async (id: string): Promise<void> => {
   await axios.delete(`${BASE_URL}/workingtime/${id}`, {
     headers: getAuthHeaders(),
@@ -47,10 +56,17 @@ export const showWorkingTime = async (
   userID: string,
   id: string
 ): Promise<any> => {
+  const cacheKey = `workingtime_${userID}_${id}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   const response = await axios.get(`${BASE_URL}/workingtime/${userID}/${id}`, {
     headers: getAuthHeaders(),
   });
-  return response.data;
+  const data = response.data;
+  cacheData(cacheKey, data);
+  return data;
 };
 
 export const getWorkingTimes = async (
@@ -58,11 +74,18 @@ export const getWorkingTimes = async (
   start: string,
   end: string
 ): Promise<any[]> => {
+  const cacheKey = `workingtimes_${userID}_${start}_${end}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   const response = await axios.get(
     `${BASE_URL}/workingtime/${userID}?start=${start}&end=${end}`,
     {
       headers: getAuthHeaders(),
     }
   );
-  return response.data;
+  const data = response.data;
+  cacheData(cacheKey, data);
+  return data;
 };

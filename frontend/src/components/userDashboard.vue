@@ -25,13 +25,14 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from "vue";
+import { ref, defineComponent, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
 import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
 import WorkedHoursPerMonth from "./WorkedHoursPerMonth.vue";
+import { toast } from "vue3-toastify";
 
 export default defineComponent({
   name: "UserDashboard",
@@ -45,8 +46,14 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const userStore = useUserStore();
+    const isOffline = ref(!navigator.onLine);
 
     onMounted(() => {
+      if (isOffline.value) {
+        toast.error("You are offline. Some features may not be available.");
+        return;
+      }
+
       const userId = parseInt(route.params.userId, 10);
       const loggedInUserId = userStore.user?.id;
       const userRole = userStore.user?.role_id;

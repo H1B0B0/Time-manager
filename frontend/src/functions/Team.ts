@@ -8,12 +8,28 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const cacheData = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const getCachedData = (key: string) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+};
+
 export const getOneTeam = async (teamId: number) => {
+  const cacheKey = `team_${teamId}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/teams/${teamId}`, {
       headers: getAuthHeaders(),
     });
-    return response.data.data;
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -64,11 +80,18 @@ export const deleteTeam = async (teamId: number) => {
 };
 
 export const getAllTeams = async () => {
+  const cacheKey = `all_teams`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/teams`, {
       headers: getAuthHeaders(),
     });
-    return response.data.data;
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -76,11 +99,18 @@ export const getAllTeams = async () => {
 };
 
 export const getTeamByUser = async (userId: number) => {
+  const cacheKey = `teams_user_${userId}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/user/${userId}/teams`, {
       headers: getAuthHeaders(),
     });
-    return response.data;
+    const data = response.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;

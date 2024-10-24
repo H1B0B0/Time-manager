@@ -11,12 +11,28 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const cacheData = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const getCachedData = (key: string) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+};
+
 export const getUserById = async (id: number) => {
+  const cacheKey = `user_${id}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/users/${id}`, {
       headers: getAuthHeaders(),
     });
-    return response.data.data;
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -24,6 +40,11 @@ export const getUserById = async (id: number) => {
 };
 
 export const getUser = async (username: string, email: string) => {
+  const cacheKey = `user_${username}_${email}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/users/`, {
       params: {
@@ -32,7 +53,9 @@ export const getUser = async (username: string, email: string) => {
       },
       headers: getAuthHeaders(),
     });
-    return response.data.data;
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -161,6 +184,11 @@ export const login = async (email: string, password: string) => {
 };
 
 export const GetUserByToken = async () => {
+  const cacheKey = `user_by_token`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const token = Cookies.get("token");
     if (!token) {
@@ -175,7 +203,9 @@ export const GetUserByToken = async () => {
         },
       }
     );
-    return response.data.user;
+    const data = response.data.user;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -183,6 +213,11 @@ export const GetUserByToken = async () => {
 };
 
 export const getAllUsers = async () => {
+  const cacheKey = `all_users`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const token = Cookies.get("token");
     if (!token) {
@@ -193,7 +228,9 @@ export const getAllUsers = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+    const data = response.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -201,11 +238,18 @@ export const getAllUsers = async () => {
 };
 
 export const getUserByTeam = async (teamId: number) => {
+  const cacheKey = `users_by_team_${teamId}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/team/${teamId}/users`, {
       headers: getAuthHeaders(),
     });
-    return response.data;
+    const data = response.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;

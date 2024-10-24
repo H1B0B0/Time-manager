@@ -9,12 +9,28 @@ const getAuthHeaders = () => {
   return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+const cacheData = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const getCachedData = (key: string) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+};
+
 export const getClock = async (userId: number) => {
+  const cacheKey = `clock_${userId}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
       headers: getAuthHeaders(),
     });
-    return response.data.data;
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -22,12 +38,19 @@ export const getClock = async (userId: number) => {
 };
 
 export const getLatestClock = async (userId: number) => {
+  const cacheKey = `latest_clock_${userId}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
       headers: getAuthHeaders(),
     });
     const sortedData = response.data.data.sort((a: any, b: any) => a.id - b.id);
-    return sortedData[sortedData.length - 1];
+    const latestClock = sortedData[sortedData.length - 1];
+    cacheData(cacheKey, latestClock);
+    return latestClock;
   } catch (error) {
     console.error(error);
     throw error;
@@ -60,6 +83,11 @@ export const getClocksDate = async (
   start: string,
   end: string
 ) => {
+  const cacheKey = `clocks_date_${userId}_${start}_${end}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
   try {
     const response = await axios.get(`${BASE_URL}/clocks/${userId}`, {
       headers: getAuthHeaders(),
@@ -86,6 +114,7 @@ export const getClocksDate = async (
       }
     });
 
+    cacheData(cacheKey, clocksByDateArray);
     return clocksByDateArray;
   } catch (error) {
     console.error(error);
