@@ -80,7 +80,6 @@ defmodule BackendWeb.Router do
     pipe_through [:api, :auth, :is_manager_or_gm]
 
     get "/users", UserController, :index
-    get "/users/:user_id", UserController, :show
   end
 
   scope "/api", BackendWeb do
@@ -92,6 +91,8 @@ defmodule BackendWeb.Router do
 
   scope "/api", BackendWeb do
     pipe_through [:api, :auth, :is_owner_or_team_owner_or_gm]
+
+    get "/users/:user_id", UserController, :show
 
     get "/clocks/:user_id", ClockController, :show
 
