@@ -87,6 +87,7 @@ defmodule BackendWeb.Router do
     pipe_through [:api, :auth, :is_owner_or_gm]
 
     delete "/users/:user_id", UserController, :delete
+    put "/users/:user_id", UserController, :update
   end
 
   scope "/api", BackendWeb do
@@ -102,8 +103,6 @@ defmodule BackendWeb.Router do
     pipe_through [:api, :auth, :is_owner]
 
     post "/clocks/:user_id", ClockController, :create
-
-    put "/users/:user_id", UserController, :update
   end
 
   scope "/api", BackendWeb do
