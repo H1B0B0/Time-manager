@@ -49,6 +49,12 @@ defmodule BackendWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     user_params = Map.put(user_params, "role_id", 1) # Employee (default role)
 
+    if !validate_password_strength(user_params["password"]) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{errors: ["Password is too weak"]})
+    end
+
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
@@ -62,6 +68,12 @@ defmodule BackendWeb.UserController do
 
     # The user can't update his own role
     user_params = Map.delete(user_params, "role_id")
+
+    if !validate_password_strength(user_params["password"]) do
+      conn
+      |> put_status(:bad_request)
+      |> json(%{errors: ["Password is too weak"]})
+    end
 
     if !user do
       conn
@@ -104,6 +116,20 @@ defmodule BackendWeb.UserController do
       with {:ok, %User{}} <- Accounts.delete_user(user) do
         send_resp(conn, :no_content, "")
       end
+    end
+  end
+
+  defp validate_password_strength(password) do
+    # At least one uppercase letter
+    # At least one lowercase letter
+    # At least one digit
+    # At least one special character
+    # Minimum 8 characters
+    regex = ~r/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+
+    case Regex.match?(regex, password) do
+      true -> true
+      false -> false
     end
   end
 end
