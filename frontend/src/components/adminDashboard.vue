@@ -183,7 +183,7 @@
         </button>
       </div>
       <div
-        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto max-h-64"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto h-128"
       >
         <table class="min-w-full divide-y divide-gray-700">
           <thead>
