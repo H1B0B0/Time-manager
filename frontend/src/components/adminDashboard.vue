@@ -14,7 +14,7 @@
       <div class="mb-4" v-if="managerTeams.length > 0">
         <h2 class="text-xl font-bold mb-4">My Teams</h2>
         <div
-          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto max-h-64"
         >
           <table class="min-w-full divide-y divide-gray-700">
             <thead>
@@ -85,7 +85,7 @@
         </div>
       </div>
       <div
-        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto max-h-64"
       >
         <table class="min-w-full divide-y divide-gray-700">
           <thead>
@@ -179,7 +179,7 @@
         </button>
       </div>
       <div
-        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+        class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto max-h-64"
       >
         <table class="min-w-full divide-y divide-gray-700">
           <thead>
@@ -317,7 +317,7 @@
           </button>
         </div>
         <div
-          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-x-auto"
+          class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl overflow-y-auto max-h-64"
         >
           <table class="min-w-full divide-y divide-gray-700">
             <thead>

@@ -24,10 +24,14 @@
           :format="dateFormat"
           input-class="custom-input"
           popup-class="custom-popup"
+          calendar-class="custom-calendar"
           placeholder="Select date range"
           @change="validateDateRange"
         />
       </div>
+      <p v-if="!isDateRangeValid" class="text-red-500 mt-2">
+        The end date cannot be earlier than the start date.
+      </p>
     </div>
   </div>
 </template>
@@ -42,6 +46,7 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  Filler,
 } from "chart.js";
 import { ref, watch, onMounted } from "vue";
 import { getClocksDate, hoursWorkedPerDay } from "../functions/Clock";
@@ -55,7 +60,8 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
+  Filler
 );
 
 export default {
@@ -70,6 +76,7 @@ export default {
           backgroundColor: "#0bf5f1",
           borderColor: "#0bf5f1",
           label: "Worked hours",
+          fill: true, // Enable fill
         },
       ],
     });
@@ -159,7 +166,7 @@ export default {
           dateRange.value[0],
           dateRange.value[1]
         );
-        const workedTimePerDay = hoursWorkedPerDay(dates);
+        const workedTimePerDay = await hoursWorkedPerDay(dates);
 
         workedTimePerDay.sort((a, b) => {
           const [dayA, monthA, yearA] = a.date.split("/").map(Number);
@@ -203,7 +210,7 @@ export default {
 
 <style>
 .dp__theme_light {
-  --dp-background-color: #212121;
+  /* --dp-background-color: #212121; */
   --dp-text-color: #fff;
   --dp-hover-color: #484848;
   --dp-hover-text-color: #fff;
