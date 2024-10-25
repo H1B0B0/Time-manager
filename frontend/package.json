@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@splinetool/react-spline": "^4.0.0",
+    "@vuepic/vue-datepicker": "^9.0.3",
     "animejs": "^3.2.2",
     "axios": "^1.7.7",
     "canvas-confetti": "^1.9.3",
@@ -33,6 +34,7 @@
     "vue-cal": "^4.10.0",
     "vue-chartjs": "^5.3.1",
     "vue-router": "^4.3.3",
+    "vue3-datepicker": "^0.4.0",
     "vue3-toastify": "^0.2.3",
     "workbox-cacheable-response": "^7.1.0",
     "workbox-expiration": "^7.1.0",

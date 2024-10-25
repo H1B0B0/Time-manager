@@ -75,7 +75,6 @@ import {
   updateUser,
   deleteUser,
   UpdateRole,
-  GetUserByToken,
 } from "@/functions/User";
 import { toast } from "vue3-toastify";
 import { passwordStrength } from "check-password-strength";
@@ -99,9 +98,9 @@ onMounted(async () => {
     toast.error("You are offline. Some features may not be available.");
   } else {
     try {
-      const user = await GetUserByToken();
+      await userStore.fetchUser();
+      const user = userStore.getUser;
       if (user) {
-        userStore.setUser(user.value);
         loggedInUserId.value = user.id;
         loggedInUserRole.value = user.role_id;
       } else {
@@ -109,7 +108,7 @@ onMounted(async () => {
         return;
       }
     } catch (error) {
-      console.log("User not logged in");
+      console.log(error);
       router.push("/login");
       return;
     }
@@ -128,11 +127,6 @@ onMounted(async () => {
 });
 
 const updateAccount = async () => {
-  if (!userStore.user?.id) {
-    toast.error("User ID not found. Please log in again.");
-    return;
-  }
-
   try {
     const updatedData = {
       email: email.value,

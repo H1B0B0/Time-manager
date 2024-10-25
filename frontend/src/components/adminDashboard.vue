@@ -695,7 +695,6 @@ import {
   getUserByTeam,
   addUserToTeam as addUserToTeamAPI,
   removeUserFromTeam as removeUserFromTeamAPI,
-  GetUserByToken,
   createUser as createUserAPI,
   deleteUserByAdmin,
   UpdateRole,
@@ -713,6 +712,7 @@ import router from "@/router";
 import { ref, onMounted, computed } from "vue";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
+import { useUserStore } from "@/stores/use-user-store";
 
 export default {
   name: "AdminDashboard",
@@ -743,10 +743,12 @@ export default {
     const totalWorkedHours = ref(0);
     const workedHoursByUser = ref([]);
     const workedHoursByTeam = ref({});
+    const userStore = useUserStore();
 
     onMounted(async () => {
       try {
-        const user = await GetUserByToken();
+        await userStore.fetchUser();
+        const user = userStore.getUser;
         userRole.value = user.role_id;
         isAdmin.value = user.role_id == 3;
         if (user.role_id < 2) {

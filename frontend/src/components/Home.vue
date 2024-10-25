@@ -193,7 +193,6 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
-import { GetUserByToken } from "@/functions/User";
 import {
   Chart,
   LineElement,
@@ -232,10 +231,11 @@ export default {
 
     onMounted(async () => {
       try {
-        const user = await GetUserByToken();
+        await userStore.fetchUser();
+        const user = userStore.getUser;
         if (user) {
           userStore.setUser(user);
-          router.push(`/dashboard/${user.id}`); // Rediriger vers le tableau de bord si déjà connecté
+          router.push(`/dashboard/${user.id}`);
         }
       } catch (error) {
         console.log("User not logged in");

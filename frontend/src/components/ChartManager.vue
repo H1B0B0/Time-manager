@@ -34,9 +34,9 @@ import {
   deleteWorkingTime,
   updateWorkingTime,
 } from "../functions/WorkingTime";
-import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
 import { formatISO } from "date-fns";
+import { useUserStore } from "@/stores/use-user-store";
 
 export default {
   name: "ScheduleCalendar",
@@ -50,6 +50,7 @@ export default {
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
     const userRole = ref(null);
     const isOffline = ref(!navigator.onLine);
+    const userStore = useUserStore();
 
     const specialHours = ref({
       1: {
@@ -202,7 +203,8 @@ export default {
         fetchData();
       } else {
         try {
-          const user = await GetUserByToken();
+          await userStore.fetchUser();
+          const user = userStore.getUser;
           userRole.value = user.role_id;
           if (isMobile()) {
             view.value = "day";

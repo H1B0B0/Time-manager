@@ -55,9 +55,11 @@ export default defineComponent({
         return;
       }
 
+      userStore.fetchUser();
+      const user = userStore.getUser;
       const userId = parseInt(route.params.userId, 10);
-      const loggedInUserId = userStore.user?.id;
-      const userRole = userStore.user?.role_id;
+      const loggedInUserId = user.id;
+      const userRole = user.role_id;
 
       if (!loggedInUserId) {
         // Redirect to login if user is not logged in

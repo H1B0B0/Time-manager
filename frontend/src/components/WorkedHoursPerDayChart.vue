@@ -18,33 +18,16 @@
         id="date-range-picker"
         class="flex items-center mt-10 justify-center sm:flex-row flex-col"
       >
-        <div class="relative">
-          <input
-            type="date"
-            v-model="startDate"
-            id="startDate"
-            name="startDate"
-            class="border border-gray-300 text-white bg-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Select date start"
-            @change="validateDateRange"
-          />
-        </div>
-        <span class="mx-4 text-white capitalize">to</span>
-        <div class="relative">
-          <input
-            type="date"
-            v-model="endDate"
-            id="endDate"
-            name="endDate"
-            class="border border-gray-300 text-white bg-gray-800 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Select date end"
-            @change="validateDateRange"
-          />
-        </div>
+        <VueDatePicker
+          v-model="dateRange"
+          range
+          :format="dateFormat"
+          input-class="custom-input"
+          popup-class="custom-popup"
+          placeholder="Select date range"
+          @change="validateDateRange"
+        />
       </div>
-      <p v-if="!isDateRangeValid" class="text-red-500 mt-2">
-        The end date cannot be earlier than the start date.
-      </p>
     </div>
   </div>
 </template>
@@ -60,9 +43,11 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { getClocksDate, hoursWorkedPerDay } from "../functions/Clock";
 import router from "@/router";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 ChartJS.register(
   Title,
@@ -75,7 +60,7 @@ ChartJS.register(
 
 export default {
   name: "BarChart",
-  components: { Bar },
+  components: { Bar, VueDatePicker },
   setup() {
     const chartData = ref({
       labels: [],
@@ -147,30 +132,34 @@ export default {
 
     const errorMessage = ref("");
     const chartKey = ref(0);
-    const startDate = ref("");
-    const endDate = ref("");
+    const dateRange = ref([new Date(), new Date()]);
     const isDateRangeValid = ref(true);
+    const dateFormat = "yyyy-MM-dd";
 
     const validateDateRange = () => {
-      if (startDate.value && endDate.value) {
+      if (dateRange.value[0] && dateRange.value[1]) {
         isDateRangeValid.value =
-          new Date(startDate.value) <= new Date(endDate.value);
+          new Date(dateRange.value[0]) <= new Date(dateRange.value[1]);
       }
     };
 
-    watch([startDate, endDate], async () => {
+    const fetchData = async () => {
       validateDateRange();
-      if (!startDate.value || !endDate.value || !isDateRangeValid.value) {
+      if (
+        !dateRange.value[0] ||
+        !dateRange.value[1] ||
+        !isDateRangeValid.value
+      ) {
         return;
       }
 
       try {
         const dates = await getClocksDate(
           router.currentRoute.value.params.userID,
-          startDate.value,
-          endDate.value
+          dateRange.value[0],
+          dateRange.value[1]
         );
-        const workedTimePerDay = await hoursWorkedPerDay(dates);
+        const workedTimePerDay = hoursWorkedPerDay(dates);
 
         workedTimePerDay.sort((a, b) => {
           const [dayA, monthA, yearA] = a.date.split("/").map(Number);
@@ -192,18 +181,84 @@ export default {
         errorMessage.value = "Failed to fetch data";
         console.error(error);
       }
-    });
+    };
+
+    watch(dateRange, fetchData);
+
+    onMounted(fetchData);
 
     return {
       chartData,
       chartOptions,
       errorMessage,
       chartKey,
-      startDate,
-      endDate,
+      dateRange,
       isDateRangeValid,
       validateDateRange,
+      dateFormat,
     };
   },
 };
 </script>
+
+<style>
+.dp__theme_light {
+  --dp-background-color: #212121;
+  --dp-text-color: #fff;
+  --dp-hover-color: #484848;
+  --dp-hover-text-color: #fff;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #8500b2;
+  --dp-primary-disabled-color: #ba61ea;
+  --dp-primary-text-color: #fff;
+  --dp-secondary-color: #a9a9a9;
+  --dp-border-color: #2d2d2d;
+  --dp-menu-border-color: #2d2d2d;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-border-color-focus: #aaaeb7;
+  --dp-disabled-color: #737373;
+  --dp-disabled-color-text: #d0d0d0;
+  --dp-scroll-bar-background: #212121;
+  --dp-scroll-bar-color: #484848;
+  --dp-success-color: #00701a;
+  --dp-success-color-disabled: #428f59;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #e53935;
+  --dp-marker-color: #e53935;
+  --dp-tooltip-color: #3e3e3e;
+  --dp-highlight-color: rgb(0 92 178 / 20%);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, #484848);
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #fff);
+  --dp-range-between-border-color: var(--dp-hover-color, #fff);
+}
+
+.dp__theme_dark {
+  --dp-background-color: #212121;
+  --dp-text-color: #fff;
+  --dp-hover-color: #484848;
+  --dp-hover-text-color: #fff;
+  --dp-hover-icon-color: #959595;
+  --dp-primary-color: #8500b2;
+  --dp-primary-disabled-color: #d161ea;
+  --dp-primary-text-color: #fff;
+  --dp-secondary-color: #a9a9a9;
+  --dp-border-color: #2d2d2d;
+  --dp-menu-border-color: #2d2d2d;
+  --dp-border-color-hover: #aaaeb7;
+  --dp-border-color-focus: #aaaeb7;
+  --dp-disabled-color: #737373;
+  --dp-disabled-color-text: #d0d0d0;
+  --dp-scroll-bar-background: #212121;
+  --dp-scroll-bar-color: #484848;
+  --dp-success-color: #00701a;
+  --dp-success-color-disabled: #428f59;
+  --dp-icon-color: #959595;
+  --dp-danger-color: #e53935;
+  --dp-marker-color: #e53935;
+  --dp-tooltip-color: #3e3e3e;
+  --dp-highlight-color: rgb(0 92 178 / 20%);
+  --dp-range-between-dates-background-color: var(--dp-hover-color, #484848);
+  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #fff);
+  --dp-range-between-border-color: var(--dp-hover-color, #fff);
+}
+</style>

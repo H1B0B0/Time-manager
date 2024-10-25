@@ -93,7 +93,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
-import { createUser, login, GetUserByToken } from "@/functions/User";
+import { createUser, login } from "@/functions/User";
 import { passwordStrength } from "check-password-strength";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
@@ -221,7 +221,8 @@ const handleKeyDown = (event) => {
 onMounted(async () => {
   document.addEventListener("keydown", handleKeyDown);
   try {
-    const user = await GetUserByToken();
+    await userStore.fetchUser();
+    const user = userStore.getUser;
     if (user) {
       userStore.setUser(user);
       router.push(`/dashboard/${user.id}`);

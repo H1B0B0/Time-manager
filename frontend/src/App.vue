@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import NavBar from "./components/NavBar.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { toast } from "vue3-toastify";
+import { useUserStore } from "./stores/use-user-store";
 
 import "https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js"; // Spline Viewer
 
@@ -17,6 +18,7 @@ const performanceMode = ref(false);
 const isMobile = ref(false);
 const isOffline = ref(!navigator.onLine);
 const wasOffline = ref(false); // Track if the user was offline
+const UserStore = useUserStore();
 
 const updateSplineViewerUrl = () => {
   isTristantMode.value = localStorage.getItem("tristantMode") === "true";
@@ -76,6 +78,8 @@ const handleOfflineStatus = () => {
 onMounted(() => {
   updateSplineViewerUrl();
   handleOfflineStatus();
+  UserStore.fetchUser();
+  console.log("User", UserStore.getUser);
 
   if (isMobileDevice()) {
     performanceMode.value = true;
@@ -86,6 +90,16 @@ onMounted(() => {
     e.preventDefault();
     deferredPrompt = e;
     showInstallPrompt.value = true;
+  });
+
+  const interval = setInterval(() => {
+    UserStore.fetchUser();
+  }, 60000); // Appel toutes les 60 secondes
+
+  onUnmounted(() => {
+    clearInterval(interval);
+    window.removeEventListener("online", handleOfflineStatus);
+    window.removeEventListener("offline", handleOfflineStatus);
   });
 
   window.addEventListener("keydown", async (event) => {
