@@ -49,10 +49,12 @@ defmodule BackendWeb.UserController do
   def create(conn, %{"user" => user_params}) do
     user_params = Map.put(user_params, "role_id", 1) # Employee (default role)
 
-    if !validate_password_strength(user_params["password"]) do
-      conn
-      |> put_status(:bad_request)
-      |> json(%{errors: ["Password is too weak"]})
+    if user_params["password"] do
+      if !validate_password_strength(user_params["password"]) do
+        conn
+        |> put_status(:bad_request)
+        |> json(%{errors: ["Password is too weak"]})
+      end
     end
 
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
@@ -69,10 +71,12 @@ defmodule BackendWeb.UserController do
     # The user can't update his own role
     user_params = Map.delete(user_params, "role_id")
 
-    if !validate_password_strength(user_params["password"]) do
-      conn
-      |> put_status(:bad_request)
-      |> json(%{errors: ["Password is too weak"]})
+    if user_params["password"] do
+      if !validate_password_strength(user_params["password"]) do
+        conn
+        |> put_status(:bad_request)
+        |> json(%{errors: ["Password is too weak"]})
+      end
     end
 
     if !user do
