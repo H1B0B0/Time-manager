@@ -46,8 +46,9 @@ defmodule BackendWeb.WorkingtimeControllerTest do
              } = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/api/workingtime/users", workingtime: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn, user: user} do
+      invalid_attrs = Map.put(@invalid_attrs, :user_id, user.id)
+      conn = post(conn, ~p"/api/workingtime/users", workingtime: invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
