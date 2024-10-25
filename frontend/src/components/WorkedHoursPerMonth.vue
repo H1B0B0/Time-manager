@@ -52,7 +52,7 @@ export default {
       datasets: [
         {
           data: [],
-          backgroundColor: "",
+          backgroundColor: "rgba(0, 0, 0, 0)",
           borderColor: "#0bf5f1",
           label: "Worked hours per month (Cumulative)",
           fill: true,

@@ -210,7 +210,7 @@ export default {
 
 <style>
 .dp__theme_light {
-  /* --dp-background-color: #212121; */
+  --dp-background-color: #212121;
   --dp-text-color: #fff;
   --dp-hover-color: #484848;
   --dp-hover-text-color: #fff;
