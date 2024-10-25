@@ -1,5 +1,5 @@
 <template>
-  <div class="text-white p-6">
+  <div class="text-white p-6 sm:p-8 lg:p-10">
     <div v-if="!isAdmin">
       <div class="flex flex-col lg:flex-row justify-between items-center mb-4">
         <div class="mb-4 lg:mb-0">
@@ -20,22 +20,22 @@
             <thead>
               <tr>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Team Id
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Team Name
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Worked Hours
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Actions
                 </th>
@@ -48,14 +48,20 @@
                 @click="selectTeam(team.id)"
                 class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               >
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ team.id }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ team.name }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ formatHours(totalWorkedHours) }}
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
+                  {{ getWorkedHoursForTeam(team.id) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -104,7 +110,11 @@
               >
                 Role
               </th>
-
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+              >
+                Worked Hours
+              </th>
               <th
                 class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
               >
@@ -114,26 +124,38 @@
           </thead>
           <tbody class="divide-y divide-gray-700">
             <tr
-              v-for="user in filteredUsers"
+              v-for="user in uniqueUsersTeam"
               :key="user.id"
               class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
             >
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
                 {{ user.id }}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
                 {{ user.username }}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
                 {{ user.email }}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
                 {{ user.role_id === 2 ? "Manager" : "Employee" }}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                {{ getWorkedHours(user.id) }}
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
+                {{ getWorkedHoursForUser(user.id) }}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-300 text-center">
+              <td
+                class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+              >
                 <button
                   @click="viewUserInfo(user.id)"
                   class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2"
@@ -190,14 +212,20 @@
                 @click="selectTeam(team.id)"
                 class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               >
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ team.id }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ team.name }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ formatHours(totalWorkedHours) }}
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
+                  {{ getWorkedHoursForTeam(team.id) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -222,7 +250,7 @@
                     <div class="flex justify-end">
                       <button
                         @click="showAddUserModal = true"
-                        class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 m-4 w-full"
+                        class="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-1 m-4 w-full sm:w-auto"
                       >
                         Add User
                       </button>
@@ -231,29 +259,31 @@
                       <div
                         v-for="user in usersTeam"
                         :key="user.id"
-                        class="mb-4 p-4 border rounded-lg shadow-lg bg-gray-800 flex flex-col"
+                        class="mb-4 p-4 border rounded-lg shadow-lg bg-gray-800 flex flex-col sm:flex-row items-center"
                       >
                         <img
                           :src="`https://api.dicebear.com/9.x/lorelei/svg?seed=${user.username}`"
                           class="rounded-full h-8 w-8 mr-4"
                         />
-                        <h3 class="text-lg font-semibold text-purple-400">
-                          {{ user.username }}
-                        </h3>
-                        <p class="text-sm text-gray-300">
-                          Email: {{ user.email }}
-                        </p>
-                        <p class="text-sm text-gray-300">
-                          Role:
-                          {{
-                            user.role_id === 3
-                              ? "General Manager"
-                              : user.role_id === 2
-                              ? "Manager"
-                              : "Employee"
-                          }}
-                        </p>
-                        <div class="flex justify-end space-x-2 ml-auto">
+                        <div class="flex-1 text-center sm:text-left">
+                          <h3 class="text-lg font-semibold text-purple-400">
+                            {{ user.username }}
+                          </h3>
+                          <p class="text-sm text-gray-300">
+                            Email: {{ user.email }}
+                          </p>
+                          <p class="text-sm text-gray-300">
+                            Role:
+                            {{
+                              user.role_id === 3
+                                ? "General Manager"
+                                : user.role_id === 2
+                                ? "Manager"
+                                : "Employee"
+                            }}
+                          </p>
+                        </div>
+                        <div class="flex space-x-2 mt-2 sm:mt-0">
                           <button
                             @click="viewUserInfo(user.id)"
                             class="text-white bg-purple-500 hover:bg-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-2 py-1"
@@ -293,32 +323,32 @@
             <thead>
               <tr>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   User Id
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Username
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Email
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Role
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Worked Hours
                 </th>
                 <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  class="px-2 py-1 sm:px-6 sm:py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider"
                 >
                   Actions
                 </th>
@@ -330,16 +360,24 @@
                 :key="user.id"
                 class="transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               >
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ user.id }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ user.username }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{ user.email }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
                   {{
                     user.role_id === 3
                       ? "General Manager"
@@ -348,8 +386,10 @@
                       : "Employee"
                   }}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-300 text-center">
-                  {{ getWorkedHours(user.id) }}
+                <td
+                  class="px-2 py-1 sm:px-6 sm:py-4 text-sm text-gray-300 text-center"
+                >
+                  {{ getWorkedHoursForUser(user.id) }}
                 </td>
                 <td
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
@@ -375,10 +415,14 @@
         <!-- Create User Modal -->
         <div
           v-if="showCreateUserModal"
-          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8"
         >
-          <div class="p-6 rounded-lg shadow-lg backdrop-blur-2xl border w-6/12">
-            <h2 class="text-xl font-bold mb-4">Create a New User</h2>
+          <div
+            class="p-6 rounded-lg shadow-lg backdrop-blur-2xl border w-full max-w-md sm:max-w-lg lg:max-w-xl"
+          >
+            <h2 class="text-xl font-bold mb-4 text-center sm:text-left">
+              Create a New User
+            </h2>
             <form @submit.prevent="createUser">
               <div class="mb-4">
                 <label
@@ -477,10 +521,14 @@
 
     <div
       v-if="showEditTeamModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8"
     >
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">Modify Team Information</h2>
+      <div
+        class="backdrop-blur-2xl border p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl"
+      >
+        <h2 class="text-xl font-bold mb-4 text-center sm:text-left">
+          Modify Team Information
+        </h2>
         <form @submit.prevent="updateTeamInfo">
           <div class="mb-4">
             <label
@@ -496,7 +544,9 @@
               required
             />
           </div>
-          <div class="flex justify-end space-x-4">
+          <div
+            class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4"
+          >
             <button
               type="button"
               @click="showEditTeamModal = false"
@@ -517,10 +567,14 @@
 
     <div
       v-if="showAddUserModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8"
     >
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">Add a User to the Team</h2>
+      <div
+        class="backdrop-blur-2xl p-6 rounded-2xl border shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl"
+      >
+        <h2 class="text-xl font-bold mb-4 text-center sm:text-left">
+          Add a User to the Team
+        </h2>
         <form @submit.prevent="addUserToTeamAction">
           <div class="mb-4">
             <label for="addUser" class="block text-sm font-medium text-gray-300"
@@ -542,7 +596,9 @@
               </option>
             </select>
           </div>
-          <div class="flex justify-end space-x-4">
+          <div
+            class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4"
+          >
             <button
               type="button"
               @click="showAddUserModal = false"
@@ -563,10 +619,14 @@
 
     <div
       v-if="showCreateTeamModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8"
     >
-      <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">Create a New Team</h2>
+      <div
+        class="backdrop-blur-2xl border p-6 rounded-2xl shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl"
+      >
+        <h2 class="text-xl font-bold mb-4 text-center sm:text-left">
+          Create a New Team
+        </h2>
         <form @submit.prevent="createTeam">
           <div class="mb-4">
             <label
@@ -606,7 +666,9 @@
               </option>
             </select>
           </div>
-          <div class="flex justify-end space-x-4">
+          <div
+            class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4"
+          >
             <button
               type="button"
               @click="showCreateTeamModal = false"
@@ -679,6 +741,8 @@ export default {
     const confirmPassword = ref("");
     const workedHours = ref([]);
     const totalWorkedHours = ref(0);
+    const workedHoursByUser = ref([]);
+    const workedHoursByTeam = ref({});
 
     onMounted(async () => {
       try {
@@ -688,36 +752,19 @@ export default {
         if (user.role_id < 2) {
           router.push({ path: `/dashboard/${user.id}` });
         }
+
         if (isAdmin.value) {
           const teamsResponse = await getAllTeams();
           allTeams.value = teamsResponse;
+          managerTeams.value = teamsResponse;
 
           const allUsersResponse = await getAllUsers();
           if (Array.isArray(allUsersResponse.data)) {
             users.value = allUsersResponse.data.filter((u) => u.role_id !== 3);
-            console.log(users.value);
             availableUsers.value = allUsersResponse.data;
             availableOwners.value = allUsersResponse.data.filter(
               (u) => u.role_id === 2 || u.role_id === 3
             );
-          }
-          const teamResponse = await getAllTeams();
-          if (Array.isArray(teamResponse)) {
-            managerTeams.value = teamResponse.filter(
-              (team) => team.owner_id === user.id
-            );
-            if (managerTeams.value.length > 0) {
-              const team = managerTeams.value[0];
-              teamName.value = team.name;
-
-              const response = await getUserByTeam(team.id);
-              usersTeam.value = response;
-            }
-          } else {
-            teamName.value = teamResponse.name;
-
-            const response = await getUserByTeam(teamResponse.id);
-            usersTeam.value = response;
           }
         } else {
           const teamResponse = await getTeamByUser(user.id);
@@ -725,56 +772,98 @@ export default {
             managerTeams.value = teamResponse.filter(
               (team) => team.owner_id === user.id
             );
-            if (managerTeams.value.length > 0) {
-              const team = managerTeams.value[0];
-              teamName.value = team.name;
-              console.log("teamResponse", teamResponse);
-
-              const response = await getUserByTeam(team.id);
-              console.log("response", response);
-              usersTeam.value = response;
-            }
           } else {
-            teamName.value = teamResponse.name;
-            console.log("teamResponse", teamResponse);
+            managerTeams.value = [teamResponse];
+          }
 
-            const response = await getUserByTeam(teamResponse.id);
-            console.log("response", response);
-            usersTeam.value = response;
+          for (const team of managerTeams.value) {
+            const usersInTeam = await getUserByTeam(team.id);
+            usersTeam.value = [...usersTeam.value, ...usersInTeam];
           }
         }
-        await getWorkedHoursForTeam();
+
+        await loadUsersAndWorkedHoursForTeams();
+        await getWorkedHoursForUsers();
       } catch (error) {
         console.error(error);
         router.push({ path: `/` });
       }
     });
 
-    const getWorkedHoursForTeam = async () => {
+    const loadUsersAndWorkedHoursForTeams = async () => {
       try {
-        const userIds = usersTeam.value.map((user) => user.id);
-        const workingTimes = await getWorkingTimesForTeamCurrentMonth(userIds);
+        const teamWorkedHours = {};
 
-        workedHours.value = userIds.map((userId, index) => {
-          const userTimes = workingTimes[index].data;
+        for (const team of managerTeams.value) {
+          const usersInTeam = await getUserByTeam(team.id);
+          usersTeam.value = [...usersTeam.value, ...usersInTeam];
 
-          const totalHours = userTimes.reduce((acc, time) => {
+          const userIds = usersInTeam.map((user) => user.id);
+          const workingTimes = await getWorkingTimesForTeamCurrentMonth(
+            userIds
+          );
+
+          const teamHours = userIds.map((userId, index) => {
+            const userTimes = workingTimes[index].data;
+            const totalHours = userTimes.reduce((acc, time) => {
+              const start = new Date(time.start);
+              const end = new Date(time.end);
+              const hours = (end - start) / (1000 * 60 * 60);
+              return acc + hours;
+            }, 0);
+
+            return { userId, hours: totalHours };
+          });
+
+          teamWorkedHours[team.id] = teamHours.reduce(
+            (acc, user) => acc + user.hours,
+            0
+          );
+        }
+
+        workedHoursByTeam.value = teamWorkedHours;
+      } catch (error) {
+        console.error("Error fetching worked hours for teams:", error);
+      }
+    };
+
+    const getWorkedHoursForTeam = (teamId) => {
+      return workedHoursByTeam.value[teamId]
+        ? formatHours(workedHoursByTeam.value[teamId])
+        : "0h 0m";
+    };
+
+    const getWorkedHoursForUsers = async () => {
+      try {
+        const userWorkedHours = {};
+
+        const usersToFetch = isAdmin.value ? users.value : usersTeam.value;
+
+        for (const user of usersToFetch) {
+          const workingTimes = await getWorkingTimesForTeamCurrentMonth([
+            user.id,
+          ]);
+
+          const totalHours = workingTimes[0].data.reduce((acc, time) => {
             const start = new Date(time.start);
             const end = new Date(time.end);
-            const hours = (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
+            const hours = (end - start) / (1000 * 60 * 60);
             return acc + hours;
           }, 0);
 
-          return { userId, hours: totalHours };
-        });
+          userWorkedHours[user.id] = totalHours;
+        }
 
-        totalWorkedHours.value = workedHours.value.reduce(
-          (acc, user) => acc + user.hours,
-          0
-        );
+        workedHoursByUser.value = userWorkedHours;
       } catch (error) {
-        console.error("Error fetching worked hours for team:", error);
+        console.error("Error fetching worked hours for users:", error);
       }
+    };
+
+    const getWorkedHoursForUser = (userId) => {
+      return workedHoursByUser.value[userId]
+        ? formatHours(workedHoursByUser.value[userId])
+        : "0h 0m";
     };
 
     const getWorkedHours = (userId) => {
@@ -806,7 +895,6 @@ export default {
             ...newUser,
             role_id: parseInt(newRole.value, 10),
           };
-          console.log(userWithRole);
           users.value.push(userWithRole);
           showCreateUserModal.value = false;
           newUsername.value = "";
@@ -854,11 +942,13 @@ export default {
         const response = await getUserByTeam(teamId);
         usersTeam.value = response;
 
-        const allUsersResponse = await getAllUsers();
-        if (Array.isArray(allUsersResponse.data)) {
-          availableUsers.value = allUsersResponse.data.filter(
-            (u) => !response.find((r) => r.id === u.id)
-          );
+        if (isAdmin.value) {
+          const allUsersResponse = await getAllUsers();
+          if (Array.isArray(allUsersResponse.data)) {
+            availableUsers.value = allUsersResponse.data.filter(
+              (u) => !response.find((r) => r.id === u.id)
+            );
+          }
         }
 
         selectedTeam.value = teamId;
@@ -868,6 +958,15 @@ export default {
     };
 
     const filteredUsers = computed(() => usersTeam.value);
+
+    const uniqueUsersTeam = computed(() => {
+      const seen = new Set();
+      return usersTeam.value.filter((user) => {
+        const duplicate = seen.has(user.id);
+        seen.add(user.id);
+        return !duplicate;
+      });
+    });
 
     const updateTeamInfo = async () => {
       try {
@@ -987,7 +1086,6 @@ export default {
       editUser,
       deleteUser,
       users,
-      users,
       showCreateUserModal,
       newUsername,
       newEmail,
@@ -999,6 +1097,10 @@ export default {
       totalWorkedHours,
       getWorkedHours,
       formatHours,
+      getWorkedHoursForUsers,
+      getWorkedHoursForUser,
+      getWorkedHoursForTeam,
+      uniqueUsersTeam,
     };
   },
 };

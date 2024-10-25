@@ -126,7 +126,21 @@
       become: yes
       command: rm -rf /app/backend/priv/repo/seeds.exs
 
-    - name: Deploy Docker Compose stack
+    - name: Check if Docker Compose stack is running
+      become: yes
+      become_user: root
+      command: docker compose -f /app/docker-compose.prod.yml ps
+      register: docker_compose_status
+      failed_when: docker_compose_status.rc not in [0, 1]
+
+    - name: Restart Docker Compose stack if running
+      become: yes
+      become_user: root
+      command: docker compose -f /app/docker-compose.prod.yml restart
+      when: docker_compose_status.rc == 0
+
+    - name: Deploy Docker Compose stack if not running
       become: yes
       become_user: root
       command: docker compose -f /app/docker-compose.prod.yml up -d
+      when: docker_compose_status.rc != 0

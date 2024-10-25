@@ -40,7 +40,6 @@ const formatDateTime = (dateTimeString: string) => {
 const fetchData = async () => {
   if (workingTimeID.value) {
     try {
-      console.log("Fetching working time for ID:", workingTimeID.value);
       const fetchedWorkingTime = await showWorkingTime(
         userID.value,
         workingTimeID.value
@@ -50,7 +49,6 @@ const fetchData = async () => {
         start: formatDateTime(fetchedWorkingTime.data.start),
         end: formatDateTime(fetchedWorkingTime.data.end),
       };
-      console.log("Fetched working time data:", workingTimeData.value);
       toast.success("Working time fetched successfully", toastOptions);
     } catch (error) {
       console.error("Error fetching working time:", error);
@@ -61,9 +59,7 @@ const fetchData = async () => {
 
 const handleCreate = async () => {
   try {
-    console.log("Creating working time with data:", workingTimeData.value);
     await createWorkingTime({ workingtime: workingTimeData.value });
-    console.log("Working time created successfully");
     toast.success("Working time created successfully", toastOptions);
   } catch (error) {
     console.error("Error creating working time:", error);
@@ -73,8 +69,6 @@ const handleCreate = async () => {
 
 const handleUpdate = async () => {
   try {
-    console.log("Updating working time with ID:", workingTimeID.value);
-    console.log("New working time data:", workingTimeData.value);
     await updateWorkingTime(userID.value, {
       start: workingTimeData.value.start,
       end: workingTimeData.value.end,

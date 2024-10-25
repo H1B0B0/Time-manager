@@ -24,20 +24,4 @@ app.use(Vue3Toastify, toastOptions);
 const userStore = useUserStore();
 userStore.fetchUser();
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("/sw.js")
-      .then((registration) => {
-        console.log(
-          "ServiceWorker registration successful with scope: ",
-          registration.scope
-        );
-      })
-      .catch((error) => {
-        console.log("ServiceWorker registration failed: ", error);
-      });
-  });
-}
-
 app.mount("#app");

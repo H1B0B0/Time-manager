@@ -115,7 +115,6 @@ export const getWorkingTimesForTeamCurrentMonth = async (
     );
 
     const responses = await Promise.all(promises);
-    console.log(responses);
     const data = responses.flat();
     cacheData(cacheKey, data);
     return data;

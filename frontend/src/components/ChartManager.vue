@@ -7,7 +7,6 @@
         :events="events"
         :time="true"
         :view="view"
-        :active-view="view"
         :special-hours="specialHours"
         :event-class="getEventClass"
         @view-change="handleViewChange"
@@ -19,7 +18,7 @@
         :editable-events="editableEvents"
         :snap-to-time="15"
         :drag-to-create-threshold="15"
-        eventsCountOnYearView="dot"
+        :events-count-on-year-view="true"
       />
     </div>
   </div>
@@ -136,7 +135,6 @@ export default {
     };
 
     const handleEventCreate = async (event, deleteEvent) => {
-      console.log(event);
       if (userRole.value >= 2) {
         const newEvent = {
           workingtime: {
@@ -145,8 +143,6 @@ export default {
             user_id: parseInt(router.currentRoute.value.params.userID, 10),
           },
         };
-
-        console.log(newEvent);
 
         try {
           await createWorkingTime(newEvent);

@@ -83,11 +83,9 @@ onMounted(() => {
   }
 
   window.addEventListener("beforeinstallprompt", (e) => {
-    console.log("beforeinstallprompt event triggered");
     e.preventDefault();
     deferredPrompt = e;
     showInstallPrompt.value = true;
-    console.log("showInstallPrompt:", showInstallPrompt.value);
   });
 
   window.addEventListener("keydown", async (event) => {
@@ -103,7 +101,6 @@ onMounted(() => {
           await caches.delete(cacheName);
         }
       }
-      console.log("Cache cleared!");
 
       location.reload();
     }

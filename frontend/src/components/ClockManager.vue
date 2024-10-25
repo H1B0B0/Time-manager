@@ -19,8 +19,6 @@ onMounted(async () => {
   try {
     latestClock.value = await getLatestClock(userId.value);
     clockedIn.value = latestClock.value.status;
-    console.log("Latest Clock:", latestClock.value);
-    console.log("Clocked In:", clockedIn.value);
   } catch (error) {
     console.error(error);
   }

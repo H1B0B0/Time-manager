@@ -13,7 +13,6 @@ const fetchClockData = async () => {
   try {
     const result = await getClock(Number(userID.value));
     clockData.value = result.data;
-    console.log("Fetched clock data:", clockData.value);
     render.value = clockData.value && clockData.value.length > 0;
   } catch (error) {
     console.error("Error fetching clock data:", error);
