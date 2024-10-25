@@ -28,6 +28,7 @@ const updateSplineViewerUrl = () => {
 
   if (isTristantMode.value) {
     document.body.classList.add("tristant-mode");
+    performanceMode.value = false; // Disable performance mode when Tristant mode is active
   } else {
     document.body.classList.remove("tristant-mode");
   }
@@ -75,6 +76,23 @@ const handleOfflineStatus = () => {
   isOffline.value = currentlyOffline;
 };
 
+const toggleTristantMode = async () => {
+  const currentMode = localStorage.getItem("tristantMode") === "true";
+  localStorage.setItem("tristantMode", (!currentMode).toString());
+  performanceMode.value = false; // Ensure performance mode is disabled
+  updateSplineViewerUrl();
+
+  // Clear cache
+  if ("caches" in window) {
+    const cacheNames = await caches.keys();
+    for (const cacheName of cacheNames) {
+      await caches.delete(cacheName);
+    }
+  }
+
+  location.reload();
+};
+
 onMounted(() => {
   updateSplineViewerUrl();
   handleOfflineStatus();
@@ -82,7 +100,12 @@ onMounted(() => {
   console.log("User", UserStore.getUser);
 
   if (isMobileDevice()) {
-    performanceMode.value = true;
+    if (localStorage.getItem("tristantMode") === "true") {
+      isTristantMode.value = true;
+    } else {
+      isTristantMode.value = false;
+      performanceMode.value = true;
+    }
     isMobile.value = true;
   }
 
@@ -95,18 +118,7 @@ onMounted(() => {
   window.addEventListener("keydown", async (event) => {
     if (event.ctrlKey && event.key === "m") {
       // Toggle tristant mode
-      const currentMode = localStorage.getItem("tristantMode") === "true";
-      localStorage.setItem("tristantMode", (!currentMode).toString());
-
-      // Clear cache
-      if ("caches" in window) {
-        const cacheNames = await caches.keys();
-        for (const cacheName of cacheNames) {
-          await caches.delete(cacheName);
-        }
-      }
-
-      location.reload();
+      await toggleTristantMode();
     }
   });
 
@@ -219,6 +231,23 @@ setTimeout(() => {
     ></div>
     <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
       >Performance Mode</span
+    >
+  </label>
+  <label
+    v-if="isMobile"
+    class="inline-flex items-center cursor-pointer fixed bottom-4 left-4 z-30 m-5"
+  >
+    <input
+      type="checkbox"
+      @change="toggleTristantMode"
+      class="sr-only peer"
+      :checked="isTristantMode"
+    />
+    <div
+      class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+    ></div>
+    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+      >Tristant Mode</span
     >
   </label>
   <div v-if="isOffline" class="offline-banner">You are offline!</div>
