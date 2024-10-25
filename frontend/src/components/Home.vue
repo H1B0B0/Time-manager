@@ -207,6 +207,7 @@ import {
   Legend,
 } from "chart.js";
 import anime from "animejs/lib/anime.es.js";
+import { GetUserByToken } from "@/functions/User";
 
 Chart.register(
   LineElement,
@@ -231,8 +232,7 @@ export default {
 
     onMounted(async () => {
       try {
-        await userStore.fetchUser();
-        const user = userStore.getUser;
+        const user = await GetUserByToken();
         if (user) {
           userStore.setUser(user);
           router.push(`/dashboard/${user.id}`);
