@@ -221,9 +221,10 @@ const handleKeyDown = (event) => {
 onMounted(async () => {
   document.addEventListener("keydown", handleKeyDown);
   try {
-    await userStore.fetchUser();
-    const user = userStore.getUser;
+    const user = GetUserByToken();
+    console.log("User:", user);
     if (user) {
+      console.log("User is logged in");
       userStore.setUser(user);
       router.push(`/dashboard/${user.id}`);
     }

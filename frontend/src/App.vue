@@ -92,16 +92,6 @@ onMounted(() => {
     showInstallPrompt.value = true;
   });
 
-  const interval = setInterval(() => {
-    UserStore.fetchUser();
-  }, 60000); // Appel toutes les 60 secondes
-
-  onUnmounted(() => {
-    clearInterval(interval);
-    window.removeEventListener("online", handleOfflineStatus);
-    window.removeEventListener("offline", handleOfflineStatus);
-  });
-
   window.addEventListener("keydown", async (event) => {
     if (event.ctrlKey && event.key === "m") {
       // Toggle tristant mode

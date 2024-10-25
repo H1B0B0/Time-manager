@@ -29,6 +29,7 @@
 import { ref, defineComponent, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
+import { GetUserByToken } from "@/functions/User";
 import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
@@ -55,14 +56,15 @@ export default defineComponent({
         return;
       }
 
-      userStore.fetchUser();
-      const user = userStore.getUser;
-      const userId = parseInt(route.params.userId, 10);
+      const user = GetUserByToken();
+
       const loggedInUserId = user.id;
+      const userId = Number(route.params.userID);
       const userRole = user.role_id;
 
       if (!loggedInUserId) {
         // Redirect to login if user is not logged in
+        console.log("User not logged in");
         router.push("/login");
       } else if (
         userId !== loggedInUserId &&
