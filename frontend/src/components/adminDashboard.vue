@@ -67,7 +67,11 @@
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
                 >
                   <button
-                    @click.stop="showEditTeamModal = true"
+                    @click.stop="
+                      (showEditTeamModal = true),
+                        (teamName = team.name),
+                        (selectedTeam = team.id)
+                    "
                     class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
                   >
                     Edit
@@ -231,7 +235,11 @@
                   class="px-6 py-4 text-sm text-gray-300 text-center space-x-2"
                 >
                   <button
-                    @click.stop="showEditTeamModal = true"
+                    @click.stop="
+                      (showEditTeamModal = true),
+                        (teamName = team.name),
+                        (selectedTeam = team.id)
+                    "
                     class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
                   >
                     Edit
@@ -972,6 +980,7 @@ export default {
 
     const updateTeamInfo = async () => {
       try {
+        console.log(selectedTeam.value, teamName.value);
         await updateTeam(selectedTeam.value, { name: teamName.value });
         showEditTeamModal.value = false;
 
