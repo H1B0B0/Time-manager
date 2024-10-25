@@ -7,7 +7,11 @@ meta {
 post {
   url: http://localhost:4000/api/workingtime/users
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYWNrZW5kIiwiZXhwIjoxNzI5ODkxNTY4LCJpYXQiOjE3Mjk4NDgzNjgsImlzcyI6ImJhY2tlbmQiLCJqdGkiOiIzMDBxZnI4N2VhM3ViaWhzbmcwMDJ2ZTIiLCJuYmYiOjE3Mjk4NDgzNjgsInVzZXJfaWQiOjJ9.5CBq6J7QOzK1-dMZUZn-y_kFdFQZ-9zGQ7ZQA6yFS6E
 }
 
 body:json {
@@ -15,7 +19,7 @@ body:json {
     "workingtime": {
       "start": "2024-10-06T12:13:00",
       "end": "2024-10-06T12:13:00",
-      "user_id": 43
+      "user_id": 2
     }
   }
 }

@@ -16,35 +16,38 @@ defmodule Backend.Plugs.Workingtime.CreateIsTeamOwnerOrGMPlug do
       conn
     else
       body = conn.body_params
-      user_id = body["id"]
-      user = Accounts.get_user(user_id)
+      user_id = get_in(body, ["workingtime", "user_id"])
 
-      if user == nil do
+      if user_id == auth_user.id do
         conn
-        |> put_status(:not_found)
-        |> json(%{error: "User not found"})
-        |> halt
-      end
+      else
+        user = Accounts.get_user(user_id)
 
-      user_teams = TeamsUsers.get_teams_by_user(user)
-
-      if user_teams == nil do
-        conn
-        |> put_status(:not_found)
-        |> json(%{error: "Teams not found"})
-        |> halt
-      end
-
-      for user_team <- user_teams do
-        if user_team.team.owner_id == auth_user.id do
+        if user == nil do
           conn
+          |> put_status(:not_found)
+          |> json(%{error: "User not found"})
+          |> halt()
+        else
+          user_teams = TeamsUsers.get_teams_by_user(user)
+
+          if user_teams == nil do
+            conn
+            |> put_status(:not_found)
+            |> json(%{error: "Teams not found"})
+            |> halt()
+          else
+            if Enum.any?(user_teams, fn user_team -> user_team.team.owner_id == auth_user.id end) do
+              conn
+            else
+              conn
+              |> put_status(:forbidden)
+              |> json(%{error: "Permission denied"})
+              |> halt()
+            end
+          end
         end
       end
-
-      conn
-      |> put_status(:forbidden)
-      |> json(%{error: "Permission denied"})
-      |> halt
     end
   end
 end

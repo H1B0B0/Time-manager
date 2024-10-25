@@ -37,6 +37,8 @@ defmodule Backend.WorkingTime do
   """
   def get_workingtime!(id), do: Repo.get!(Workingtime, id)
 
+  def get_workingtime(id), do: Repo.get(Workingtime, id)
+
   @doc """
   Gets a single workingtime by user ID and workingtime ID.
 
