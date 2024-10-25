@@ -12,7 +12,7 @@ defmodule Backend.Plugs.Workingtime.CreateIsTeamOwnerOrGMPlug do
   def call(conn, _opts) do
     auth_user = conn.assigns[:auth_user]
 
-    if auth_user.role_id >= RolesEnum.role_general_manager do
+    if auth_user.role_id in [RolesEnum.role_general_manager, RolesEnum.role_manager] do
       conn
     else
       body = conn.body_params
@@ -29,7 +29,7 @@ defmodule Backend.Plugs.Workingtime.CreateIsTeamOwnerOrGMPlug do
           |> json(%{error: "User not found"})
           |> halt()
         else
-          user_teams = TeamsUsers.get_teams_by_user(user)
+          user_teams = TeamsUsers.get_teams_for_user(user)
 
           if user_teams == nil do
             conn
@@ -37,7 +37,7 @@ defmodule Backend.Plugs.Workingtime.CreateIsTeamOwnerOrGMPlug do
             |> json(%{error: "Teams not found"})
             |> halt()
           else
-            if Enum.any?(user_teams, fn user_team -> user_team.team.owner_id == auth_user.id end) do
+            if Enum.any?(user_teams, fn user_team -> user_team.team.owner_id == auth_user.id end) or auth_user.role_id == RolesEnum.role_manager do
               conn
             else
               conn

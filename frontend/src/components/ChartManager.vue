@@ -34,23 +34,21 @@ import {
   deleteWorkingTime,
   updateWorkingTime,
 } from "../functions/WorkingTime";
+import { GetUserByToken } from "@/functions/User";
 import router from "@/router";
 import { formatISO } from "date-fns";
-import { useUserStore } from "@/stores/use-user-store";
 
 export default {
   name: "ScheduleCalendar",
   components: { VueCal },
   setup() {
-    const isMobile = () => window.innerWidth <= 768;
-    const view = ref(isMobile() ? "day" : "week");
+    const view = "week";
     const events = ref([]);
     const errorMessage = ref("");
     const startDate = ref(new Date("2000-01-01T00:00:00Z"));
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
     const userRole = ref(null);
     const isOffline = ref(!navigator.onLine);
-    const userStore = useUserStore();
 
     const specialHours = ref({
       1: {
@@ -124,18 +122,17 @@ export default {
       fetchData();
     };
 
-    const handleEventDelete = async (event, deleteEvent) => {
+    const handleEventDelete = async (event) => {
       try {
         await deleteWorkingTime(event.id);
         fetchData();
       } catch (error) {
         errorMessage.value = "Failed to delete working time";
         console.error(error);
-        deleteEvent();
       }
     };
 
-    const handleEventCreate = async (event, deleteEvent) => {
+    const handleEventCreate = async (event) => {
       if (userRole.value >= 2) {
         const newEvent = {
           workingtime: {
@@ -151,12 +148,10 @@ export default {
         } catch (error) {
           errorMessage.value = "Failed to create working time";
           console.error(error);
-          deleteEvent();
         }
       } else {
         errorMessage.value =
           "You do not have permission to create working times.";
-        deleteEvent();
       }
     };
 
@@ -203,12 +198,8 @@ export default {
         fetchData();
       } else {
         try {
-          await userStore.fetchUser();
-          const user = userStore.getUser;
+          const user = await GetUserByToken();
           userRole.value = user.role_id;
-          if (isMobile()) {
-            view.value = "day";
-          }
           fetchData();
         } catch (error) {
           router.push("/login");

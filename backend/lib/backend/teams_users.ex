@@ -78,7 +78,7 @@ defmodule Backend.TeamsUsers do
   """
   def get_teams_for_user(%User{} = user) do
     user
-    |> Repo.preload(:teams)
+    |> Repo.preload(teams: :owner)
     |> Map.get(:teams)
   end
 end

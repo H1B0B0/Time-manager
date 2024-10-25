@@ -50,29 +50,37 @@ export default defineComponent({
     const userStore = useUserStore();
     const isOffline = ref(!navigator.onLine);
 
-    onMounted(() => {
+    onMounted(async () => {
       if (isOffline.value) {
         toast.error("You are offline. Some features may not be available.");
         return;
       }
 
-      const user = GetUserByToken();
+      try {
+        const user = await GetUserByToken();
+        console.log("User: ", user);
 
-      const loggedInUserId = user.id;
-      const userId = Number(route.params.userID);
-      const userRole = user.role_id;
+        if (!user) {
+          // Redirect to login if user is not logged in
+          console.log("User not logged in");
+          router.push("/login");
+          return;
+        }
 
-      if (!loggedInUserId) {
-        // Redirect to login if user is not logged in
-        console.log("User not logged in");
+        const loggedInUserId = user.id;
+        console.log("Logged in user ID: ", loggedInUserId);
+        const userId = Number(route.params.userID);
+        const userRole = user.role_id;
+        console.log("User role: ", userRole);
+        console.log("User ID from route: ", userId);
+
+        if (userId !== loggedInUserId && userRole !== 2 && userRole !== 3) {
+          // Redirect to the logged-in user's dashboard
+          router.push(`/dashboard/${loggedInUserId}`);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
         router.push("/login");
-      } else if (
-        userId !== loggedInUserId &&
-        userRole !== 2 &&
-        userRole !== 3
-      ) {
-        // Redirect to the logged-in user's dashboard
-        router.push(`/dashboard/${loggedInUserId}`);
       }
     });
 

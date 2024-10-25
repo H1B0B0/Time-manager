@@ -15,8 +15,8 @@ defmodule Backend.Plugs.Workingtime.DeleteIsTeamOwnerOrGMPlug do
     auth_user = conn.assigns[:auth_user]
     Logger.info("Authenticated user: #{inspect(auth_user)}")
 
-    if auth_user.role_id >= RolesEnum.role_general_manager do
-      Logger.info("User is a General Manager, access granted.")
+    if auth_user.role_id in [RolesEnum.role_general_manager, RolesEnum.role_manager] do
+      Logger.info("User is a General Manager or Manager, access granted.")
       conn
     else
       working_time_id = conn.params["working_time_id"]
@@ -62,8 +62,8 @@ defmodule Backend.Plugs.Workingtime.DeleteIsTeamOwnerOrGMPlug do
           |> halt()
         end
 
-        if Enum.any?(user_teams, fn user_team -> user_team.team.owner_id == auth_user.id end) do
-          Logger.info("User is a team owner, access granted.")
+        if Enum.any?(user_teams, fn user_team -> user_team.team.owner_id == auth_user.id end) or auth_user.role_id == RolesEnum.role_manager do
+          Logger.info("User is a team owner or Manager, access granted.")
           conn
         else
           Logger.error("Permission denied for user: #{inspect(auth_user)}")
