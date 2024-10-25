@@ -24,13 +24,14 @@ defmodule BackendWeb.TeamController do
 
   def create(conn, %{"team" => team_params}) do
 
-    # If the owner is not a manager, return an error
+    # If the owner is an employee, return an error
     if team_params["owner_id"] do
       owner = Accounts.get_user(team_params["owner_id"])
-      if owner.role_id != RolesEnum.role_manager do
+      if owner.role_id == RolesEnum.role_employee do
         conn
         |> put_status(:unprocessable_entity)
-        |> json(%{errors: ["Owner must be a manager"]})
+        |> json(%{errors: ["Owner must be manager or general manager"]})
+        |> halt()
       end
     end
 
@@ -51,13 +52,14 @@ defmodule BackendWeb.TeamController do
   def update(conn, %{"team_id" => id, "team" => team_params}) do
     team = Teams.get_team(id)
 
-    # If the new owner is not a manager, return an error
+    # If the new owner is an employee, return an error
     if team_params["owner_id"] do
       owner = Accounts.get_user(team_params["owner_id"])
-      if owner.role_id != RolesEnum.role_manager do
+      if owner.role_id == RolesEnum.role_employee do
         conn
         |> put_status(:unprocessable_entity)
-        |> json(%{errors: ["Owner must be a manager"]})
+        |> json(%{errors: ["Owner must be manager or general manager"]})
+        |> halt()
       end
     end
 
