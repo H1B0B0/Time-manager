@@ -15,7 +15,7 @@ defmodule Backend.Plugs.Workingtime.DeleteIsTeamOwnerOrGMPlug do
     auth_user = conn.assigns[:auth_user]
     Logger.info("Authenticated user: #{inspect(auth_user)}")
 
-    if auth_user.role_id in [RolesEnum.role_general_manager] do
+    if auth_user.role_id >= RolesEnum.role_general_manager do
       Logger.info("User is a General Manager, access granted.")
       conn
     else

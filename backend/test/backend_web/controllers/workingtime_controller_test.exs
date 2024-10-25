@@ -13,7 +13,7 @@ defmodule BackendWeb.WorkingtimeControllerTest do
     start: ~N[2024-10-07 12:13:00],
     end: ~N[2024-10-07 12:13:00]
   }
-  @invalid_attrs %{start: nil, end: nil, user_id: nil}
+  @invalid_attrs %{start: nil, end: nil, user_id: -1}
 
   setup %{conn: conn} do
     unique_id = System.unique_integer([:positive])

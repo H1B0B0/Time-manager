@@ -15,7 +15,7 @@ defmodule Backend.Plugs.IsTeamOwnerOrGMPlug do
     user_id = conn.params["user_id"]
 
     cond do
-      auth_user.role_id in [RolesEnum.role_general_manager] ->
+      auth_user.role_id >= RolesEnum.role_general_manager ->
         conn
 
       conn.params["team_id"] ->

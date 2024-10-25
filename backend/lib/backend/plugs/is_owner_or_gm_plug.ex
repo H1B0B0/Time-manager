@@ -12,7 +12,7 @@ defmodule Backend.Plugs.IsOwnerOrGMPlug do
     user = conn.assigns[:auth_user]
     user_id = conn.params["user_id"]
 
-    if user.id == String.to_integer(user_id) or user.role_id in [RolesEnum.role_general_manager] do
+    if user.id == String.to_integer(user_id) or user.role_id >= RolesEnum.role_general_manager do
       conn
     else
       conn

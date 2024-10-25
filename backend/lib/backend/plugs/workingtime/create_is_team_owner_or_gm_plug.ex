@@ -12,7 +12,7 @@ defmodule Backend.Plugs.Workingtime.CreateIsTeamOwnerOrGMPlug do
   def call(conn, _opts) do
     auth_user = conn.assigns[:auth_user]
 
-    if auth_user.role_id in [RolesEnum.role_general_manager] do
+    if auth_user.role_id >= RolesEnum.role_general_manager do
       conn
     else
       body = conn.body_params

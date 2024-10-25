@@ -11,7 +11,7 @@ defmodule Backend.Plugs.IsManagerOrGMPlug do
   def call(conn, _opts) do
     user = conn.assigns[:auth_user]
 
-    if user.role_id in [RolesEnum.role_manager, RolesEnum.role_general_manager] do
+    if user.role_id == RolesEnum.role_manager or user.role_id >= RolesEnum.role_general_manager do
       conn
     else
       conn

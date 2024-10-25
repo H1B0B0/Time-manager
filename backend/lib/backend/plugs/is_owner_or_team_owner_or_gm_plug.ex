@@ -17,7 +17,7 @@ defmodule Backend.Plugs.IsOwnerOrTeamOwnerOrGMPlug do
       auth_user.id == String.to_integer(user_id) ->
         conn
 
-      auth_user.role_id in [RolesEnum.role_general_manager] ->
+      auth_user.role_id >= RolesEnum.role_general_manager ->
         conn
 
       conn.params["team_id"] ->
