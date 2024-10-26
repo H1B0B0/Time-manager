@@ -195,7 +195,6 @@ export default {
 
     const handleEventClick = (event) => {
       copiedEvent.value = event;
-      console.log("Event copied:", copiedEvent.value);
     };
 
     const handlePasteEvent = async () => {

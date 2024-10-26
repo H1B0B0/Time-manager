@@ -47,7 +47,6 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const userStore = useUserStore();
     const isOffline = ref(!navigator.onLine);
 
     onMounted(async () => {
@@ -58,7 +57,6 @@ export default defineComponent({
 
       try {
         const user = await GetUserByToken();
-        console.log("User: ", user);
 
         if (!user) {
           // Redirect to login if user is not logged in
@@ -68,11 +66,8 @@ export default defineComponent({
         }
 
         const loggedInUserId = user.id;
-        console.log("Logged in user ID: ", loggedInUserId);
         const userId = Number(route.params.userID);
         const userRole = user.role_id;
-        console.log("User role: ", userRole);
-        console.log("User ID from route: ", userId);
 
         if (userId !== loggedInUserId && userRole !== 2 && userRole !== 3) {
           // Redirect to the logged-in user's dashboard
