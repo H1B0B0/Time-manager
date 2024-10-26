@@ -293,3 +293,22 @@ export const removeUserFromTeam = async (userId: number, teamId: number) => {
     throw error;
   }
 };
+
+export const GetUserById = async (id: number) => {
+  const cacheKey = `user_${id}`;
+  if (!navigator.onLine) {
+    return getCachedData(cacheKey);
+  }
+
+  try {
+    const response = await axios.get(`${BASE_URL}/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
+    const data = response.data.data;
+    cacheData(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

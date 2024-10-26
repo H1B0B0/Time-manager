@@ -2,7 +2,7 @@
   <h1 class="text-2xl font-bold text-center text-white mb-4">My Schedule</h1>
   <p v-if="errorMessage" class="text-red-500 mb-2">{{ errorMessage }}</p>
   <div class="backdrop-blur-2xl shadow-xl border p-6 rounded-3xl w-full">
-    <div class="relative w-full h-[600px]">
+    <div class="relative w-full md:h-[800px]">
       <vue-cal
         :events="events"
         :time="true"

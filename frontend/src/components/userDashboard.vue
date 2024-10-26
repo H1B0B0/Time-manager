@@ -1,13 +1,18 @@
 <template>
   <div class="">
     <div class="flex flex-col justify-center items-center space-y-6">
+      <!-- Title -->
+      <h1 class="text-2xl font-bold text-center text-white mb-4">
+        Dashboard of {{ userName }}
+      </h1>
+
       <!-- Clock Manager -->
       <div class="flex justify-center items-center">
         <ClockManager />
       </div>
 
       <!-- Chart Manager -->
-      <div class="md:pl-20 md:pr-20 w-full">
+      <div class="md:pl-40 md:pr-40 w-full md:h-[900px]">
         <ChartManager />
       </div>
       <!-- Worked Hours Charts -->
@@ -28,8 +33,7 @@
 <script>
 import { ref, defineComponent, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useUserStore } from "@/stores/use-user-store";
-import { GetUserByToken } from "@/functions/User";
+import { GetUserById, GetUserByToken } from "@/functions/User"; // Assurez-vous d'avoir une fonction pour obtenir l'utilisateur par ID
 import ChartManager from "./ChartManager.vue";
 import ClockManager from "./ClockManager.vue";
 import WorkedHoursPerDayChart from "./WorkedHoursPerDayChart.vue";
@@ -48,6 +52,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const isOffline = ref(!navigator.onLine);
+    const userName = ref("");
 
     onMounted(async () => {
       if (isOffline.value) {
@@ -56,21 +61,23 @@ export default defineComponent({
       }
 
       try {
-        const user = await GetUserByToken();
+        const userId = Number(route.params.userID);
+        const user = await GetUserById(userId);
 
         if (!user) {
-          // Redirect to login if user is not logged in
-          console.log("User not logged in");
+          console.log("User not found");
           router.push("/login");
           return;
         }
 
-        const loggedInUserId = user.id;
-        const userId = Number(route.params.userID);
-        const userRole = user.role_id;
+        userName.value = user.username;
+        console.log(user.username);
+
+        const loggedInUser = await GetUserByToken();
+        const loggedInUserId = loggedInUser.id;
+        const userRole = loggedInUser.role_id;
 
         if (userId !== loggedInUserId && userRole !== 2 && userRole !== 3) {
-          // Redirect to the logged-in user's dashboard
           router.push(`/dashboard/${loggedInUserId}`);
         }
       } catch (error) {
@@ -79,7 +86,9 @@ export default defineComponent({
       }
     });
 
-    return {};
+    return {
+      userName,
+    };
   },
 });
 </script>
