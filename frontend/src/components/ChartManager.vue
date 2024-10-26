@@ -14,6 +14,7 @@
         @event-drag-create="handleEventCreate"
         @event-change="handleEventResize"
         @event-drop="handleEventDrop"
+        @event-click="handleEventClick"
         :draggable="false"
         :editable-events="editableEvents"
         :snap-to-time="15"
@@ -49,6 +50,7 @@ export default {
     const endDate = ref(new Date("2100-12-31T23:59:59Z"));
     const userRole = ref(null);
     const isOffline = ref(!navigator.onLine);
+    const copiedEvent = ref(null); // Variable to store the copied event
 
     const specialHours = ref({
       1: {
@@ -191,6 +193,38 @@ export default {
       }
     };
 
+    const handleEventClick = (event) => {
+      copiedEvent.value = event;
+      console.log("Event copied:", copiedEvent.value);
+    };
+
+    const handlePasteEvent = async () => {
+      if (copiedEvent.value && userRole.value >= 2) {
+        const newEvent = {
+          workingtime: {
+            start: formatISO(copiedEvent.value.start),
+            end: formatISO(copiedEvent.value.end),
+            user_id: parseInt(router.currentRoute.value.params.userID, 10),
+          },
+        };
+
+        try {
+          await createWorkingTime(newEvent);
+          fetchData();
+        } catch (error) {
+          errorMessage.value = "Failed to paste working time";
+          console.error(error);
+        }
+      } else {
+        errorMessage.value =
+          "You do not have permission to paste working times.";
+      }
+    };
+
+    const isMacOS = () => {
+      return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+    };
+
     onMounted(async () => {
       if (isOffline.value) {
         errorMessage.value =
@@ -206,6 +240,25 @@ export default {
           console.error("Failed to get user:", error);
         }
       }
+
+      window.addEventListener("keydown", (event) => {
+        const isCopy = isMacOS()
+          ? event.metaKey && event.key === "c"
+          : event.ctrlKey && event.key === "c";
+        const isPaste = isMacOS()
+          ? event.metaKey && event.key === "v"
+          : event.ctrlKey && event.key === "v";
+
+        if (isCopy) {
+          console.log("Copy event detected");
+          if (copiedEvent.value) {
+            console.log("Event copied:", copiedEvent.value);
+          }
+        } else if (isPaste) {
+          console.log("Paste event detected");
+          handlePasteEvent();
+        }
+      });
     });
 
     const editableEvents = computed(() => {
@@ -240,6 +293,8 @@ export default {
       handleEventDelete,
       handleEventResize,
       handleEventDrop,
+      handleEventClick,
+      handlePasteEvent,
     };
   },
 };
