@@ -224,6 +224,12 @@ export default {
       return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
     };
 
+    const isMobile = () => {
+      return (
+        /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 800
+      );
+    };
+
     onMounted(async () => {
       if (isOffline.value) {
         errorMessage.value =
@@ -261,6 +267,16 @@ export default {
     });
 
     const editableEvents = computed(() => {
+      if (isMobile()) {
+        return {
+          title: false,
+          drag: false,
+          resize: false,
+          delete: false,
+          create: false,
+        };
+      }
+
       if (!userRole.value) {
         return {
           title: false,
