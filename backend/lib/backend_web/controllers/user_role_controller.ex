@@ -14,11 +14,13 @@ defmodule BackendWeb.UserRoleController do
       conn
       |> put_status(:not_found)
       |> json(%{errors: ["User not found, no update made"]})
+      |> halt()
     else
       if role_id > 3 or role_id < 1 do
         conn
         |> put_status(:bad_request)
         |> json(%{errors: ["Invalid role_id"]})
+        |> halt()
       else
         user_params = %{}
         user_params = Map.put(user_params, "role_id", role_id)

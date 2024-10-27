@@ -28,6 +28,7 @@ defmodule BackendWeb.WorkingtimeController do
         conn
         |> put_status(:not_found)
         |> json(%{error: "Workingtime not found"})
+        |> halt()
       workingtime ->
         render(conn, :show, workingtime: workingtime)
     end
@@ -39,6 +40,7 @@ defmodule BackendWeb.WorkingtimeController do
         conn
         |> put_status(:not_found)
         |> json(%{error: "Workingtime not found"})
+        |> halt()
       workingtime ->
         with {:ok, %Workingtime{} = updated_workingtime} <- WorkingTime.update_workingtime(workingtime, workingtime_params) do
           render(conn, :show, workingtime: updated_workingtime)
@@ -46,7 +48,8 @@ defmodule BackendWeb.WorkingtimeController do
           {:error, changeset} ->
             conn
             |> put_status(:unprocessable_entity)
-            |> json(%{error: "Workingtime not found"})
+            |> json(%{error: "Unable to update workingtime"})
+            |> halt()
         end
     end
   end
@@ -61,6 +64,7 @@ defmodule BackendWeb.WorkingtimeController do
         conn
         |> put_status(:unprocessable_entity)
         |> render(BackendWeb.ChangesetView, "error.json", changeset: changeset)
+        |> halt()  
     end
   end
 
@@ -84,11 +88,13 @@ defmodule BackendWeb.WorkingtimeController do
             conn
             |> put_status(:unprocessable_entity)
             |> json(%{error: "Invalid end time format"})
+            |> halt()  
         end
       _ ->
         conn
         |> put_status(:unprocessable_entity)
         |> json(%{error: "Invalid start time format"})
+        |> halt()  
     end
   end
 

@@ -14,10 +14,14 @@ defmodule BackendWeb.RoleController do
   def show(conn, %{"role_id" => id}) do
     role = Accounts.get_role(id)
     case role do
-      nil -> conn
-      |> put_status(:not_found)
-      |> json(%{errors: ["Role not found"]})
-      _ -> render(conn, :show, role: role)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{errors: ["Role not found"]})
+        |> halt()
+
+      _ ->
+        render(conn, :show, role: role)
     end
   end
 end

@@ -15,6 +15,8 @@ defmodule BackendWeb.UserController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["User not found"]})
+        |> halt()
+
       _ ->
         render(conn, :index, users: users)
     end
@@ -27,6 +29,7 @@ defmodule BackendWeb.UserController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["User not found"]})
+        |> halt()
 
       _ ->
         render(conn, :show, user: user)
@@ -40,6 +43,7 @@ defmodule BackendWeb.UserController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["User not found"]})
+        |> halt()
 
       _ ->
         render(conn, :show, user: user)
@@ -54,6 +58,7 @@ defmodule BackendWeb.UserController do
         conn
         |> put_status(:bad_request)
         |> json(%{errors: ["Password is too weak"]})
+        |> halt()
       end
     end
 
@@ -76,6 +81,7 @@ defmodule BackendWeb.UserController do
         conn
         |> put_status(:bad_request)
         |> json(%{errors: ["Password is too weak"]})
+        |> halt()
       end
     end
 
@@ -83,6 +89,7 @@ defmodule BackendWeb.UserController do
       conn
       |> put_status(:not_found)
       |> json(%{errors: ["User not found, no update made"]})
+      |> halt()
     else
       case user_params do
         %{"old_password" => old_password} ->
@@ -94,12 +101,14 @@ defmodule BackendWeb.UserController do
             conn
             |> put_status(:unauthorized)
             |> json(%{errors: ["Old password is incorrect"]})
+            |> halt()
           end
 
         %{"password" => _new_password} ->
           conn
           |> put_status(:bad_request)
           |> json(%{errors: ["Old password is required"]})
+          |> halt()
 
         _ ->
           with {:ok, %User{} = user} <- Accounts.update_user(user, user_params) do
@@ -116,6 +125,7 @@ defmodule BackendWeb.UserController do
       conn
       |> put_status(:not_found)
       |> json(%{errors: ["User not found, no delete made"]})
+      |> halt()
     else
       with {:ok, %User{}} <- Accounts.delete_user(user) do
         send_resp(conn, :no_content, "")

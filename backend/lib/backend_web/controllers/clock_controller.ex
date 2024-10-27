@@ -13,6 +13,7 @@ defmodule BackendWeb.ClockController do
         conn
         |> put_status(:not_found)
         |> json(%{error: "User not found"})
+        |> halt()
 
       _user ->
         latest_clock = Time.get_latest_clock(user_id)
@@ -36,6 +37,7 @@ defmodule BackendWeb.ClockController do
         conn
         |> put_status(:not_found)
         |> json(%{error: "User not found"})
+        |> halt()
 
       _user ->
         clocks = Time.list_user_clocks(user_id)

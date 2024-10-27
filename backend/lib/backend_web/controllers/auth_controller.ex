@@ -18,6 +18,7 @@ defmodule BackendWeb.AuthController do
         conn
         |> put_status(:unauthorized)
         |> json(%{error: "User not found"})
+        |> halt()
 
       user ->
         case Auth.sign_in(user.id, password) do
@@ -30,6 +31,7 @@ defmodule BackendWeb.AuthController do
             conn
             |> put_status(:unauthorized)
             |> json(%{error: reason})
+            |> halt()
         end
     end
   end

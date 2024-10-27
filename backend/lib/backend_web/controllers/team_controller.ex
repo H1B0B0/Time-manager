@@ -16,6 +16,7 @@ defmodule BackendWeb.TeamController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["Team not found"]})
+        |> halt()
 
       team ->
         render(conn, :show, team: team)
@@ -46,6 +47,7 @@ defmodule BackendWeb.TeamController do
         conn
         |> put_status(:unprocessable_entity)
         |> json(%{errors: changeset.errors})
+        |> halt()
     end
   end
 
@@ -68,6 +70,7 @@ defmodule BackendWeb.TeamController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["Team not found, no update made"]})
+        |> halt()
 
       _ ->
         case Teams.update_team(team, team_params) do
@@ -78,6 +81,7 @@ defmodule BackendWeb.TeamController do
             conn
             |> put_status(:unprocessable_entity)
             |> json(%{errors: changeset.errors})
+            |> halt()
         end
     end
   end
@@ -90,6 +94,7 @@ defmodule BackendWeb.TeamController do
         conn
         |> put_status(:not_found)
         |> json(%{errors: ["Team not found, no delete made"]})
+        |> halt()
 
       _ ->
         case Teams.delete_team(team) do
@@ -100,6 +105,7 @@ defmodule BackendWeb.TeamController do
             conn
             |> put_status(:internal_server_error)
             |> json(%{errors: ["Unable to delete team"]})
+            |> halt()
         end
     end
   end

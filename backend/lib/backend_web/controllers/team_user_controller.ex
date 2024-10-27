@@ -17,6 +17,7 @@ defmodule BackendWeb.TeamUserController do
         |> put_status(:not_found)
         |> json(%{errors: ["Team not found"]})
         |> halt()
+
       team ->
         users = TeamsUsers.get_users_for_team(team)
 
@@ -33,6 +34,7 @@ defmodule BackendWeb.TeamUserController do
         |> put_status(:not_found)
         |> json(%{errors: ["User not found"]})
         |> halt()
+
       user ->
         teams = TeamsUsers.get_teams_for_user(user)
 
@@ -70,6 +72,7 @@ defmodule BackendWeb.TeamUserController do
             conn
             |> put_status(:unprocessable_entity)
             |> json(%{error: changeset})
+            |> halt()
         end
     end
   end
@@ -78,33 +81,32 @@ defmodule BackendWeb.TeamUserController do
     user = Accounts.get_user(id)
     team = Teams.get_team(team_id)
 
-    if user === nil do
-      conn
-      |> put_status(:not_found)
-      |> json(%{errors: ["User not found, no delete made"]})
-      |> halt()
-    end
-
-    if team === nil do
-      conn
-      |> put_status(:not_found)
-      |> json(%{errors: ["Team not found, no delete made"]})
-      |> halt()
-    end
-
-    user_params = %{}
-    user_params = Map.put(user_params, "team_id", nil)
-
-    case TeamsUsers.remove_user_from_team(user, team) do
-      {:ok, _team_user} ->
+    cond do
+      user === nil ->
         conn
-        |> put_status(:ok)
-        |> json(%{message: "User removed from team successfully."})
+        |> put_status(:not_found)
+        |> json(%{errors: ["User not found, no delete made"]})
+        |> halt()
 
-      {:error, changeset} ->
+      team === nil ->
         conn
-        |> put_status(:unprocessable_entity)
-        |> json(%{error: changeset})
+        |> put_status(:not_found)
+        |> json(%{errors: ["Team not found, no delete made"]})
+        |> halt()
+
+      true ->
+        case TeamsUsers.remove_user_from_team(user, team) do
+          {:ok, _team_user} ->
+            conn
+            |> put_status(:ok)
+            |> json(%{message: "User removed from team successfully."})
+
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> json(%{error: changeset})
+            |> halt()
+        end
     end
   end
 end
