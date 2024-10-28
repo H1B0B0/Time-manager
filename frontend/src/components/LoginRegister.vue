@@ -16,11 +16,26 @@
         />
         <input
           v-model="password"
+          id="password"
           placeholder="Password"
           type="password"
           required
           class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
         />
+        <div class="flex items-center mb-4">
+          <input
+            id="default-checkbox"
+            type="checkbox"
+            @click="ShowPassword"
+            value=""
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label
+            for="password-checkbox"
+            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Show Password</label
+          >
+        </div>
         <button
           @click="Handlelogin"
           :disabled="!email || !password"
@@ -57,6 +72,7 @@
         <input
           v-model="newPassword"
           placeholder="Password"
+          id="password"
           type="password"
           required
           class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -64,10 +80,25 @@
         <input
           v-model="confirmPassword"
           placeholder="Confirm Password"
+          id="password1"
           type="password"
           required
           class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
         />
+        <div class="flex items-center mb-4">
+          <input
+            id="password-checkbox"
+            type="checkbox"
+            @click="ShowPassword"
+            value=""
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label
+            for="default-checkbox"
+            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Show Password</label
+          >
+        </div>
         <button
           type="button"
           @click="cancelCreating"
@@ -113,6 +144,18 @@ const newPassword = ref("");
 const confirmPassword = ref("");
 const isCreating = ref(false);
 const error = ref("");
+
+const ShowPassword = () => {
+  const password = document.getElementById("password");
+  const password1 = document.getElementById("password1");
+  if (password.type === "password") {
+    password.type = "text";
+    password1.type = "text";
+  } else {
+    password.type = "password";
+    password1.type = "password";
+  }
+};
 
 const Handlelogin = async () => {
   if (!email.value || !password.value) {
