@@ -4,15 +4,15 @@
 
 ### Cross-Site Scripting (XSS)
 
-- Tests de sécurité effectués pour détecter les vulnérabilités XSS
-- Mise en place de protections contre l'injection de scripts malveillants
-- Validation et assainissement des entrées utilisateur
+- Tests de sécurité effectués pour détecter les vulnérabilités XSS.
+- Mise en place de protections contre l'injection de scripts malveillants.
+- Validation et assainissement des entrées utilisateur.
 
 ### Injection SQL et Bruteforce
 
-- Tests de protection contre les injections SQL réalisés
-- Implémentation de mécanismes anti-bruteforce
-- Utilisation de requêtes préparées et d'ORM pour prévenir les injections SQL
+- Tests de protection contre les injections SQL réalisés avec [SQLMAP](https://github.com/sqlmapproject/sqlmap). Pourquoi [SQLMAP](https://github.com/sqlmapproject/sqlmap) ? [SQLMAP](https://github.com/sqlmapproject/sqlmap) permet de tester automatiquement si les entrées sont vulnérables aux injections SQL. Nous ne sommes donc pas vulnérables.
+- Implémentation de mécanismes anti-bruteforce.
+- Utilisation de requêtes préparées et d'ORM pour prévenir les injections SQL.
 
 ## 2. Gestion des Mots de Passe
 
@@ -20,67 +20,54 @@
 
 Exigences minimales pour les mots de passe :
 
-- Longueur minimale de 8 caractères
-- Au moins 1 lettre
-- Au moins 1 chiffre
-- Au moins 1 caractère spécial
+- Longueur minimale de 8 caractères.
+- Au moins 1 lettre majuscule et minuscule.
+- Au moins 1 chiffre.
+- Au moins 1 caractère spécial.
 
 ### Stockage Sécurisé
 
-- Hachage systématique des mots de passe avant stockage
-- Utilisation d'algorithmes de hachage sécurisés
+- Hachage systématique des mots de passe avant stockage.
+- Utilisation d'algorithmes de hachage sécurisés.
 
 ## 3. Sécurité de l'Infrastructure
 
 ### Certificats SSL/TLS
 
-- Mise en place du protocole HTTPS
-- Utilisation de Traefik avec Let's Encrypt
-- Renouvellement automatique des certificats SSL
+- Mise en place du protocole HTTPS.
+- Utilisation de Traefik avec Let's Encrypt.
+- Renouvellement automatique des certificats SSL.
 
 ### Sécurité du Serveur (EC2)
 
-- Déploiement sur une instance EC2 sécurisée
-- Fermeture de tous les ports non essentiels
-- Accès SSH uniquement par clé (suppression de l'authentification par mot de passe)
+- Déploiement sur une instance EC2 sécurisée.
+- Fermeture de tous les ports non essentiels.
+- Accès SSH uniquement par clé SSH. Une amélioration possible serait de limiter l'accès au port SSH à certaines IP, mais l'utilisation de GitHub Actions sur des serveurs publics ne permet pas de connaître leurs IP fixes.
 
 ## 4. Authentification et Autorisation
 
 ### JSON Web Tokens (JWT)
 
-- Implémentation de l'authentification par JWT
-- Gestion sécurisée des sessions utilisateur
-- Validation des tokens côté serveur
+- Implémentation de l'authentification par JWT.
+- Gestion sécurisée des sessions utilisateur.
+- Validation des tokens côté serveur.
+- Aucune information sur l'utilisateur n'est contenue dans le token ; celles-ci ne sont récupérables que grâce au token.
 
 ### CORS (Cross-Origin Resource Sharing)
 
-- Configuration stricte des politiques CORS
-- Restriction des domaines autorisés à accéder aux ressources
-- Protection contre les requêtes cross-origin non autorisées
-
-## 5. Protection contre les Attaques par Déni de Service
-
-### Rate Limiting
-
-- Implémentation d'un système de "clock tin"
-- Protection contre le spam des boutons et actions
-- Limitation du nombre de requêtes par utilisateur
+- Configuration stricte des politiques CORS ; seules les URL de développement et de production sont autorisées.
 
 ## Bonnes Pratiques Générales
 
 1. Principe du moindre privilège
 
-   - Attribution des droits minimums nécessaires
-   - Séparation des rôles et responsabilités
+   - Attribution des droits minimums nécessaires.
+   - Séparation des rôles et responsabilités.
 
-2. Logging et Monitoring
+2. Mises à jour régulières
 
-   - Journalisation des événements de sécurité
-   - Surveillance des tentatives d'accès suspectes
-
-3. Mises à jour régulières
-   - Maintenance continue des composants de sécurité
-   - Application rapide des correctifs de sécurité
+   - Maintenance continue des composants de sécurité.
+   - Application rapide des correctifs de sécurité.
 
 ## Conclusion
 
