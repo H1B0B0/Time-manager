@@ -1,22 +1,44 @@
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <div class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl">
+    <div
+      class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl"
+    >
       <div v-if="!isCreating" class="mb-6">
         <h2 class="text-3xl font-bold mb-6 text-center text-white">
           Log in 🔐
         </h2>
-        <input v-model="email" placeholder="Email" type="email" required
-          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <input v-model="password" placeholder="Password" type="password" required
-          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <button @click="Handlelogin" :disabled="!email || !password"
-          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed">
+        <input
+          v-model="email"
+          placeholder="Email"
+          type="email"
+          required
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <input
+          v-model="password"
+          placeholder="Password"
+          type="password"
+          required
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <button
+          @click="Handlelogin"
+          :disabled="!email || !password"
+          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed"
+        >
           Log in
         </button>
+        <googleAuth
+          @login-success="googleLoginSuccess"
+          @login-error="googleLoginError"
+        />
       </div>
 
-      <button v-if="!isCreating" @click="startCreating"
-        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300">
+      <button
+        v-if="!isCreating"
+        @click="startCreating"
+        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300"
+      >
         Create an account
       </button>
 
@@ -24,25 +46,49 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-white mt-2">
           Create an account 👋🏻
         </h2>
-        <input v-model="newEmail" placeholder="Email" required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <input v-model="newUsername" placeholder="Username" required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <input v-model="newPassword" placeholder="Password" type="password" required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <input v-model="confirmPassword" placeholder="Confirm Password" type="password" required
-          class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-        <button type="button" @click="cancelCreating"
-          class="mb-4 text-purple-500 hover:text-purple-700 transition duration-300 underline items-center ml-2 text-sm">
+        <input
+          v-model="newEmail"
+          placeholder="Email"
+          required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <input
+          v-model="newUsername"
+          placeholder="Username"
+          required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <input
+          v-model="newPassword"
+          placeholder="Password"
+          type="password"
+          required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <input
+          v-model="confirmPassword"
+          placeholder="Confirm Password"
+          type="password"
+          required
+          class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        />
+        <button
+          type="button"
+          @click="cancelCreating"
+          class="mb-4 text-purple-500 hover:text-purple-700 transition duration-300 underline items-center ml-2 text-sm"
+        >
           Already have an account?
         </button>
-        <button @click="register" :disabled="!newEmail || !newUsername || !newPassword || !confirmPassword
+        <button
+          @click="register"
+          :disabled="
+            !newEmail || !newUsername || !newPassword || !confirmPassword
           "
-          class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed mb-4">
+          class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed mb-4"
+        >
           Create an account
         </button>
       </div>
-      <googleAuth @login-success="googleLoginSuccess" @login-error="googleLoginError" />
     </div>
   </div>
 </template>
