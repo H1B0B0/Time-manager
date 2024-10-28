@@ -41,8 +41,11 @@ defmodule BackendWeb.Router do
     plug Backend.Plugs.Workingtime.DeleteIsTeamOwnerOrGMPlug
   end
 
+
   scope "/api", BackendWeb do
+
     pipe_through :api
+    get "/auth/google", GoogleAuthController, :index
 
     post "/auth/login", AuthController, :login
     post "/users", UserController, :create

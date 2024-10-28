@@ -48,7 +48,10 @@ defmodule Backend.MixProject do
       {:plug, "~> 1.0"},
       {:corsica, "~> 2.0"},
       {:joken, "~> 2.6"},
-      {:pbkdf2_elixir, "~> 2.3"}
+      {:pbkdf2_elixir, "~> 2.3"},
+      {:elixir_auth_google, "~> 1.6.9"},
+      {:httpoison, "~> 2.0"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 

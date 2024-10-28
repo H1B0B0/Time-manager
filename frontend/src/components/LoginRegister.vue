@@ -85,6 +85,7 @@
           Create an account
         </button>
       </div>
+      <googleAuth />
     </div>
   </div>
 </template>
@@ -98,6 +99,7 @@ import { passwordStrength } from "check-password-strength";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
 import axios from "axios";
+import googleAuth from "@/components/googleAuth.vue";
 
 const router = useRouter();
 const userStore = useUserStore();

@@ -29,6 +29,21 @@ defmodule Backend.Auth do
     end
   end
 
+  def google_sign_in(email) do
+    case Accounts.get_user_by_email(email) do
+      nil ->
+        {:error, %{reason: :not_found}}
+
+      user ->
+        case generate_and_sign(%{"user_id" => user.id}) do
+          {:ok, token, _claims} ->
+            {:ok, %{token: token}}
+          {:error, reason} ->
+            {:error, %{reason: reason}}
+        end
+    end
+  end
+
   def get_user_from_token(token) do
     case verify_and_validate(token) do
       {:ok, claims} ->

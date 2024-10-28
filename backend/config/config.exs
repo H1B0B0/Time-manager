@@ -39,7 +39,15 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Joken configuration
+
+# Google configuration
+
+config :elixir_auth_google,
+  client_id: "832550689961-uk981s634d9r755nuoa8fg3gqpu9gcjb.apps.googleusercontent.com",
+  client_secret: "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",
+  redirect_uri: "https://frontend.traefik.me/auth/redirect"
+
+  # Joken configuration
 config :joken, default_signer: "skdflksjdf446546jslfjsqdf465654qsdf"
 
 # Import environment specific config. This must remain at the bottom

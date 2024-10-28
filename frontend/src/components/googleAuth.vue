@@ -1,129 +1,100 @@
-<button class="gsi-material-button">
-    <div class="gsi-material-button-state"></div>
-    <div class="gsi-material-button-content-wrapper">
-      <div class="gsi-material-button-icon">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-          <path fill="none" d="M0 0h48v48H0z"></path>
-        </svg>
-      </div>
-      <span class="gsi-material-button-contents">Sign in with Google</span>
-      <span style="display: none;">Sign in with Google</span>
+<template>
+  <div
+    class="flex flex-col items-center bg-black text-white border border-white rounded py-3 mt-3 hover:bg-black"
+  >
+    <button
+      @click="login"
+      :disabled="loading"
+      class="flex items-center gap-2 px-4"
+    >
+      <img
+        class="w-6 h-6"
+        src="https://www.svgrepo.com/show/475656/google-color.svg"
+        loading="lazy"
+        alt="Google logo"
+      />
+      <span>{{ loading ? "Signing in..." : "Sign in with Google" }}</span>
+    </button>
+
+    <div
+      v-if="error"
+      class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg"
+    >
+      <p class="text-sm text-red-600">{{ error }}</p>
+      <pre v-if="debug" class="mt-2 text-xs text-gray-600">{{ debug }}</pre>
     </div>
-  </button>
-<style>
-.gsi-material-button {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -webkit-appearance: none;
-  background-color: #131314;
-  background-image: none;
-  border: 1px solid #747775;
-  -webkit-border-radius: 20px;
-  border-radius: 20px;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #e3e3e3;
-  cursor: pointer;
-  font-family: "Roboto", arial, sans-serif;
-  font-size: 14px;
-  height: 40px;
-  letter-spacing: 0.25px;
-  outline: none;
-  overflow: hidden;
-  padding: 0 12px;
-  position: relative;
-  text-align: center;
-  -webkit-transition: background-color 0.218s, border-color 0.218s,
-    box-shadow 0.218s;
-  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
-  vertical-align: middle;
-  white-space: nowrap;
-  width: auto;
-  max-width: 400px;
-  min-width: min-content;
-  border-color: #8e918f;
-}
+  </div>
+</template>
 
-.gsi-material-button .gsi-material-button-icon {
-  height: 20px;
-  margin-right: 12px;
-  min-width: 20px;
-  width: 20px;
-}
+<script>
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-.gsi-material-button .gsi-material-button-content-wrapper {
-  -webkit-align-items: center;
-  align-items: center;
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  height: 100%;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-}
+const GOOGLE_CLIENT_ID =
+  "832550689961-uk981s634d9r755nuoa8fg3gqpu9gcjb.apps.googleusercontent.com";
+const BACKEND_URL = "https://backend.traefik.me";
+const REDIRECT_URI = encodeURIComponent(
+  "https://backend.traefik.me/api/auth/google"
+);
 
-.gsi-material-button .gsi-material-button-contents {
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  font-family: "Roboto", arial, sans-serif;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: top;
-}
+export default {
+  name: "GoogleAuth",
+  emits: ["login-success", "login-error"],
 
-.gsi-material-button .gsi-material-button-state {
-  -webkit-transition: opacity 0.218s;
-  transition: opacity 0.218s;
-  bottom: 0;
-  left: 0;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
+  setup(props, { emit }) {
+    const loading = ref(false);
+    const error = ref(null);
+    const debug = ref(null);
 
-.gsi-material-button:disabled {
-  cursor: default;
-  background-color: #13131461;
-  border-color: #8e918f1f;
-}
+    const login = () => {
+      loading.value = true;
+      error.value = null;
+      debug.value = null;
 
-.gsi-material-button:disabled .gsi-material-button-state {
-  background-color: #e3e3e31f;
-}
+      const googleAuthUrl =
+        `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${GOOGLE_CLIENT_ID}` +
+        `&redirect_uri=${REDIRECT_URI}` +
+        `&response_type=code` +
+        `&scope=${encodeURIComponent("email profile openid")}` +
+        `&access_type=offline` +
+        `&prompt=consent`;
 
-.gsi-material-button:disabled .gsi-material-button-contents {
-  opacity: 38%;
-}
+      // Redirection vers Google
+      window.location.href = googleAuthUrl;
+    };
 
-.gsi-material-button:disabled .gsi-material-button-icon {
-  opacity: 38%;
-}
+    const handleOAuthCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
 
-.gsi-material-button:not(:disabled):active .gsi-material-button-state,
-.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
-  background-color: white;
-  opacity: 12%;
-}
+      if (code) {
+        try {
+          const response = await axios.post(
+            `${BACKEND_URL}/api/auth/google/callback`,
+            { code }
+          );
+          emit("login-success", response.data);
+        } catch (err) {
+          error.value = "Failed to login with Google.";
+          debug.value = err.response ? err.response.data : err.message;
+          emit("login-error", err);
+        } finally {
+          loading.value = false;
+        }
+      }
+    };
 
-.gsi-material-button:not(:disabled):hover {
-  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 1px 3px 1px rgba(60, 64, 67, 0.15);
-  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
-    0 1px 3px 1px rgba(60, 64, 67, 0.15);
-}
+    onMounted(() => {
+      handleOAuthCallback();
+    });
 
-.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
-  background-color: white;
-  opacity: 8%;
-}
-</style>
+    return {
+      login,
+      loading,
+      error,
+      debug,
+    };
+  },
+};
+</script>
