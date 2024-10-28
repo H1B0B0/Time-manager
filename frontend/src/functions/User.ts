@@ -183,6 +183,26 @@ export const login = async (email: string, password: string) => {
   }
 };
 
+export const google_login = async (google_token : string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/auth/google`, {
+      params: {
+        code: google_token
+      },
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+    const token = response.data.token;
+    const expirationDate = new Date(new Date().getTime() + 12 * 60 * 60 * 1000);
+    Cookies.set("token", token, { expires: expirationDate });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const GetUserByToken = async () => {
   const cacheKey = `user_by_token`;
   if (!navigator.onLine) {

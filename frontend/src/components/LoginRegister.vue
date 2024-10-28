@@ -1,55 +1,22 @@
 <template>
   <div class="flex items-center justify-center min-h-screen">
-    <div
-      class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl"
-    >
+    <div class="max-w-md m-10 p-6 backdrop-blur-2xl border rounded-lg shadow-2xl">
       <div v-if="!isCreating" class="mb-6">
         <h2 class="text-3xl font-bold mb-6 text-center text-white">
           Log in 🔐
         </h2>
-        <input
-          v-model="email"
-          placeholder="Email"
-          type="email"
-          required
-          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <input
-          v-model="password"
-          id="password"
-          placeholder="Password"
-          type="password"
-          required
-          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <div class="flex items-center mb-4">
-          <input
-            id="default-checkbox"
-            type="checkbox"
-            @click="ShowPassword"
-            value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label
-            for="password-checkbox"
-            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Show Password</label
-          >
-        </div>
-        <button
-          @click="Handlelogin"
-          :disabled="!email || !password"
-          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed"
-        >
+        <input v-model="email" placeholder="Email" type="email" required
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <input v-model="password" placeholder="Password" type="password" required
+          class="w-full p-3 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <button @click="Handlelogin" :disabled="!email || !password"
+          class="w-full bg-indigo-500 text-white p-3 rounded-lg hover:bg-indigo-600 transition duration-300 disabled:cursor-not-allowed">
           Log in
         </button>
       </div>
 
-      <button
-        v-if="!isCreating"
-        @click="startCreating"
-        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300"
-      >
+      <button v-if="!isCreating" @click="startCreating"
+        class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300">
         Create an account
       </button>
 
@@ -57,66 +24,25 @@
         <h2 class="text-3xl font-bold mb-6 text-center text-white mt-2">
           Create an account 👋🏻
         </h2>
-        <input
-          v-model="newEmail"
-          placeholder="Email"
-          required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <input
-          v-model="newUsername"
-          placeholder="Username"
-          required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <input
-          v-model="newPassword"
-          placeholder="Password"
-          id="password"
-          type="password"
-          required
-          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <input
-          v-model="confirmPassword"
-          placeholder="Confirm Password"
-          id="password1"
-          type="password"
-          required
-          class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-        />
-        <div class="flex items-center mb-4">
-          <input
-            id="password-checkbox"
-            type="checkbox"
-            @click="ShowPassword"
-            value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label
-            for="default-checkbox"
-            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Show Password</label
-          >
-        </div>
-        <button
-          type="button"
-          @click="cancelCreating"
-          class="mb-4 text-purple-500 hover:text-purple-700 transition duration-300 underline items-center ml-2 text-sm"
-        >
+        <input v-model="newEmail" placeholder="Email" required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <input v-model="newUsername" placeholder="Username" required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <input v-model="newPassword" placeholder="Password" type="password" required
+          class="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <input v-model="confirmPassword" placeholder="Confirm Password" type="password" required
+          class="w-full p-3 mb-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+        <button type="button" @click="cancelCreating"
+          class="mb-4 text-purple-500 hover:text-purple-700 transition duration-300 underline items-center ml-2 text-sm">
           Already have an account?
         </button>
-        <button
-          @click="register"
-          :disabled="
-            !newEmail || !newUsername || !newPassword || !confirmPassword
+        <button @click="register" :disabled="!newEmail || !newUsername || !newPassword || !confirmPassword
           "
-          class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed mb-4"
-        >
+          class="w-full bg-gradient-to-r from-[#7B61FF] via-[#4BC0C0] to-[#36A2EB] text-white p-3 rounded-lg hover:from-[#6A52E0] hover:via-[#3AA0A0] hover:to-[#2A82C9] transition duration-300 disabled:bg-[#A3D1F7] disabled:cursor-not-allowed mb-4">
           Create an account
         </button>
       </div>
-      <googleAuth />
+      <googleAuth @login-success="googleLoginSuccess" @login-error="googleLoginError" />
     </div>
   </div>
 </template>
@@ -125,7 +51,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/use-user-store";
-import { createUser, login } from "@/functions/User";
+import { createUser, google_login, login } from "@/functions/User";
 import { passwordStrength } from "check-password-strength";
 import { toast } from "vue3-toastify";
 import confetti from "canvas-confetti";
@@ -144,6 +70,36 @@ const newPassword = ref("");
 const confirmPassword = ref("");
 const isCreating = ref(false);
 const error = ref("");
+
+const googleLoginSuccess = async (credential) => {
+  console.log("Google login success", credential);
+
+  try {
+    error.value = "";
+    const response = await google_login(credential);
+    userStore.setUser(response.user);
+    if (response.user.role_id >= 2) {
+      router.push(`/admin/dashboard/${response.user.id}`);
+    } else {
+      router.push(`/dashboard/${response.user.id}`);
+    }
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      if (err.response.status === 401) {
+        error.value = "Invalid login credentials";
+      } else {
+        error.value = err.response.data.message || "Error logging in";
+      }
+    } else {
+      error.value = "An unexpected error occurred";
+    }
+    toast.error(error.value);
+  }
+};
+
+const googleLoginError = (response) => {
+  console.error("Google login error", response);
+};
 
 const ShowPassword = () => {
   const password = document.getElementById("password");
