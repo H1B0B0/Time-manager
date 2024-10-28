@@ -144,7 +144,9 @@ const googleLoginSuccess = async (credential) => {
 };
 
 const googleLoginError = (response) => {
-  console.error("Google login error", response);
+  console.log("Google login error", response);
+  error.value = "Failed to login with Google.";
+  toast.error(error.value);
 };
 
 const ShowPassword = () => {
