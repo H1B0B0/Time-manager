@@ -122,10 +122,6 @@
       args:
         chdir: /app/frontend
 
-    - name: remove seeds
-      become: yes
-      command: rm -rf /app/backend/priv/repo/seeds.exs
-
     - name: Check if Docker Compose stack is running
       become: yes
       become_user: root
