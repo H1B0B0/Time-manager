@@ -43,8 +43,8 @@ config :phoenix, :json_library, Jason
 # Google configuration
 
 config :elixir_auth_google,
-  client_id: "832550689961-uk981s634d9r755nuoa8fg3gqpu9gcjb.apps.googleusercontent.com",
-  client_secret: "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",
+  client_id: System.get_env("CLIENT_ID_GOOGLE"),
+  client_secret: System.get_env("CLIENT_SECRET_GOOGLE"),
   redirect_uri: "https://frontend.traefik.me/auth/redirect"
 
   # Joken configuration

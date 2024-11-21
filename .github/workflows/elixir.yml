@@ -98,7 +98,7 @@ jobs:
           done
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }} FRONTEND_DNS=${{ secrets.FRONTEND_DNS }} BACKEND_DNS=${{ secrets.BACKEND_DNS }} PGADMIN_DNS=${{ secrets.PGADMIN_DNS }} kuramacert=${{ secrets.kuramacert }} kuramakey=${{ secrets.kuramakey }}"
+          ansible-playbook Playbook.yml -i inventory.ini --private-key key.pem --ssh-extra-args "-o StrictHostKeyChecking=no" --extra-vars "POSTGRES_USER=${{ secrets.POSTGRES_USER }} POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} POSTGRES_DB=${{ secrets.POSTGRES_DB }} DATABASE_HOSTNAME=${{ secrets.DATABASE_HOSTNAME }} PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }} PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }} FRONTEND_DNS=${{ secrets.FRONTEND_DNS }} BACKEND_DNS=${{ secrets.BACKEND_DNS }} PGADMIN_DNS=${{ secrets.PGADMIN_DNS }} kuramacert=${{ secrets.kuramacert }} kuramakey=${{ secrets.kuramakey }} CLIENT_ID_GOOGLE=${{ secrets.CLIENT_ID_GOOGLE }} CLIENT_SECRET_GOOGLE=${{ secrets.CLIENT_SECRET_GOOGLE }}"
 
   mail:
     name: Send mail

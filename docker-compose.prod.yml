@@ -25,6 +25,8 @@ services:
     working_dir: /app
     environment:
       DATABASE_HOSTNAME: ${DATABASE_HOSTNAME}
+      CLIENT_ID_GOOGLE: ${CLIENT_ID}
+      CLIENT_SECRET_GOOGLE: ${CLIENT_SECRET}
     volumes:
       - ./backend:/app
       - backend:/app/_build

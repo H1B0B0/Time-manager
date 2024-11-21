@@ -105,6 +105,8 @@
           FRONTEND_DNS={{ FRONTEND_DNS }}
           BACKEND_DNS={{ BACKEND_DNS }}
           PGADMIN_DNS={{ PGADMIN_DNS }}
+          CLIENT_ID_GOOGLE={{ CLIENT_ID_GOOGLE }}
+          CLIENT_SECRET_GOOGLE={{ CLIENT_SECRET_GOOGLE }}
         dest: /app/.env
         force: yes
 

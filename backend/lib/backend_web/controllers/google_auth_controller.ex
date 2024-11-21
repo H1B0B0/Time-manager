@@ -5,7 +5,7 @@ defmodule BackendWeb.GoogleAuthController do
   use BackendWeb, :controller
   require Logger
 
-  @client_id "832550689961-uk981s634d9r755nuoa8fg3gqpu9gcjb.apps.googleusercontent.com"
+  @client_id System.get_env("CLIENT_ID_GOOGLE")
   @redirect_uri "https://backend.traefik.me/api/auth/google"
 
   plug CORSPlug,
