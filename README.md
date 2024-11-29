@@ -2,6 +2,12 @@
 
 ## TIME TRACKING APP
 
+test account for the showcase site:
+acc:
+johnDoe@gmail.com
+pass:
+password1
+
 ### Project Overview
 
 The revolt rises in the halls of Gotham town hall! Rumors of strikes and resignations run, and the main union (CGT-U, which stands for City of Gotham Trade-Union) alerts the mayor and senior officials of the town hall of the urgency of the situation:
