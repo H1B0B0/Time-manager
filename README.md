@@ -2,11 +2,24 @@
 
 ## TIME TRACKING APP
 
-test account for the showcase site:
-acc:
-johnDoe@gmail.com
-pass:
-password1
+These three demo accounts allow you to explore and fully test the application:
+
+Account 1
+📧 johnDoe@gmail.com
+🔑 password1
+role: employee
+
+Account 2
+📧 janeDoe@gmail.com
+🔑 password2
+role: manager
+
+Account 3
+📧 aliceSmith@gmail.com
+🔑 password3
+role: super-manager (admin)
+
+Log in and discover all the features! 🚀
 
 ### Project Overview
 
